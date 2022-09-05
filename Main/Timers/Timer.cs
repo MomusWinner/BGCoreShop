@@ -1,29 +1,36 @@
 using System;
+using Core.Main.LoopSystem;
 using UnityEngine;
 
 namespace Core.Main.Timers
 {
-    public class Timer : ITimer, IDisposable
+    public class Timer : Loopable, ITimer
     {
-        public event Action OnDispose;
         public event Action<TimerArgs> OnTimerTick;
         public float Period { get; private set; }
 
         public bool IsPlaying { get; private set; }
 
+        private readonly int loop; 
         private float value;
+
+        private bool invokeOnce;
 
         private Action<object> onReachedPeriod;
 
-        public Timer(float period, Action<object> onReachedPeriodAction, bool playOnAwake)
+        public Timer(int loopType, float period, Action<object> onReachedPeriodAction, bool playOnAwake, bool once = false) : base(null)
         {
+            loop = loopType;
             Period = period;
             onReachedPeriod = onReachedPeriodAction;
-            
+            invokeOnce = once;
+        
             if (playOnAwake)
             {
                 Play();
             }
+
+            LoopOn(loopType, Execute, playOnAwake);
         }
         
         public void Play()
@@ -84,6 +91,10 @@ namespace Core.Main.Timers
             {
                 value = 0;
                 onReachedPeriod?.Invoke(this);
+                if (invokeOnce)
+                {
+                    Drop();
+                }
                 return;
             }
 
@@ -91,9 +102,12 @@ namespace Core.Main.Timers
             OnTimerTick?.Invoke(new TimerArgs(this, value, Period));
         }
 
-        public void Dispose()
+        protected override void OnDrop()
         {
-            OnDispose?.Invoke();
+            OnTimerTick = null;
+            onReachedPeriod = null;
+            
+            base.OnDrop();
         }
     }
 

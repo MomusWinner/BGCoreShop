@@ -2,7 +2,7 @@ using System;
 
 namespace Core.Main.Timers
 {
-    public interface ITimer : IDisposable
+    public interface ITimer 
     {
         event Action<TimerArgs> OnTimerTick;
         float Period { get; }

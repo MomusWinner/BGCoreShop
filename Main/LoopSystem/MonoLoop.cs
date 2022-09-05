@@ -1,10 +1,13 @@
+using UnityEngine;
+
 namespace Core.Main.LoopSystem
 {
-    public class MonoLoop : Singleton<MonoLoop>
+    public class MonoLoop : MonoBehaviour
     {
         private void Start()
         {
             Loops.Initiate();
+            GEvent.Call(GlobalEvents.Start);
         }
 
         private void FixedUpdate()

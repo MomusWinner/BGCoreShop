@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Core.Main.LoopSystem
 {
-    public class CoreLoopService
+    public static class CoreLoopService
     {
         public static int LoopsCount => loops.Count;
         
@@ -25,7 +26,11 @@ namespace Core.Main.LoopSystem
         {
             if (loops.Count is 0)
             {
-                throw new Exception($"Loop {type} is empty.");
+                if (Application.isPlaying)
+                {
+                    throw new Exception($"Loop {type} is empty.");
+                }
+                return;
             }
 
             loops[type].ExecuteAllEvents();

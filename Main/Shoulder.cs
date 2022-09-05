@@ -16,16 +16,14 @@ namespace Core.Main
         {
             void InvokeAction(object o)
             {
-                if (o is ITimer timer)
+                if (o is ITimer)
                 {
                     action?.Invoke();
-                    timer.Dispose();
-                    delayTimers.Remove(timer);
                 }
             }
 
             
-            var delayTimer = TimerFactory.CreateTimer(Loops.Update, delay, InvokeAction);
+            var delayTimer = TimerFactory.CreateTimer(Loops.Update, delay, InvokeAction, true, true);
             delayTimers.Add(delayTimer);
         }
 
