@@ -1,6 +1,7 @@
 using System;
 using Core.Main.Locations;
 using Core.Main.ObjectsSystem;
+using Submodules.BGLogic.Main.Locations;
 using UnityEngine;
 
 namespace Core.Main
@@ -12,30 +13,32 @@ namespace Core.Main
 
         public event Action<IDroppable> Dropped;
 
-        private Location staticLocation;
-        private Location dynamicLocation;
-
-        private LocationView staticLocationView;
-        private LocationView dynamicLocationView;
+        private Location statLocation;
+        private Location dynLocation;
 
         private void Awake()
         {
             SetAlive();
-            Shoulder.Instance.InvokeWhen(() => GlobalState.Initialized, OnStart);
+
+            GEvent.Attach(GlobalEvents.Start, OnStart);
         }
 
-        private void OnStart()
+        private async void OnStart(params object[] obj)
         {
             GEvent.Attach(GlobalEvents.DropSection, _ => Drop(), this);
 
-            staticLocationView = new LocationView(staticLocation);
-            dynamicLocationView = new LocationView(dynamicLocation);
+            if (obj.Length > 1 && obj[0] is LocationSetting statSetting && obj[1] is LocationSetting dynSetting)
+            {
+                (statLocation, dynLocation) = await LocationFactory.CreateLocation(statSetting, dynSetting);
+            }
         }
 
         private void OnDrop()
         {
-            staticLocation?.Drop();
-            dynamicLocation?.Drop();
+            LocationFactory.DropLocation(statLocation, dynLocation);
+
+            statLocation = null;
+            dynLocation = null;
         }
 
         public void Drop()
