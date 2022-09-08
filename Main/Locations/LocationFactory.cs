@@ -13,8 +13,8 @@ namespace Submodules.BGLogic.Main.Locations
         private static bool isLoadedDynamicLocation;
         public static async Task<(Location, Location)> CreateLocation(LocationSetting statSettings, LocationSetting dynSetting)
         {
-            var loadingStatic = SceneManager.LoadSceneAsync(statSettings.sceneName, LoadSceneMode.Additive);
-            var loadingDynamic =  SceneManager.LoadSceneAsync(dynSetting.sceneName, LoadSceneMode.Additive);
+            var loadingStatic = SceneManager.LoadSceneAsync(statSettings.SceneName, LoadSceneMode.Additive);
+            var loadingDynamic =  SceneManager.LoadSceneAsync(dynSetting.SceneName, LoadSceneMode.Additive);
 
             loadingStatic.completed += _ => isLoadedStaticLocation = true;
             loadingDynamic.completed += _ => isLoadedDynamicLocation = true;
@@ -46,7 +46,7 @@ namespace Submodules.BGLogic.Main.Locations
             return (statLocation, dynLocation);
         }
 
-        public static void DropLocation(Location statLocation, Location dynamicLocation)
+        public static async Task DropLocation(Location statLocation, Location dynamicLocation)
         {
             statLocation.Drop();
             dynamicLocation.Drop();
@@ -56,6 +56,26 @@ namespace Submodules.BGLogic.Main.Locations
             
             unloadingStatic.completed += _ => isLoadedStaticLocation = false;
             unloadingDynamic.completed += _ => isLoadedDynamicLocation = false;
+            
+            await Task.Run(() =>
+            {
+                while (true)
+                {
+                    if (!isLoadedStaticLocation)
+                    {
+                        break;
+                    }
+                }
+
+                while (true)
+                {
+                    if (!isLoadedDynamicLocation)
+                    {
+                        break;
+                    }
+                }
+            });
+
             
             GEvent.Call(GlobalEvents.LocationUnloaded);
         }

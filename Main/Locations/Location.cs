@@ -1,13 +1,21 @@
 using Core.Main.ObjectsSystem;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Core.Main.Locations
 {
     public class Location : BaseDroppable
     {
         public string RootSceneName { get; private set; }
-        public Location(LocationSetting settings) : base(settings.sceneName)
+        public GameObject RootObjectResources { get; }
+
+        private readonly LocationView locationView;
+
+        public Location(LocationSetting settings) : base(settings.SceneName)
         {
-            RootSceneName = settings.sceneName;
+            RootSceneName = settings.SceneName;
+            RootObjectResources = Resources.Load<GameObject>(settings.RootObjectPath);
+            locationView = new LocationView(this);
             GEvent.Attach(GlobalEvents.LocationLoaded, Initialize);
         }
 
@@ -15,6 +23,13 @@ namespace Core.Main.Locations
         {
             GEvent.Detach(GlobalEvents.LocationUnloaded, Initialize);
             
+            var mainScene = SceneManager.GetActiveScene();
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
+            
+            locationView.Initialize();
+            
+            SceneManager.SetActiveScene(mainScene);
+
         }
 
         protected override void OnDrop()

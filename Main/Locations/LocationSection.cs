@@ -3,6 +3,7 @@ using Core.Main.Locations;
 using Core.Main.ObjectsSystem;
 using Submodules.BGLogic.Main.Locations;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Core.Main
 {
@@ -26,6 +27,7 @@ namespace Core.Main
         private async void OnStart(params object[] obj)
         {
             GEvent.Attach(GlobalEvents.DropSection, _ => Drop(), this);
+            GEvent.Attach(GlobalEvents.Restart, OnRestart);
 
             if (obj.Length > 1 && obj[0] is LocationSetting statSetting && obj[1] is LocationSetting dynSetting)
             {
@@ -33,12 +35,19 @@ namespace Core.Main
             }
         }
 
-        private void OnDrop()
+        private async void OnDrop()
         {
-            LocationFactory.DropLocation(statLocation, dynLocation);
+            await LocationFactory.DropLocation(statLocation, dynLocation);
 
             statLocation = null;
             dynLocation = null;
+        }
+        
+        private void OnRestart(params object[] objs)
+        {
+            GEvent.Detach(GlobalEvents.Restart, OnRestart);
+            GEvent.Attach(GlobalEvents.LocationUnloaded, OnStart);
+            GEvent.Call(GlobalEvents.DropSection);
         }
 
         public void Drop()
