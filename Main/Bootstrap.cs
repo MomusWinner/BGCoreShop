@@ -14,7 +14,7 @@ namespace Core.Main
 
         private static void OnStart(object _)
         {
-            GEvent.Detach(GlobalEvents.Start, OnStart);
+            //GEvent.Detach(GlobalEvents.Start, OnStart);
             GlobalState.InProcess = true;
             GlobalState.Initialized = false;
         }

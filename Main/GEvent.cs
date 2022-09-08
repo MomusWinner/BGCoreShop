@@ -61,40 +61,12 @@ namespace Core.Main
                 return;
             }
 
+            var copy = new Action<object[]> [actionsList.Count];
+            actionsList.CopyTo(copy, 0);
 
-            switch (actionsList.Count)
+            foreach (var action in copy)
             {
-                case 1:
-                {
-                    actionsList[0](objects);
-                    break;
-                }
-                case 2:
-                {
-                    var tmp0 = actionsList[0];
-                    var tmp1 = actionsList[1];
-                    tmp0(objects);
-                    tmp1(objects);
-                    break;
-                }
-                case 3:
-                {
-                    var tmp0 = actionsList[0];
-                    var tmp1 = actionsList[1];
-                    var tmp2 = actionsList[2];
-                    tmp0(objects);
-                    tmp1(objects);
-                    tmp2(objects);
-                    break;
-                }
-                default:
-                {
-                    var copy = new Action<object> [actionsList.Count];
-                    actionsList.CopyTo(copy, 0);
-                    foreach (var action in copy)
-                        action(objects);
-                    break;
-                }
+                action(objects);
             }
         }
     }

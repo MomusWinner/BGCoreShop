@@ -3,7 +3,6 @@ using Core.Main.Locations;
 using Core.Main.ObjectsSystem;
 using Submodules.BGLogic.Main.Locations;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Core.Main
 {
@@ -14,8 +13,8 @@ namespace Core.Main
 
         public event Action<IDroppable> Dropped;
 
-        private Location statLocation;
-        private Location dynLocation;
+        public static Location StatLocation { get; private set; }
+        public static Location DynLocation { get; private set; }
 
         private void Awake()
         {
@@ -29,25 +28,30 @@ namespace Core.Main
             GEvent.Attach(GlobalEvents.DropSection, _ => Drop(), this);
             GEvent.Attach(GlobalEvents.Restart, OnRestart);
 
-            if (obj.Length > 1 && obj[0] is LocationSetting statSetting && obj[1] is LocationSetting dynSetting)
+            if (obj.Length > 1)
             {
-                (statLocation, dynLocation) = await LocationFactory.CreateLocation(statSetting, dynSetting);
+                if(obj[0] is LocationSetting statSetting && obj[1] is LocationSetting dynSetting)
+                { 
+                    var sLocation = new Location(statSetting);
+                    var dLocation = new Location(dynSetting);
+                    (StatLocation, DynLocation) = await LocationLoader.LoadBoth(sLocation, dLocation);
+                }
             }
         }
 
-        private async void OnDrop()
+        private void OnDrop()
         {
-            await LocationFactory.DropLocation(statLocation, dynLocation);
-
-            statLocation = null;
-            dynLocation = null;
+            LocationLoader.DropBoth(StatLocation, DynLocation);
         }
         
         private void OnRestart(params object[] objs)
         {
-            GEvent.Detach(GlobalEvents.Restart, OnRestart);
-            GEvent.Attach(GlobalEvents.LocationUnloaded, OnStart);
-            GEvent.Call(GlobalEvents.DropSection);
+            if (objs.Length > 0 && objs[0] is Location {Alive: true} location)
+            {
+                location.Drop();
+                location.Refresh();
+                GEvent.Call(GlobalEvents.LocationLoaded, location);
+            }
         }
 
         public void Drop()

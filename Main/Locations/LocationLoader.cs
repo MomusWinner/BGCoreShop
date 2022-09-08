@@ -1,5 +1,4 @@
-using System;
-using System.Threading;
+using System.IO;
 using System.Threading.Tasks;
 using Core.Main;
 using Core.Main.Locations;
@@ -7,18 +6,36 @@ using UnityEngine.SceneManagement;
 
 namespace Submodules.BGLogic.Main.Locations
 {
-    public static class LocationFactory
+    internal static class LocationLoader
     {
         private static bool isLoadedStaticLocation;
         private static bool isLoadedDynamicLocation;
-        public static async Task<(Location, Location)> CreateLocation(LocationSetting statSettings, LocationSetting dynSetting)
+
+        private static string sceneStaticName;
+        private static string sceneDynamicName;
+
+        public static async Task<(Location, Location)> LoadBoth(Location statLocation, Location dynLocation)
         {
-            var loadingStatic = SceneManager.LoadSceneAsync(statSettings.SceneName, LoadSceneMode.Additive);
-            var loadingDynamic =  SceneManager.LoadSceneAsync(dynSetting.SceneName, LoadSceneMode.Additive);
+            if (!string.IsNullOrEmpty(sceneDynamicName) &&
+                !string.IsNullOrEmpty(sceneStaticName) &&
+                (statLocation.RootSceneName != sceneStaticName ||
+                 dynLocation.RootSceneName != sceneDynamicName))
+            {
+                sceneDynamicName = dynLocation.RootSceneName;
+                sceneStaticName = statLocation.RootSceneName;
+
+                await UnloadScenes(LocationSection.StatLocation, LocationSection.DynLocation);
+            }
+            
+            sceneDynamicName = dynLocation.RootSceneName;
+            sceneStaticName = statLocation.RootSceneName;
+
+            var loadingStatic = SceneManager.LoadSceneAsync(statLocation.RootSceneName, LoadSceneMode.Additive);
+            var loadingDynamic = SceneManager.LoadSceneAsync(dynLocation.RootSceneName, LoadSceneMode.Additive);
 
             loadingStatic.completed += _ => isLoadedStaticLocation = true;
             loadingDynamic.completed += _ => isLoadedDynamicLocation = true;
-            
+
             await Task.Run(() =>
             {
                 while (true)
@@ -37,26 +54,25 @@ namespace Submodules.BGLogic.Main.Locations
                     }
                 }
             });
-            
-            var statLocation = new Location(statSettings);
-            var dynLocation = new Location(dynSetting);
-            
-            GEvent.Call(GlobalEvents.LocationLoaded, statLocation, dynLocation);
 
+            GEvent.Call(GlobalEvents.BothLocationLoaded, statLocation, dynLocation);
             return (statLocation, dynLocation);
         }
 
-        public static async Task DropLocation(Location statLocation, Location dynamicLocation)
+        public static async void DropBoth(Location statLocation, Location dynamicLocation)
         {
             statLocation.Drop();
             dynamicLocation.Drop();
+        }
 
+        private static async Task UnloadScenes(Location statLocation, Location dynamicLocation)
+        {
             var unloadingStatic = SceneManager.UnloadSceneAsync(statLocation.RootSceneName);
             var unloadingDynamic = SceneManager.UnloadSceneAsync(dynamicLocation.RootSceneName);
-            
+
             unloadingStatic.completed += _ => isLoadedStaticLocation = false;
             unloadingDynamic.completed += _ => isLoadedDynamicLocation = false;
-            
+
             await Task.Run(() =>
             {
                 while (true)
@@ -76,8 +92,7 @@ namespace Submodules.BGLogic.Main.Locations
                 }
             });
 
-            
-            GEvent.Call(GlobalEvents.LocationUnloaded);
+            GEvent.Call(GlobalEvents.BothLocationUnloaded, statLocation, dynamicLocation);
         }
     }
 }

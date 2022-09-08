@@ -10,18 +10,34 @@ namespace Core.Main.Locations
         public GameObject RootObjectResources { get; }
 
         private readonly LocationView locationView;
-
+        private readonly string rootObjectPath;
         public Location(LocationSetting settings) : base(settings.SceneName)
         {
             RootSceneName = settings.SceneName;
-            RootObjectResources = Resources.Load<GameObject>(settings.RootObjectPath);
+            rootObjectPath = settings.RootObjectPath;
+            RootObjectResources = Resources.Load<GameObject>(rootObjectPath);
             locationView = new LocationView(this);
-            GEvent.Attach(GlobalEvents.LocationLoaded, Initialize);
+            GEvent.Attach(GlobalEvents.BothLocationLoaded, Initialize);
         }
 
+        public void Refresh()
+        {
+            if (!Alive)
+            {
+                SetAlive();
+
+                var mainScene = SceneManager.GetActiveScene();
+                SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
+                
+                locationView.Refresh();
+                
+                SceneManager.SetActiveScene(mainScene);
+            }
+        }
+        
         private void Initialize(params object[] objects)
         {
-            GEvent.Detach(GlobalEvents.LocationUnloaded, Initialize);
+            GEvent.Detach(GlobalEvents.BothLocationLoaded, Initialize);
             
             var mainScene = SceneManager.GetActiveScene();
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
@@ -29,11 +45,11 @@ namespace Core.Main.Locations
             locationView.Initialize();
             
             SceneManager.SetActiveScene(mainScene);
-
         }
 
         protected override void OnDrop()
         {
+            locationView.Drop();
         }
     }
 }

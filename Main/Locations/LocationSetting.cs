@@ -9,14 +9,19 @@ namespace Core.Main.Locations
     {
         public string RootObjectPath => rootObjectPath;
         public string SceneName => sceneName;
-        
+
         [SerializeField] private string sceneName;
         [SerializeField] private Object rootObject;
-        [SerializeField, HideInInspector] private string rootObjectPath;
+        [SerializeField] private string rootObjectPath;
 
+#if UNITY_EDITOR
         private void OnValidate()
         {
-            rootObjectPath = Utilities.GetValidPathToResource(rootObject);
+            if (rootObject)
+            {
+                rootObjectPath = Utilities.GetValidPathToResource(rootObject);
+            }
         }
+#endif
     }
 }

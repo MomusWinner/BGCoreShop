@@ -15,8 +15,26 @@ namespace Core.Main.Locations
 
         public void Initialize()
         {
-            rootObject = Object.Instantiate(rootResource);
-            rootObject.name = rootResource.name;
+            if (rootResource)
+            {
+                rootObject = Object.Instantiate(rootResource);
+                rootObject.name = rootResource.name;
+            }
+        }
+
+        public void Refresh()
+        {
+            if (!Alive)
+            {
+                SetAlive();
+                Initialize();
+            }
+        }
+
+        protected override void OnDrop()
+        {
+            base.OnDrop();
+            Object.Destroy(rootObject);
         }
     }
 }
