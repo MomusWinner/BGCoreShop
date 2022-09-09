@@ -11,30 +11,28 @@ namespace Submodules.BGLogic.Main.Locations
         private static bool isLoadedStaticLocation;
         private static bool isLoadedDynamicLocation;
 
-        private static string sceneStaticName;
-        private static string sceneDynamicName;
+        private static Scene staticScene;
+        private static Scene dynamicScene;
 
         public static async Task<(Location, Location)> LoadBoth(Location statLocation, Location dynLocation)
         {
-            if (!string.IsNullOrEmpty(sceneDynamicName) &&
-                !string.IsNullOrEmpty(sceneStaticName) &&
-                (statLocation.RootSceneName != sceneStaticName ||
-                 dynLocation.RootSceneName != sceneDynamicName))
+            void InnerLoadingScenes(object[] obj)
             {
-                sceneDynamicName = dynLocation.RootSceneName;
-                sceneStaticName = statLocation.RootSceneName;
+                GEvent.Detach(GlobalEvents.BothLocationUnloaded, InnerLoadingScenes);
+                LoadingScenes(statLocation, dynLocation);
+            }
+
+            if (staticScene.isLoaded && statLocation.RootSceneName != staticScene.name ||
+                dynamicScene.isLoaded && dynLocation.RootSceneName != dynamicScene.name)
+            {
+                GEvent.Attach(GlobalEvents.BothLocationUnloaded, InnerLoadingScenes);
 
                 await UnloadScenes(LocationSection.StatLocation, LocationSection.DynLocation);
             }
-            
-            sceneDynamicName = dynLocation.RootSceneName;
-            sceneStaticName = statLocation.RootSceneName;
-
-            var loadingStatic = SceneManager.LoadSceneAsync(statLocation.RootSceneName, LoadSceneMode.Additive);
-            var loadingDynamic = SceneManager.LoadSceneAsync(dynLocation.RootSceneName, LoadSceneMode.Additive);
-
-            loadingStatic.completed += _ => isLoadedStaticLocation = true;
-            loadingDynamic.completed += _ => isLoadedDynamicLocation = true;
+            else if (!staticScene.isLoaded && !dynamicScene.isLoaded)
+            {
+                LoadingScenes(statLocation, dynLocation);
+            }
 
             await Task.Run(() =>
             {
@@ -59,6 +57,23 @@ namespace Submodules.BGLogic.Main.Locations
             return (statLocation, dynLocation);
         }
 
+        private static void LoadingScenes(Location statLocation, Location dynLocation)
+        {
+            var loadingStatic = SceneManager.LoadSceneAsync(statLocation.RootSceneName, LoadSceneMode.Additive);
+            var loadingDynamic = SceneManager.LoadSceneAsync(dynLocation.RootSceneName, LoadSceneMode.Additive);
+
+            loadingStatic.completed += _ =>
+            {
+                staticScene = SceneManager.GetSceneByName(statLocation.RootSceneName);
+                isLoadedStaticLocation = true;
+            };
+            loadingDynamic.completed += _ =>
+            {
+                dynamicScene = SceneManager.GetSceneByName(dynLocation.RootSceneName);
+                isLoadedDynamicLocation = true;
+            };
+        }
+
         public static async void DropBoth(Location statLocation, Location dynamicLocation)
         {
             statLocation.Drop();
@@ -67,8 +82,8 @@ namespace Submodules.BGLogic.Main.Locations
 
         private static async Task UnloadScenes(Location statLocation, Location dynamicLocation)
         {
-            var unloadingStatic = SceneManager.UnloadSceneAsync(statLocation.RootSceneName);
-            var unloadingDynamic = SceneManager.UnloadSceneAsync(dynamicLocation.RootSceneName);
+            var unloadingStatic = SceneManager.UnloadSceneAsync(staticScene);
+            var unloadingDynamic = SceneManager.UnloadSceneAsync(dynamicScene);
 
             unloadingStatic.completed += _ => isLoadedStaticLocation = false;
             unloadingDynamic.completed += _ => isLoadedDynamicLocation = false;
@@ -92,7 +107,7 @@ namespace Submodules.BGLogic.Main.Locations
                 }
             });
 
-            GEvent.Call(GlobalEvents.BothLocationUnloaded, statLocation, dynamicLocation);
+            GEvent.Call(GlobalEvents.BothLocationUnloaded);
         }
     }
 }

@@ -5,8 +5,8 @@ namespace Core.Main.LoopSystem
 {
     public abstract class Loopable : BaseDroppable
     {
-        public bool CallActions { get; protected set; }
-        public bool CallWhenAdded { get; protected set; }
+        public bool CallActions { get; private set; }
+        public bool CallWhenAdded { get; private set; }
 
         private readonly Action[] actions;
         private readonly uint[] orders;
@@ -70,12 +70,6 @@ namespace Core.Main.LoopSystem
             }
             
             base.OnDrop();
-        }
-
-        public override void SetAlive()
-        {
-            base.SetAlive();
-            CallActions = true;
         }
     }
 }

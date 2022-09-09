@@ -7,6 +7,7 @@ namespace Core.Main.Chapters
     [Serializable]
     public class Chapter
     {
+        public string ChapterName => chapterName;
         public LocationSetting StaticLocationSetting => statLocationSetting;
         public LocationSetting DynamicLocationSetting => dynamicLocationSetting;
 

@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.Linq;
 using Core.Main.ObjectsSystem;
 
 namespace Core.Main
@@ -8,8 +10,8 @@ namespace Core.Main
     {
         private static uint staticUniqueCounter;
 
-        private static readonly Dictionary<string, List<Action<object[]>>> actions =
-            new Dictionary<string, List<Action<object[]>>>();
+        private static readonly Dictionary<string, Dictionary<int, Action<object[]>>> actions =
+            new Dictionary<string, Dictionary<int, Action<object[]>>>();
 
         public static string GetUniqueCategory()
         {
@@ -20,11 +22,11 @@ namespace Core.Main
         {
             if (actions.TryGetValue(category, out var actionsList))
             {
-                actionsList.Add(method);
+                actionsList.Add(method.GetHashCode(), method);
             }
             else
             {
-                actions.Add(category, new List<Action<object[]>> {method});
+                actions.Add(category, new Dictionary<int, Action<object[]>> {{method.GetHashCode(), method}});
             }
 
             if (puller is { })
@@ -33,16 +35,30 @@ namespace Core.Main
             }
         }
 
+        public static void AttachOnce(string category, Action<object[]> method, IDroppable puller = null)
+        {
+            if (actions.TryGetValue(category, out var actionsMap))
+            {
+                if (actionsMap.ContainsKey(method.GetHashCode()))
+                {
+                    return;
+                }
+            }
+
+            Attach(category, method, puller);
+        }
+
         public static void Detach(string category, Action<object[]> method)
         {
-            if (actions.TryGetValue(category, out var actionsList))
+            if (actions.TryGetValue(category, out var actionMap))
             {
-                for (var i = actionsList.Count - 1; i >= 0; i--)
+                var hash = method.GetHashCode();
+                if (actionMap.ContainsKey(hash))
                 {
-                    actionsList.RemoveAt(i);
+                    actionMap.Remove(hash);
                 }
-
-                if (actionsList.Count is 0)
+                
+                if (actionMap.Count is 0)
                 {
                     actions.Remove(category);
                 }
@@ -61,8 +77,8 @@ namespace Core.Main
                 return;
             }
 
-            var copy = new Action<object[]> [actionsList.Count];
-            actionsList.CopyTo(copy, 0);
+            var copy = new Action<object[]>[actionsList.Count];
+            actionsList.Values.CopyTo(copy, 0);
 
             foreach (var action in copy)
             {
