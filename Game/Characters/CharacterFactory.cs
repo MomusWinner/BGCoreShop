@@ -2,15 +2,16 @@ using Game.Characters.Model;
 using GameLogic;
 using UnityEngine;
 
-namespace Submodules.BGLogic.Game.Characters
+namespace Game.Characters
 {
     public static class CharacterFactory
     {
         public static ICharacter CreateCharacter(CharacterType characterType, BaseCharacterSetting setting, Transform parent = null)
         {
-            if (characterType is CharacterType.Player)
+            if (setting is PlayerSetting playerSetting &&
+                characterType is CharacterType.Player)
             {
-                return new Player("[Player]", setting, parent);
+                return new Player("[Player]", playerSetting, parent);
             }
 
             return null;

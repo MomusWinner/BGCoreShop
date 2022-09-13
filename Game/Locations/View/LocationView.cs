@@ -4,17 +4,17 @@ using UnityEngine;
 
 namespace Core.Locations.View
 {
-    public class LocationView : BaseDroppable
+    public abstract class LocationView : BaseDroppable
     {
         public GameObject Root { get; private set; }
         private readonly GameObject rootResource;
 
-        public LocationView(Location location) : base(location.Name)
+        protected LocationView(Location location) : base(location.Name)
         {
             rootResource = Resources.Load<GameObject>(location.RootObjectResourcesPath);
         }
 
-        public void Initialize()
+        public virtual void Initialize()
         {
             if (rootResource)
             {

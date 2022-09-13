@@ -1,22 +1,25 @@
 using Core.Locations.View;
 using Core.ObjectsSystem;
+using Game.Locations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Core.Locations.Model
 {
-    public class Location : BaseDroppable
+    public abstract class Location : BaseDroppable
     {
         public GameObject Root => locationView.Root;
         public string RootSceneName { get; }
         public string RootObjectResourcesPath { get; }
 
         private readonly LocationView locationView;
-        public Location(LocationSetting settings) : base(settings.SceneName)
+        protected Location(LocationSetting settings) : base(settings.SceneName)
         {
             RootSceneName = settings.SceneName;
             RootObjectResourcesPath = settings.RootObjectPath;
-            locationView = new LocationView(this);
+            
+            locationView = LocationViewFactory.CreateView(this);
+            
             GEvent.Attach(GlobalEvents.BothLocationLoaded, Initialize);
         }
 

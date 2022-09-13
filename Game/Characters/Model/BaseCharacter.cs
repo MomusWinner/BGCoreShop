@@ -10,7 +10,7 @@ namespace Game.Characters.Model
         where TCharacterControl : BaseCharacterControl
     {
         public GameObject Root => View?.Root;
-        public Transform Pivot => View?.ParentTransform;
+        public Transform ParentTransform => View?.ParentTransform;
 
         protected abstract TCharacterView View { get; set; }
         protected abstract TCharacterControl Control { get; set; }

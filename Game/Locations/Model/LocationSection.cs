@@ -1,5 +1,4 @@
 using Core.ObjectsSystem;
-using Submodules.BGLogic.Main.Locations;
 
 namespace Core.Locations.Model
 {
@@ -26,9 +25,10 @@ namespace Core.Locations.Model
             GEvent.Attach(GlobalEvents.DropSection, Drop);
             GEvent.AttachOnce(GlobalEvents.Restart, OnRestart);
 
-            var sLocation = new Location(statLocationSetting);
-            var dLocation = new Location(dynLocationSetting);
+            var sLocation = LocationFactory.CreateLocation(statLocationSetting);
+            var dLocation = LocationFactory.CreateLocation(dynLocationSetting);
             (StatLocation, DynLocation) = await LocationLoader.LoadBoth(sLocation, dLocation);
+            
             GEvent.Call(GlobalEvents.BothLocationLoaded);
         }
 

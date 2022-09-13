@@ -3,7 +3,7 @@ using Core.Locations.Model;
 using Core;
 using UnityEngine.SceneManagement;
 
-namespace Submodules.BGLogic.Main.Locations
+namespace Core.Locations
 {
     internal static class LocationLoader
     {
@@ -26,7 +26,7 @@ namespace Submodules.BGLogic.Main.Locations
             {
                 GEvent.Attach(GlobalEvents.BothLocationUnloaded, InnerLoadingScenes);
 
-                await UnloadScenes(LocationSection.StatLocation, LocationSection.DynLocation);
+                await UnloadScenes();
             }
             else if (!staticScene.isLoaded && !dynamicScene.isLoaded)
             {
@@ -72,13 +72,13 @@ namespace Submodules.BGLogic.Main.Locations
             };
         }
 
-        public static async void DropBoth(Location statLocation, Location dynamicLocation)
+        public static void DropBoth(Location statLocation, Location dynamicLocation)
         {
-            statLocation.Drop();
-            dynamicLocation.Drop();
+            statLocation?.Drop();
+            dynamicLocation?.Drop();
         }
 
-        private static async Task UnloadScenes(Location statLocation, Location dynamicLocation)
+        private static async Task UnloadScenes()
         {
             var unloadingStatic = SceneManager.UnloadSceneAsync(staticScene);
             var unloadingDynamic = SceneManager.UnloadSceneAsync(dynamicScene);
