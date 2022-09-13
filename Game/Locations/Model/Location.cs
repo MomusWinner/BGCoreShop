@@ -32,7 +32,7 @@ namespace Core.Locations.Model
                 var mainScene = SceneManager.GetActiveScene();
                 SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
                 
-                locationView.Refresh();
+                locationView?.Refresh();
                 
                 SceneManager.SetActiveScene(mainScene);
             }
@@ -45,14 +45,14 @@ namespace Core.Locations.Model
             var mainScene = SceneManager.GetActiveScene();
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
             
-            locationView.Initialize();
+            locationView?.Initialize();
             
             SceneManager.SetActiveScene(mainScene);
         }
 
         protected override void OnDrop()
         {
-            locationView.Drop();
+            locationView?.Drop();
         }
     }
 }

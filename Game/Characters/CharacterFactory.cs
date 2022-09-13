@@ -1,5 +1,6 @@
 using Game.Characters.Model;
 using GameLogic;
+using GameLogic.GameData;
 using UnityEngine;
 
 namespace Game.Characters

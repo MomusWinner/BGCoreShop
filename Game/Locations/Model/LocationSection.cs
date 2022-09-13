@@ -1,4 +1,6 @@
 using Core.ObjectsSystem;
+using Game.GameData;
+using UnityEngine;
 
 namespace Core.Locations.Model
 {
@@ -9,8 +11,9 @@ namespace Core.Locations.Model
 
         private readonly LocationSetting statLocationSetting;
         private readonly LocationSetting dynLocationSetting;
+        private BaseData sectionDate;
 
-        public LocationSection(string name, LocationSetting statLocationSetting, LocationSetting dynLocationSetting) :
+        public LocationSection(string name, LocationSetting statLocationSetting, LocationSetting dynLocationSetting, BaseData data) :
             base(name)
         {
             this.statLocationSetting = statLocationSetting;
@@ -25,8 +28,8 @@ namespace Core.Locations.Model
             GEvent.Attach(GlobalEvents.DropSection, Drop);
             GEvent.AttachOnce(GlobalEvents.Restart, OnRestart);
 
-            var sLocation = LocationFactory.CreateLocation(statLocationSetting);
-            var dLocation = LocationFactory.CreateLocation(dynLocationSetting);
+            var sLocation = LocationFactory.CreateLocation(statLocationSetting, sectionDate);
+            var dLocation = LocationFactory.CreateLocation(dynLocationSetting, sectionDate);
             (StatLocation, DynLocation) = await LocationLoader.LoadBoth(sLocation, dLocation);
             
             GEvent.Call(GlobalEvents.BothLocationLoaded);

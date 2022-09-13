@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Core.Locations.Model;
 using Core;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Core.Locations
@@ -57,6 +58,23 @@ namespace Core.Locations
 
         private static void LoadingScenes(Location statLocation, Location dynLocation)
         {
+            var haveStatic = statLocation is { };
+            var haveDynamic = dynLocation is { };
+            if (!haveStatic)
+            {
+                Debug.LogWarning("Static location is null");
+            }
+            if (!haveDynamic)
+            {
+                Debug.LogWarning("Dynamic location is null");
+            }
+
+            if (!haveDynamic && !haveStatic)
+            {
+                Debug.LogError("Scene load failed");
+                return;
+            }
+            
             var loadingStatic = SceneManager.LoadSceneAsync(statLocation.RootSceneName, LoadSceneMode.Additive);
             var loadingDynamic = SceneManager.LoadSceneAsync(dynLocation.RootSceneName, LoadSceneMode.Additive);
 

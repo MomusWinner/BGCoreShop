@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Core.Locations.Model
 {
-    public class LocationSetting : ViewSetting
+    public abstract class LocationSetting : ViewSetting
     {
         public string SceneName => sceneName;
 
