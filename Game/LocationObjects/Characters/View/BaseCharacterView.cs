@@ -1,5 +1,6 @@
 using Core.ObjectsSystem;
 using Game.Characters.Model;
+using Game.GameData;
 using UnityEngine;
 
 namespace Game.Characters.View
@@ -8,15 +9,17 @@ namespace Game.Characters.View
     {
         public GameObject Root { get; private set; }
         public Transform ParentTransform { get; }
+        public IContext Context { get; }
 
         private Object resource;
 
-        protected BaseCharacterView(string name, BaseCharacterSetting setting, Transform parent = null) : base(name)
+        protected BaseCharacterView(string name, BaseCharacterSetting setting, IContext context, Transform parent = null) : base(name)
         {
-            resource = Resources.Load(setting.RootObjectPath);
             ParentTransform = parent;
+            resource = Resources.Load(setting.RootObjectPath);
+            Context = context;
         }
-
+        
         public override void SetAlive()
         {
             base.SetAlive();

@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 namespace Core.Pool
@@ -20,7 +19,7 @@ namespace Core.Pool
                 gameObject.SetActive(false);
                 gameObject.transform.SetParent(parentObject);
             }
-            catch (Exception e)
+            catch 
             {
                 // ignored
             }

@@ -5,7 +5,7 @@ namespace Game.Characters.Model
 {
     public interface ICharacter : IDroppable
     {
-        GameObject Root { get; }
+        GameObject ViewRoot { get; }
         Transform ParentTransform { get; }
     }
 }

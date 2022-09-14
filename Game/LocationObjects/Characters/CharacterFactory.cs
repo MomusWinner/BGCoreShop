@@ -1,18 +1,19 @@
+using Core.Locations.Model;
 using Game.Characters.Model;
+using Game.GameData;
 using GameLogic;
-using GameLogic.GameData;
-using UnityEngine;
 
 namespace Game.Characters
 {
     public static class CharacterFactory
     {
-        public static ICharacter CreateCharacter(CharacterType characterType, BaseCharacterSetting setting, Transform parent = null)
+        public static ICharacter CreateCharacter(Location parentLocation, CharacterType characterType,
+            BaseCharacterSetting setting, IContext context)
         {
             if (setting is PlayerSetting playerSetting &&
-                characterType is CharacterType.Player)
+                characterType is CharacterType.Player )
             {
-                return new Player("[Player]", playerSetting, parent);
+                return new Player(parentLocation, "[Player]", playerSetting, context);
             }
 
             return null;

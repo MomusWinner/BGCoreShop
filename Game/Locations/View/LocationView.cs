@@ -20,6 +20,7 @@ namespace Core.Locations.View
             {
                 Root = Object.Instantiate(rootResource);
                 Root.name = rootResource.name;
+                GEvent.Call(GlobalEvents.LocationViewLoaded, this);
             }
         }
 
@@ -27,8 +28,8 @@ namespace Core.Locations.View
         {
             if (!Alive)
             {
-                SetAlive();
                 Initialize();
+                SetAlive();
             }
         }
 

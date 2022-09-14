@@ -1,6 +1,6 @@
 namespace Game.GameData
 {
-    public abstract class BaseData
+    public interface IContext
     {
     }
 }

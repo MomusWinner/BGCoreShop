@@ -2,7 +2,6 @@ using Core.Locations.Model;
 using Core.Locations.View;
 using GameLogic.Locations;
 using GameLogic.Locations.Settings;
-using Unity.VisualScripting;
 
 namespace Game.Locations
 {

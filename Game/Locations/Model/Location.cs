@@ -1,3 +1,4 @@
+using System.Threading;
 using Core.Locations.View;
 using Core.ObjectsSystem;
 using Game.Locations;
@@ -12,43 +13,59 @@ namespace Core.Locations.Model
         public string RootSceneName { get; }
         public string RootObjectResourcesPath { get; }
 
-        private readonly LocationView locationView;
+        protected readonly LocationView locationView;
+
         protected Location(LocationSetting settings) : base(settings.SceneName)
         {
             RootSceneName = settings.SceneName;
             RootObjectResourcesPath = settings.RootObjectPath;
-            
+
             locationView = LocationViewFactory.CreateView(this);
-            
-            GEvent.Attach(GlobalEvents.BothLocationLoaded, Initialize);
+
+            GEvent.Attach(GlobalEvents.LocationScenesLoaded, InitializeView);
         }
 
         public void Refresh()
         {
-            if (!Alive)
+            if (!Alive && locationView is { })
             {
                 SetAlive();
 
                 var mainScene = SceneManager.GetActiveScene();
                 SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
-                
-                locationView?.Refresh();
-                
+
+                locationView.Refresh();
+
                 SceneManager.SetActiveScene(mainScene);
             }
         }
         
-        private void Initialize(params object[] objects)
+        protected virtual void InitializeView(params object[] objects)
         {
-            GEvent.Detach(GlobalEvents.BothLocationLoaded, Initialize);
-            
-            var mainScene = SceneManager.GetActiveScene();
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
-            
-            locationView?.Initialize();
-            
-            SceneManager.SetActiveScene(mainScene);
+            GEvent.Detach(GlobalEvents.LocationScenesLoaded, InitializeView);
+            GEvent.Attach(GlobalEvents.LocationViewLoaded, InitializeChildViews);
+
+            if (locationView is { })
+            {
+                var mainScene = SceneManager.GetActiveScene();
+                SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
+
+                locationView.Initialize();
+
+                SceneManager.SetActiveScene(mainScene);
+            }
         }
+
+        private void InitializeChildViews(params object[] objects)
+        {
+            if (objects[0] == locationView)
+            {
+                GEvent.Detach(GlobalEvents.LocationViewLoaded, InitializeChildViews);
+                InitializeChildViews();
+            }
+        }
+
+        protected abstract void InitializeChildViews();
 
         protected override void OnDrop()
         {

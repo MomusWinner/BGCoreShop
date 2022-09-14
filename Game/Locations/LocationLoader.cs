@@ -18,14 +18,14 @@ namespace Core.Locations
         {
             void InnerLoadingScenes(object[] obj)
             {
-                GEvent.Detach(GlobalEvents.BothLocationUnloaded, InnerLoadingScenes);
+                GEvent.Detach(GlobalEvents.LocationScenesUnloaded, InnerLoadingScenes);
                 LoadingScenes(statLocation, dynLocation);
             }
 
             if (staticScene.isLoaded && statLocation.RootSceneName != staticScene.name ||
                 dynamicScene.isLoaded && dynLocation.RootSceneName != dynamicScene.name)
             {
-                GEvent.Attach(GlobalEvents.BothLocationUnloaded, InnerLoadingScenes);
+                GEvent.Attach(GlobalEvents.LocationScenesUnloaded, InnerLoadingScenes);
 
                 await UnloadScenes();
             }
@@ -123,7 +123,7 @@ namespace Core.Locations
                 }
             });
 
-            GEvent.Call(GlobalEvents.BothLocationUnloaded);
+            GEvent.Call(GlobalEvents.LocationScenesUnloaded);
         }
     }
 }

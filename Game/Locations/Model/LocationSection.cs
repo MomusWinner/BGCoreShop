@@ -1,21 +1,21 @@
 using Core.ObjectsSystem;
 using Game.GameData;
-using UnityEngine;
 
 namespace Core.Locations.Model
 {
     public class LocationSection : BaseDroppable
     {
-        public static Location StatLocation { get; private set; }
-        public static Location DynLocation { get; private set; }
+        public Location StatLocation { get; private set; }
+        public Location DynLocation { get; private set; }
 
         private readonly LocationSetting statLocationSetting;
         private readonly LocationSetting dynLocationSetting;
-        private BaseData sectionDate;
+        private BaseContext sectionContext;
 
-        public LocationSection(string name, LocationSetting statLocationSetting, LocationSetting dynLocationSetting, BaseData data) :
+        public LocationSection(string name, LocationSetting statLocationSetting, LocationSetting dynLocationSetting, BaseContext context) :
             base(name)
         {
+            sectionContext = context;
             this.statLocationSetting = statLocationSetting;
             this.dynLocationSetting = dynLocationSetting;
 
@@ -24,15 +24,15 @@ namespace Core.Locations.Model
 
         private async void OnStart(params object[] obj)
         {
-            SetAlive();
             GEvent.Attach(GlobalEvents.DropSection, Drop);
             GEvent.AttachOnce(GlobalEvents.Restart, OnRestart);
 
-            var sLocation = LocationFactory.CreateLocation(statLocationSetting, sectionDate);
-            var dLocation = LocationFactory.CreateLocation(dynLocationSetting, sectionDate);
+            var sLocation = LocationFactory.CreateLocation(statLocationSetting, sectionContext);
+            var dLocation = LocationFactory.CreateLocation(dynLocationSetting, sectionContext);
             (StatLocation, DynLocation) = await LocationLoader.LoadBoth(sLocation, dLocation);
             
-            GEvent.Call(GlobalEvents.BothLocationLoaded);
+            GEvent.Call(GlobalEvents.LocationScenesLoaded);
+            SetAlive();
         }
 
         private void Drop(params object[] objects)
@@ -52,7 +52,6 @@ namespace Core.Locations.Model
             {
                 location.Drop();
                 location.Refresh();
-                GEvent.Call(GlobalEvents.LocationLoaded, location);
             }
         }
     }

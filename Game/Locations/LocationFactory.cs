@@ -7,12 +7,12 @@ namespace Core.Locations
 {
     public static class LocationFactory
     {
-        public static Location CreateLocation(LocationSetting locationSetting, BaseData data = null)
+        public static Location CreateLocation(LocationSetting locationSetting, BaseContext context = null)
         {
             return locationSetting switch
             {
-                DynamicLocationSetting dynamicLocationSetting => new DynamicLocation(dynamicLocationSetting, data),
-                StaticLocationSetting staticLocationSetting => new StaticLocation(staticLocationSetting, data),
+                DynamicLocationSetting dynamicLocationSetting => new DynamicLocation(dynamicLocationSetting, context),
+                StaticLocationSetting staticLocationSetting => new StaticLocation(staticLocationSetting, context),
                 _ => null
             };
         }
