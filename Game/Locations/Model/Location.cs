@@ -1,4 +1,3 @@
-using System.Threading;
 using Core.Locations.View;
 using Core.ObjectsSystem;
 using Game.Locations;
@@ -35,15 +34,18 @@ namespace Core.Locations.Model
                 SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
 
                 locationView.Refresh();
+                GEvent.Call(GlobalEvents.LocationViewLoaded, this);
 
+                InitializeChildViews();
+                
                 SceneManager.SetActiveScene(mainScene);
             }
         }
-        
+
         protected virtual void InitializeView(params object[] objects)
         {
+            GEvent.Call(GlobalEvents.LocationViewLoaded, locationView);
             GEvent.Detach(GlobalEvents.LocationScenesLoaded, InitializeView);
-            GEvent.Attach(GlobalEvents.LocationViewLoaded, InitializeChildViews);
 
             if (locationView is { })
             {
@@ -51,20 +53,14 @@ namespace Core.Locations.Model
                 SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
 
                 locationView.Initialize();
+                GEvent.Call(GlobalEvents.LocationViewLoaded, this);
+                
+                InitializeChildViews();
 
                 SceneManager.SetActiveScene(mainScene);
             }
         }
-
-        private void InitializeChildViews(params object[] objects)
-        {
-            if (objects[0] == locationView)
-            {
-                GEvent.Detach(GlobalEvents.LocationViewLoaded, InitializeChildViews);
-                InitializeChildViews();
-            }
-        }
-
+        
         protected abstract void InitializeChildViews();
 
         protected override void OnDrop()

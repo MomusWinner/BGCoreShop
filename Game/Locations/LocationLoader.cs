@@ -14,7 +14,7 @@ namespace Core.Locations
         private static Scene staticScene;
         private static Scene dynamicScene;
 
-        public static async Task<(Location, Location)> LoadBoth(Location statLocation, Location dynLocation)
+        public static async Task LoadBoth(Location statLocation, Location dynLocation)
         {
             void InnerLoadingScenes(object[] obj)
             {
@@ -52,8 +52,6 @@ namespace Core.Locations
                     }
                 }
             });
-
-            return (statLocation, dynLocation);
         }
 
         private static void LoadingScenes(Location statLocation, Location dynLocation)
@@ -89,13 +87,7 @@ namespace Core.Locations
                 isLoadedDynamicLocation = true;
             };
         }
-
-        public static void DropBoth(Location statLocation, Location dynamicLocation)
-        {
-            statLocation?.Drop();
-            dynamicLocation?.Drop();
-        }
-
+        
         private static async Task UnloadScenes()
         {
             var unloadingStatic = SceneManager.UnloadSceneAsync(staticScene);

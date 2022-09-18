@@ -27,9 +27,9 @@ namespace Core.Locations.Model
             GEvent.Attach(GlobalEvents.DropSection, Drop);
             GEvent.AttachOnce(GlobalEvents.Restart, OnRestart);
 
-            var sLocation = LocationFactory.CreateLocation(statLocationSetting, sectionContext);
-            var dLocation = LocationFactory.CreateLocation(dynLocationSetting, sectionContext);
-            (StatLocation, DynLocation) = await LocationLoader.LoadBoth(sLocation, dLocation);
+            StatLocation = LocationFactory.CreateLocation(statLocationSetting, sectionContext);
+            DynLocation = LocationFactory.CreateLocation(dynLocationSetting, sectionContext);
+            await LocationLoader.LoadBoth(StatLocation, DynLocation);
             
             GEvent.Call(GlobalEvents.LocationScenesLoaded);
             SetAlive();
@@ -43,7 +43,8 @@ namespace Core.Locations.Model
 
         protected override void OnDrop()
         {
-            LocationLoader.DropBoth(StatLocation, DynLocation);
+            StatLocation?.Drop();
+            DynLocation?.Drop();
         }
 
         private void OnRestart(params object[] objs)
