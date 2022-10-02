@@ -37,7 +37,7 @@ namespace Core.Locations.View
         protected virtual void InnerInitialize()
         {
             Root = Object.Instantiate(rootResource);
-            Root.name = rootResource.name;
+            Root.name = "[Location Root] " + rootResource.name;
         }
         
         protected override void OnDrop()

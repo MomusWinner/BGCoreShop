@@ -11,7 +11,7 @@ namespace Game.Settings
         [SerializeField] private string rootObjectPath;
 
 #if UNITY_EDITOR
-        private void OnValidate()
+        protected virtual void OnValidate()
         {
             if (rootObject)
             {

@@ -18,8 +18,8 @@ namespace Core.Entities.Loopables
             orders = new uint[CoreLoopService.LoopsCount];
             CallActions = true;
         }
-        
-        public void LoopOn(int type, Action action, bool callNow = false)
+
+        protected void LoopOn(int type, Action action, bool callNow = false)
         {
             if (!Alive)
             {

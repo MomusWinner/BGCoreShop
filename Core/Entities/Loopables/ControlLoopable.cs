@@ -57,6 +57,7 @@ namespace Core.Entities.Loopables
         public override void SetAlive()
         {
             base.SetAlive();
+            Enable();
             CallActions = false;
         }
 
