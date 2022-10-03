@@ -10,14 +10,14 @@ namespace Game.Settings
         [SerializeField] private Object rootObject;
         [SerializeField] private string rootObjectPath;
 
-#if UNITY_EDITOR
         protected virtual void OnValidate()
         {
             if (rootObject)
             {
+#if UNITY_EDITOR
                 rootObjectPath = Utilities.GetValidPathToResource(rootObject);
+#endif
             }
         }
-#endif
     }
 }
