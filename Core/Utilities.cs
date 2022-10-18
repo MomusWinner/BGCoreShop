@@ -12,7 +12,7 @@ namespace Core
             var str = (string) value;
             return float.TryParse(str, out var number) ? ToShortString(number) : value.ToString();
         }
-        
+
         public static string ToShortString(this float value)
         {
             var mag = (int) (System.Math.Round(System.Math.Log10(value)) / 3);
@@ -51,6 +51,13 @@ namespace Core
             return path.Split('.')[0];
         }
 #endif
+        public static string TimeFromSeconds(float time)
+        {
+            var minutes = (int) time / 60;
+            var seconds = (int) time - 60 * minutes;
+            var milliseconds = (int) (1000 * (time - minutes * 60 - seconds));
+            return $"{minutes:00}:{seconds:00}:{milliseconds:000}";
+        }
     }
 
     public abstract class KeyValuePair<TKey, TValue>

@@ -80,7 +80,7 @@ namespace Core.Timers
             Period += step;
         }
 
-        public void Execute()
+        private void Execute()
         {
             if (!IsPlaying)
             {
