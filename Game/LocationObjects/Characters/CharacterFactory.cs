@@ -2,7 +2,7 @@ using Core.Locations.Model;
 using Game.Characters.Model;
 using Game.GameData;
 using GameLogic;
-using GameLogic.Npcs;
+//using GameLogic.Npcs;
 
 namespace Game.Characters
 {
@@ -15,10 +15,10 @@ namespace Game.Characters
             {
                 return new Player(parentLocation, "[Player]", playerSetting, context);
             }
-            if (setting is NpcSetting npcSetting && characterType is CharacterType.Npc )
-            {
-                return new Npc(parentLocation, "[NPC]", npcSetting, context);
-            }
+            // if (setting is NpcSetting npcSetting && characterType is CharacterType.Npc )
+            // {
+            //     return new Npc(parentLocation, "[NPC]", npcSetting, context);
+            // }
 
             return null;
         }
