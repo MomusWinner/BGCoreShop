@@ -1,6 +1,6 @@
 using Core.ObjectsSystem;
 using Game.Characters.Model;
-using Game.GameData;
+using GameData;
 using UnityEngine;
 
 namespace Game.Characters.View

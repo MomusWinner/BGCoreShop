@@ -1,5 +1,6 @@
+using BGCore.Game.Factories;
 using Core.ObjectsSystem;
-using Game.GameData;
+using GameData;
 
 namespace Core.Locations.Model
 {
@@ -27,8 +28,10 @@ namespace Core.Locations.Model
             GEvent.Attach(GlobalEvents.DropSection, Drop);
             GEvent.AttachOnce(GlobalEvents.Restart, OnRestart);
 
-            StatLocation = LocationFactory.CreateLocation(statLocationSetting, sectionContext);
-            DynLocation = LocationFactory.CreateLocation(dynLocationSetting, sectionContext);
+            StatLocation = GeneralFactory.CreateItem<Location, LocationSetting>(statLocationSetting, sectionContext);
+                //LocationFactory.CreateLocation(statLocationSetting, sectionContext);
+            DynLocation = GeneralFactory.CreateItem<Location, LocationSetting>(dynLocationSetting, sectionContext); 
+                //LocationFactory.CreateLocation(dynLocationSetting, sectionContext);
             await LocationLoader.LoadBoth(StatLocation, DynLocation);
             
             GEvent.Call(GlobalEvents.LocationScenesLoaded);

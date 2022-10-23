@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using System.Xml.Schema;
 using Core.Locations.Model;
-using Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

@@ -1,4 +1,3 @@
-using Game.GameData;
 using UnityEngine;
 
 namespace Game.Characters.View
