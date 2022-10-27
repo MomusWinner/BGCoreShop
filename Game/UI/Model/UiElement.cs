@@ -2,7 +2,7 @@
 using Core.ObjectsSystem;
 using UI.View;
 using GameData;
-using GameLogic.Settings.UISettings;
+using Game.Settings.UISettings;
 
 namespace Game.UI
 {
