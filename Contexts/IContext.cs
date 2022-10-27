@@ -1,4 +1,4 @@
-namespace Game.GameData
+namespace GameData
 {
     public interface IContext
     {

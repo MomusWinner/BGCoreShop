@@ -53,10 +53,10 @@ namespace Core
 #endif
         public static string TimeFromSeconds(float time)
         {
-            var minutes = (int) time / 60;
-            var seconds = (int) time - 60 * minutes;
-            var milliseconds = (int) (1000 * (time - minutes * 60 - seconds));
-            return $"{minutes:00}:{seconds:00}:{milliseconds:000}";
+            int minutes = (int) time / 60 ;
+            int seconds = (int) time - 60 * minutes;
+            int milliseconds = (int) (1000 * (time - minutes * 60 - seconds));
+            return string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds );
         }
     }
 

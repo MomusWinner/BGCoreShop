@@ -1,6 +1,7 @@
+using BGCore.Game.Factories;
 using Core.Locations.View;
 using Core.ObjectsSystem;
-using Game.Locations;
+using GameData;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,13 +14,15 @@ namespace Core.Locations.Model
         public string RootObjectResourcesPath { get; }
 
         protected readonly LocationView locationView;
-
-        protected Location(LocationSetting settings) : base(settings.SceneName)
+        protected readonly IContext context;
+        
+        protected Location(LocationSetting settings, IContext baseContext) : base(settings.SceneName)
         {
             RootSceneName = settings.SceneName;
             RootObjectResourcesPath = settings.RootObjectPath;
+            context = baseContext;
 
-            locationView = LocationViewFactory.CreateView(this);
+            locationView = GeneralFactory.CreateItem<LocationView, Location>(this, baseContext);
 
             GEvent.Attach(GlobalEvents.LocationScenesLoaded, InitializeView);
         }

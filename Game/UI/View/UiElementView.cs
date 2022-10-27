@@ -1,23 +1,22 @@
-using Core.Locations.Model;
-using Core.ObjectsSystem;
+﻿using Core.ObjectsSystem;
+using Game.UI;
 using GameData;
 using UnityEngine;
 
-namespace Core.Locations.View
+namespace UI.View
 {
-    public abstract class LocationView : BaseDroppable
+    public abstract class UiElementView : BaseDroppable
     {
         public GameObject Root { get; private set; }
-        
-        protected Location ParentLocation { get; }
+        protected UiElement ParentUiElement { get; }
 
         protected readonly IContext context;
         private readonly GameObject rootResource;
 
-        protected LocationView(Location location, IContext ctx) : base(location.Name)
+        protected UiElementView(UiElement uiElementParent, IContext ctx) : base(uiElementParent.Name)
         {
-            ParentLocation = location;
-            rootResource = Resources.Load<GameObject>(location.RootObjectResourcesPath);
+            ParentUiElement = uiElementParent;
+            rootResource = Resources.Load<GameObject>(uiElementParent.RootObjectResourcesPath);
             context = ctx;
         }
 
@@ -28,22 +27,21 @@ namespace Core.Locations.View
                 InnerInitialize();
             }
         }
-        
-        public void Refresh()
+
+        public void SetParent(Transform parent)
         {
-            if (!Alive)
+            if (Root)
             {
-                Initialize();
-                SetAlive();
+                Root.transform.SetParent(parent);
             }
         }
-        
+
         protected virtual void InnerInitialize()
         {
             Root = Object.Instantiate(rootResource);
-            Root.name = "[Location Root] " + rootResource.name;
+            Root.name = "[UI Element] " + rootResource.name;
         }
-        
+
         protected override void OnDrop()
         {
             base.OnDrop();
