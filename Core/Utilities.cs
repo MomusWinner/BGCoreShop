@@ -12,7 +12,7 @@ namespace Core
             var str = (string) value;
             return float.TryParse(str, out var number) ? ToShortString(number) : value.ToString();
         }
-        
+
         public static string ToShortString(this float value)
         {
             var mag = (int) (System.Math.Round(System.Math.Log10(value)) / 3);
