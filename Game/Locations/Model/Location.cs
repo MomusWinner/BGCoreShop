@@ -14,7 +14,7 @@ namespace Core.Locations.Model
         public string RootObjectResourcesPath { get; }
 
         protected readonly LocationView locationView;
-        protected readonly IContext context;
+        protected IContext context;
         
         protected Location(LocationSetting settings, IContext baseContext) : base(settings.SceneName)
         {

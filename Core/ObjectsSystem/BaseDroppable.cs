@@ -5,7 +5,7 @@ namespace Core.ObjectsSystem
     public abstract class BaseDroppable : IDroppable
     {
         public string Name { get; protected set; }
-        public bool Alive { get; private set; }
+        public bool Alive { get; protected set; }
          = true;
         public event Action<IDroppable> Dropped;
 

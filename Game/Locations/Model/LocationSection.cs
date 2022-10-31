@@ -29,9 +29,8 @@ namespace Core.Locations.Model
             GEvent.AttachOnce(GlobalEvents.Restart, OnRestart);
 
             StatLocation = GeneralFactory.CreateItem<Location, LocationSetting>(statLocationSetting, sectionContext);
-                //LocationFactory.CreateLocation(statLocationSetting, sectionContext);
             DynLocation = GeneralFactory.CreateItem<Location, LocationSetting>(dynLocationSetting, sectionContext); 
-                //LocationFactory.CreateLocation(dynLocationSetting, sectionContext);
+           
             await LocationLoader.LoadBoth(StatLocation, DynLocation);
             
             GEvent.Call(GlobalEvents.LocationScenesLoaded);

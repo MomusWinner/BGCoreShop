@@ -7,7 +7,7 @@ namespace UI.View
 {
     public abstract class UiElementView : BaseDroppable
     {
-        public GameObject Root { get; private set; }
+        public GameObject Root { get; protected set; }
         protected UiElement ParentUiElement { get; }
 
         protected readonly IContext context;
