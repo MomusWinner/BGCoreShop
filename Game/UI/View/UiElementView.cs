@@ -11,7 +11,7 @@ namespace UI.View
         protected UiElement ParentUiElement { get; }
 
         protected readonly IContext context;
-        private readonly GameObject rootResource;
+        protected GameObject rootResource;
 
         protected UiElementView(UiElement uiElementParent, IContext ctx) : base(uiElementParent.Name)
         {
@@ -38,6 +38,12 @@ namespace UI.View
 
         protected virtual void InnerInitialize()
         {
+            if (rootResource is null)
+            {
+                Debug.LogWarning($"View for {Name} not created");
+                return;
+            }
+            
             Root = Object.Instantiate(rootResource);
             Root.name = "[UI Element] " + rootResource.name;
         }
