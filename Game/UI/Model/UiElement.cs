@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Game.UI
 {
-    public abstract class UiElement : BaseDroppable, IUiElement
+    public abstract class UiElement : BaseDroppable, IUiElement, IContext
     {
         private Action OnInitialize { get; set; }
 
@@ -91,5 +91,9 @@ namespace Game.UI
         }
 
         protected abstract void SetParent();
+        public TType GetContext<TType>(TType type) where TType : Type, IContext
+        {
+            return null;
+        }
     }
 }
