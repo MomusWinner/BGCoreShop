@@ -1,48 +1,47 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GameData
 {
     public abstract class BaseContext : IContext
     {
-        private readonly Dictionary<Type, IContext> contexts;
+        private readonly IDictionary<Type, IContext> contexts;
 
         protected BaseContext()
         {
             contexts = new Dictionary<Type, IContext>();
         }
-        public TType GetContext<TType>() where TType : IContext 
-        {
-            if (contexts.TryGetValue(typeof(TType), out var value))
-            {
-                return (TType)value;
-            }
 
-            return default;
+        public TType GetContext<TType>() where TType : IContext
+        {
+            return (TType) contexts.FirstOrDefault(c => c.Value is TType).Value;
         }
 
-        public void AddContext(IContext context)
+        public void AddContext<TType>(IContext context) where TType : IContext
         {
-            var type = context.GetType();
-            if(contexts.ContainsKey(type))
+            if (context is null)
             {
-                contexts[type] = context;
                 return;
             }
 
-            contexts.Add(type, context);
-        }
-
-        public void RemoveContext(IContext context)
-        {
-            var type = context.GetType();
-            if(contexts.ContainsKey(type))
+            if (contexts.ContainsKey(typeof(TType)))
             {
-                contexts[type] = context;
+                contexts[typeof(TType)] = context;
                 return;
             }
 
-            contexts.Add(type, context);
+            contexts.Add(typeof(TType), context);
+        }
+
+        public void RemoveContext<TType>(IContext context) where TType : IContext
+        {
+            if (context is null)
+            {
+                return;
+            }
+
+            contexts.Remove(typeof(TType));
         }
     }
 }
