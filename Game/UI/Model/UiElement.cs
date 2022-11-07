@@ -36,7 +36,7 @@ namespace Game.UI
 
             view = GeneralFactory.CreateItem<UiElementView, UiElement>(this, context);
 
-            InitializeChilds();
+            AssignChilds();
         }
 
         public override void SetAlive()
@@ -66,9 +66,13 @@ namespace Game.UI
         {
             base.OnDrop();
             view.Drop();
-            foreach (var childUiElement in ChildUiElements)
+            
+            if (ChildUiElements is { })
             {
-                childUiElement.Drop();
+                foreach (var childUiElement in ChildUiElements)
+                {
+                    childUiElement.Drop();
+                }
             }
 
             ChildUiElements = null;
@@ -76,7 +80,7 @@ namespace Game.UI
         }
 
         protected abstract void Initialize();
-        protected abstract void InitializeChilds();
+        protected abstract void AssignChilds();
 
         private void SetAliveChilds()
         {

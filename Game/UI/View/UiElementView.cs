@@ -20,11 +20,11 @@ namespace UI.View
             context = ctx;
         }
 
-        public void Initialize()
+        public void Initialize(Transform parent = null)
         {
             if (rootResource)
             {
-                InnerInitialize();
+                InnerInitialize(parent);
             }
         }
 
@@ -36,7 +36,7 @@ namespace UI.View
             }
         }
 
-        protected virtual void InnerInitialize()
+        protected virtual void InnerInitialize(Transform parent = null)
         {
             if (rootResource is null)
             {
@@ -44,7 +44,7 @@ namespace UI.View
                 return;
             }
             
-            Root = Object.Instantiate(rootResource);
+            Root = Object.Instantiate(rootResource, parent);
             Root.name = "[UI Element] " + rootResource.name;
         }
 
