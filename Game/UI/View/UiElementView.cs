@@ -22,10 +22,7 @@ namespace UI.View
 
         public void Initialize(Transform parent = null)
         {
-            if (rootResource)
-            {
-                InnerInitialize(parent);
-            }
+            InnerInitialize(parent);
         }
 
         public void SetParent(Transform parent)
