@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using BGCore.Game.Factories;
 using Core.ObjectsSystem;
 using UI.View;
 using GameData;
 using Game.Settings.UISettings;
+using Models.UIContexts;
 using UnityEngine;
 
 namespace Game.UI
 {
-    public abstract class UiElement : BaseDroppable, IUiElement, IContext
+    public abstract class UiElement : BaseDroppable, IUiElement
     {
         private Action OnInitialize { get; set; }
 
@@ -35,8 +35,6 @@ namespace Game.UI
             RootObjectResourcesPath = setting.RootObjectPath;
 
             view = GeneralFactory.CreateItem<UiElementView, UiElement>(this, context);
-
-            AssignChilds();
         }
 
         public override void SetAlive()
@@ -80,6 +78,7 @@ namespace Game.UI
         }
 
         protected abstract void Initialize();
+
         protected abstract void AssignChilds();
 
         private void SetAliveChilds()

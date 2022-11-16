@@ -1,9 +1,8 @@
-﻿using Core.ObjectsSystem;
-using GameData;
+﻿using GameData;
 
 namespace BGCore.Game.Factories
 {
-    public interface IFactory<TItem> : IBaseFactory where TItem : IDroppable
+    public interface IFactory<TItem> : IBaseFactory
     {
         TItem CreateItem<TConfig>(TConfig config, IContext context);
     }

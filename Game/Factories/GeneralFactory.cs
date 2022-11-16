@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Core.ObjectsSystem;
+using System.Linq;
 using GameData;
 
 namespace BGCore.Game.Factories
@@ -10,19 +10,20 @@ namespace BGCore.Game.Factories
         private static Dictionary<Type, IBaseFactory> Factories { get; set; }
 
         public static TItem CreateItem<TItem, TConfig>(TConfig config, IContext context)
-            where TItem : IDroppable
         {
             if (Factories is null)
             {
                 return default;
             }
-            
-            return Factories.TryGetValue(typeof(TItem), out var item)
+
+            Type type = typeof(TItem).IsSubclassOf(typeof(IContext)) ? typeof(IContext) : typeof(TItem);
+
+            return Factories.TryGetValue(type, out var item)
                 ? ((IFactory<TItem>) item).CreateItem(config, context)
                 : default;
         }
 
-        public static void AddFactory<TItem>(IFactory<TItem> factory) where TItem : IDroppable
+        public static void AddFactory<TItem>(IFactory<TItem> factory)
         {
             if (Factories is null)
             {
@@ -35,6 +36,11 @@ namespace BGCore.Game.Factories
             }
 
             Factories.Add(typeof(TItem), factory);
+        }
+
+        public static TFactory GetFactory<TFactory>() where TFactory : IBaseFactory
+        {
+            return (TFactory)Factories.FirstOrDefault(f => f.Value.GetType() == typeof(TFactory)).Value;
         }
     }
 }
