@@ -13,12 +13,12 @@ namespace GameData
             contexts = new Dictionary<Type, IContext>();
         }
 
-        public TType GetContext<TType>() where TType : IContext
+        public TType GetContext<TType>() where TType : class, IContext
         {
             return (TType) contexts.FirstOrDefault(c => c.Value is TType).Value;
         }
 
-        public void AddContext<TType>(IContext context) where TType : IContext
+        public void AddContext<TType>(TType context) where TType : IContext
         {
             if (context is null)
             {

@@ -13,7 +13,7 @@ namespace Game.UI
     {
         private Action OnInitialize { get; set; }
 
-        public GameObject Root => view.Root;
+        public abstract Transform ContentHolder { get; protected set; }
 
         public bool IsShown { get; }
 
@@ -64,7 +64,7 @@ namespace Game.UI
         {
             base.OnDrop();
             view.Drop();
-            
+
             if (ChildUiElements is { })
             {
                 foreach (var childUiElement in ChildUiElements)
@@ -96,20 +96,20 @@ namespace Game.UI
 
         protected abstract void SetParent();
 
-        public TType GetContext<TType>() where TType : IContext
+        public TType GetContext<TType>() where TType : class, IContext
         {
             return this is TType result ? result : default;
         }
 
-        public void AddContext<TType>(IContext context) where TType : IContext
+        public void AddContext<TType>(IContext context) where TType : class, IContext
         {
             if (context is IUiElement uiElement)
             {
-                parent = uiElement.Root.transform;
+                parent = uiElement.ContentHolder;
             }
         }
 
-        public void RemoveContext<TType>(IContext context)where TType : IContext
+        public void RemoveContext<TType>(IContext context) where TType : IContext
         {
             throw new NotImplementedException();
         }
