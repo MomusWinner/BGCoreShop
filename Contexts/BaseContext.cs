@@ -25,23 +25,25 @@ namespace GameData
                 return;
             }
 
-            if (contexts.ContainsKey(typeof(TType)))
+            var type = context.GetType();
+            
+            if (contexts.ContainsKey(type))
             {
-                contexts[typeof(TType)] = context;
+                contexts[type] = context;
                 return;
             }
 
-            contexts.Add(typeof(TType), context);
+            contexts.Add(type, context);
         }
 
-        public void RemoveContext<TType>(IContext context) where TType : IContext
+        public void RemoveContext<TType>(TType context) where TType : IContext
         {
             if (context is null)
             {
                 return;
             }
 
-            contexts.Remove(typeof(TType));
+            contexts.Remove(context.GetType());
         }
     }
 }
