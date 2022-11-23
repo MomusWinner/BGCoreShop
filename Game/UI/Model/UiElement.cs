@@ -4,7 +4,7 @@ using Core.ObjectsSystem;
 using UI.View;
 using GameData;
 using Game.Settings.UISettings;
-using Models.UIContexts;
+using GameLogic.GameData.Contexts;
 using UnityEngine;
 
 namespace Game.UI
@@ -79,7 +79,21 @@ namespace Game.UI
 
         protected abstract void Initialize();
 
-        protected abstract void AssignChilds();
+        protected virtual void AssignChilds()
+        {
+            var childContext = ((UiContext) GeneralFactory.CreateItem<IContext, UISetting>(setting, context))?.SendParent(this);
+            if (childContext != null)
+            {
+                childContext.AddContext(context.GetContext<GeneralContext>());
+                ChildUiElements = new IUiElement[setting.childUiElementSettings.Length];
+
+                for (var i = 0; i < ChildUiElements.Length; i++)
+                {
+                    ChildUiElements[i] = GeneralFactory.CreateItem<IUiElement, UISetting>(setting.childUiElementSettings[i], childContext);
+                    childContext.SetSelf(ChildUiElements[i]);
+                }
+            }
+        }
 
         private void SetAliveChilds()
         {

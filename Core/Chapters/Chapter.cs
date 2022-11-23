@@ -18,8 +18,8 @@ namespace Core.Chapters
         public void OnValidate()
         {
             var none = "NONE";
-            chapterName = $"{(statLocationSetting ? statLocationSetting.SceneName : none)}~" +
-                          $"{(dynamicLocationSetting ? dynamicLocationSetting.SceneName : none)}";
+            chapterName = $"{(statLocationSetting ? statLocationSetting.name : none)}~" +
+                          $"{(dynamicLocationSetting ? dynamicLocationSetting.name : none)}";
         }
     }
 }
