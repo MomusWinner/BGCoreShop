@@ -13,7 +13,8 @@ namespace Core.Locations.Model
         private readonly LocationSetting dynLocationSetting;
         private IContext sectionContext;
 
-        public LocationSection(string name, LocationSetting statLocationSetting, LocationSetting dynLocationSetting, IContext context) :
+        public LocationSection(string name, LocationSetting statLocationSetting, LocationSetting dynLocationSetting,
+            IContext context) :
             base(name)
         {
             sectionContext = context;
@@ -25,16 +26,25 @@ namespace Core.Locations.Model
 
         private async void OnStart(params object[] obj)
         {
+            void Finalize()
+            {
+                GEvent.Call(GlobalEvents.LocationScenesLoaded);
+                SetAlive();
+            }
+
             GEvent.Attach(GlobalEvents.DropSection, Drop);
             GEvent.AttachOnce(GlobalEvents.Restart, OnRestart);
 
             StatLocation = GeneralFactory.CreateItem<Location, LocationSetting>(statLocationSetting, sectionContext);
-            DynLocation = GeneralFactory.CreateItem<Location, LocationSetting>(dynLocationSetting, sectionContext); 
-           
-            await LocationLoader.LoadBoth(StatLocation, DynLocation);
-            
-            GEvent.Call(GlobalEvents.LocationScenesLoaded);
-            SetAlive();
+            DynLocation = GeneralFactory.CreateItem<Location, LocationSetting>(dynLocationSetting, sectionContext);
+
+#if UNITY_WEBGL
+            LocationLoader.LoadBoth(StatLocation, DynLocation, Finalize);
+
+#else
+            await LocationLoader.LoadBothAsync(StatLocation, DynLocation);
+            Finalize();
+#endif
         }
 
         private void Drop(params object[] objects)

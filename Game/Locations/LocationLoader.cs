@@ -1,5 +1,5 @@
+using System;
 using System.Threading.Tasks;
-using System.Xml.Schema;
 using Core.Locations.Model;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,7 +14,7 @@ namespace Core.Locations
         private static Scene staticScene;
         private static Scene dynamicScene;
 
-        public static async Task LoadBoth(Location statLocation, Location dynLocation)
+        public static async Task LoadBothAsync(Location statLocation, Location dynLocation)
         {
             void InnerLoadingScenes(object[] obj)
             {
@@ -22,13 +22,14 @@ namespace Core.Locations
                 LoadingScenes(statLocation, dynLocation);
             }
 
+            Debug.Log("Start load");
             if (staticScene.isLoaded && statLocation.RootSceneName != staticScene.name ||
                 dynamicScene.isLoaded && dynLocation.RootSceneName != dynamicScene.name ||
                 !staticScene.isLoaded || !dynamicScene.isLoaded)
             {
                 GEvent.Attach(GlobalEvents.LocationScenesUnloaded, InnerLoadingScenes);
 
-                await UnloadScenes();
+                await UnloadScenesAsync();
             }
             else if (!staticScene.isLoaded && !dynamicScene.isLoaded)
             {
@@ -55,11 +56,41 @@ namespace Core.Locations
             });
         }
 
+        public static void LoadBoth(Location statLocation, Location dynLocation, Action afterSceneLoaded)
+        {
+            void InnerLoadingScenes(object[] obj)
+            {
+                GEvent.Detach(GlobalEvents.LocationScenesUnloaded, InnerLoadingScenes);
+                Scheduler.Instance.InvokeWhen(() => isLoadedDynamicLocation && isLoadedStaticLocation,
+                    afterSceneLoaded.Invoke);
+                LoadingScenes(statLocation, dynLocation);
+            }
+
+            Debug.Log("Start load");
+            if (staticScene.isLoaded && statLocation.RootSceneName != staticScene.name ||
+                dynamicScene.isLoaded && dynLocation.RootSceneName != dynamicScene.name ||
+                !staticScene.isLoaded || !dynamicScene.isLoaded)
+            {
+                GEvent.Attach(GlobalEvents.LocationScenesUnloaded, InnerLoadingScenes);
+
+                UnloadScenes();
+            }
+            else if (!staticScene.isLoaded && !dynamicScene.isLoaded)
+            {
+                InnerLoadingScenes(null);
+            }
+            else
+            {
+                afterSceneLoaded.Invoke();
+            }
+        }
+
+
         private static void LoadingScenes(Location statLocation, Location dynLocation)
         {
             var haveStatic = statLocation is { };
             var haveDynamic = dynLocation is { };
-            
+
             if (!haveStatic)
             {
                 Debug.LogWarning("Static location is null");
@@ -67,14 +98,17 @@ namespace Core.Locations
             }
             else
             {
+                Debug.Log("Static scene start loading");
                 var loadingStatic = SceneManager.LoadSceneAsync(statLocation.RootSceneName, LoadSceneMode.Additive);
-                
+
                 loadingStatic.completed += _ =>
                 {
                     staticScene = SceneManager.GetSceneByName(statLocation.RootSceneName);
+                    Debug.Log("Static scene loaded");
                     isLoadedStaticLocation = true;
                 };
             }
+
             if (!haveDynamic)
             {
                 Debug.LogWarning("Dynamic location is null");
@@ -82,11 +116,13 @@ namespace Core.Locations
             }
             else
             {
+                Debug.Log("Dynamic scene start loading");
                 var loadingDynamic = SceneManager.LoadSceneAsync(dynLocation.RootSceneName, LoadSceneMode.Additive);
 
                 loadingDynamic.completed += _ =>
                 {
                     dynamicScene = SceneManager.GetSceneByName(dynLocation.RootSceneName);
+                    Debug.Log("Dynamic scene loaded");
                     isLoadedDynamicLocation = true;
                 };
             }
@@ -96,13 +132,13 @@ namespace Core.Locations
                 Debug.LogError("Scene load failed");
             }
         }
-        
-        private static async Task UnloadScenes()
+
+        private static async Task UnloadScenesAsync()
         {
             if (staticScene.isLoaded)
             {
                 var unloadingStatic = SceneManager.UnloadSceneAsync(staticScene);
-                
+
                 unloadingStatic.completed += _ => isLoadedStaticLocation = false;
             }
             else
@@ -141,6 +177,34 @@ namespace Core.Locations
             });
 
             GEvent.Call(GlobalEvents.LocationScenesUnloaded);
+        }
+
+        private static void UnloadScenes()
+        {
+            if (staticScene.isLoaded)
+            {
+                var unloadingStatic = SceneManager.UnloadSceneAsync(staticScene);
+
+                unloadingStatic.completed += _ => isLoadedStaticLocation = false;
+            }
+            else
+            {
+                isLoadedStaticLocation = false;
+            }
+
+            if (dynamicScene.isLoaded)
+            {
+                var unloadingDynamic = SceneManager.UnloadSceneAsync(dynamicScene);
+
+                unloadingDynamic.completed += _ => isLoadedDynamicLocation = false;
+            }
+            else
+            {
+                isLoadedDynamicLocation = false;
+            }
+
+            Scheduler.Instance.InvokeWhen(() => !isLoadedDynamicLocation && !isLoadedStaticLocation,
+                () => { GEvent.Call(GlobalEvents.LocationScenesUnloaded); });
         }
     }
 }

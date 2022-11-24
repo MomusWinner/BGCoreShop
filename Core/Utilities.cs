@@ -53,10 +53,22 @@ namespace Core
 #endif
         public static string TimeFromSeconds(float time)
         {
-            int minutes = (int) time / 60 ;
+            int minutes = (int) time / 60;
             int seconds = (int) time - 60 * minutes;
             int milliseconds = (int) (1000 * (time - minutes * 60 - seconds));
-            return string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds );
+            return string.Format("{0:00}:{1:00}:{2:000}", minutes, seconds, milliseconds);
+        }
+
+        public static bool TryParseVector2(string value, out Vector2 vector2)
+        {
+            var temp=value.Split(',');
+            
+            vector2 = default;
+            if (!float.TryParse(temp[0], out var x) || !float.TryParse(temp[1], out var y))
+                return false;
+
+            vector2 = new Vector2(x, y);
+            return true;
         }
     }
 
@@ -76,20 +88,5 @@ namespace Core
         {
             return ((a << 5) + a) ^ b;
         }
-    }
-
-    public static class VariableName
-    {
-    }
-
-    public enum WarningType
-    {
-        None = 0,
-        NotEnoughResources = 1,
-        NoConnectRoad = 2,
-        OutcomeFull = 3,
-        IncomeFull = 4,
-        ReadyUpgrade = 5,
-        EnoughResources = 6
     }
 }

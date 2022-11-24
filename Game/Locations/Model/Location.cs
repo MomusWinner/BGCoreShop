@@ -47,6 +47,7 @@ namespace Core.Locations.Model
 
         protected virtual void InitializeView(params object[] objects)
         {
+            Debug.Log($"Start initialize view {Name}");
             GEvent.Call(GlobalEvents.LocationViewLoaded, locationView);
             GEvent.Detach(GlobalEvents.LocationScenesLoaded, InitializeView);
 
@@ -62,6 +63,7 @@ namespace Core.Locations.Model
 
                 SceneManager.SetActiveScene(mainScene);
             }
+            Debug.Log($"Stop initialize view {Name}");
         }
         
         protected abstract void InitializeChildViews();
