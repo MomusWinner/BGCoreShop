@@ -24,9 +24,11 @@ namespace Core.Locations.Model
             GEvent.AttachOnce(GlobalEvents.Start, OnStart, this);
         }
 
+#pragma warning disable CS1998
         private async void OnStart(params object[] obj)
+#pragma warning restore CS1998
         {
-            void Finalize()
+            void OnSceneLoaded()
             {
                 GEvent.Call(GlobalEvents.LocationScenesLoaded);
                 SetAlive();
@@ -39,7 +41,7 @@ namespace Core.Locations.Model
             DynLocation = GeneralFactory.CreateItem<Location, LocationSetting>(dynLocationSetting, sectionContext);
 
 #if UNITY_WEBGL
-            LocationLoader.LoadBoth(StatLocation, DynLocation, Finalize);
+            LocationLoader.LoadBoth(StatLocation, DynLocation, OnSceneLoaded);
 
 #else
             await LocationLoader.LoadBothAsync(StatLocation, DynLocation);
