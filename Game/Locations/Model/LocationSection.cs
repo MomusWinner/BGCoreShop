@@ -45,7 +45,7 @@ namespace Core.Locations.Model
 
 #else
             await LocationLoader.LoadBothAsync(StatLocation, DynLocation);
-            Finalize();
+            OnSceneLoaded();
 #endif
         }
 
