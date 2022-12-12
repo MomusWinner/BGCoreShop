@@ -11,7 +11,7 @@ namespace Game.Characters.View
         public Transform ParentTransform { get; }
         public IContext Context { get; }
 
-        private Object resource;
+        private readonly Object resource;
 
         protected BaseCharacterView(string name, BaseCharacterSetting setting, IContext context, Transform parent = null) : base(name)
         {

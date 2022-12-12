@@ -1,3 +1,4 @@
+using Game.Characters.Control;
 using Submodules.BGLogic.Main.Entities;
 
 namespace Core.Entities
@@ -7,5 +8,6 @@ namespace Core.Entities
         bool IsActive { get; }
         void Enable();
         void Disable();
+        void ExecuteCommand(ICommand command);
     }
 }

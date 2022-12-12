@@ -1,19 +1,21 @@
+using Core.Entities;
+using Core.Entities.Loopables;
 using Core.Locations.Model;
 using Game.Characters.View;
-using Game.Characters.Control;
 using Game.LocationObjects;
 using UnityEngine;
 
 namespace Game.Characters.Model
 {
-    public abstract class BaseCharacter<TCharacterView, TCharacterControl> : LocationObject, ICharacter
+    public abstract class BaseCharacter<TCharacterView, TControl> : LocationObject, ICharacter
         where TCharacterView : BaseCharacterView
-        where TCharacterControl : BaseCharacterControl
+        where TControl : ControlLoopable
     {
-        public GameObject ViewRoot => View?.Root;
+        public GameObject PlayerRoot => View?.Root;
+        public IControllable CharacterController { get; set; }
         public Transform ParentTransform => View?.ParentTransform;
         protected abstract TCharacterView View { get; set; }
-        protected abstract TCharacterControl Control { get; set; }
+        protected abstract TControl Control { get; set; }
 
         protected BaseCharacterSetting characterSetting;
 
@@ -21,5 +23,7 @@ namespace Game.Characters.Model
         {
             characterSetting = setting;
         }
+
+        public abstract void Move(ISignal signal);
     }
 }
