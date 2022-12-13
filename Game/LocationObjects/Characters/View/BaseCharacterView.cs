@@ -1,7 +1,10 @@
+using System;
 using Core.ObjectsSystem;
+using Game.Characters.Control;
 using Game.Characters.Model;
 using GameData;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Game.Characters.View
 {
@@ -35,5 +38,9 @@ namespace Game.Characters.View
             base.OnDrop();
             Object.DestroyImmediate(Root);
         }
+
+        public abstract void Pull(ICommand command);
+        public abstract void Action(ICommand command);
+        public abstract void ExecuteCommands();
     }
 }

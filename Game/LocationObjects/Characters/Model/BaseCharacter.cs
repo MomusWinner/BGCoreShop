@@ -1,29 +1,27 @@
-using Core.Entities;
 using Core.Entities.Loopables;
 using Core.Locations.Model;
+using Game.Characters.Control;
 using Game.Characters.View;
 using Game.LocationObjects;
 using UnityEngine;
 
 namespace Game.Characters.Model
 {
-    public abstract class BaseCharacter<TCharacterView, TControl> : LocationObject, ICharacter
+    public abstract class BaseCharacter<TCharacterView, TControl, TBaseCharacterSetting> : LocationObject, ICharacter
         where TCharacterView : BaseCharacterView
         where TControl : ControlLoopable
+        where TBaseCharacterSetting : BaseCharacterSetting
     {
         public GameObject PlayerRoot => View?.Root;
-        public IControllable CharacterController { get; set; }
-        public Transform ParentTransform => View?.ParentTransform;
-        protected abstract TCharacterView View { get; set; }
-        protected abstract TControl Control { get; set; }
+        public virtual IReceiver CommandReceiver => View;
+        protected TCharacterView View { get; set; }
+        protected TControl Control { get; set; }
 
-        protected BaseCharacterSetting characterSetting;
+        protected readonly TBaseCharacterSetting setting;
 
-        protected BaseCharacter(Location parentLocation, string name, BaseCharacterSetting setting) : base(parentLocation, name)
+        protected BaseCharacter(Location parentLocation, string name, TBaseCharacterSetting setting) : base(parentLocation, name)
         {
-            characterSetting = setting;
+            this.setting = setting;
         }
-
-        public abstract void Move(ISignal signal);
     }
 }

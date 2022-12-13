@@ -1,5 +1,3 @@
-using Game.Characters.Control;
-
 namespace Core.Entities.Loopables
 {
     public abstract class ControlLoopable : Loopable, IControllable
@@ -33,12 +31,7 @@ namespace Core.Entities.Loopables
             Pause();
             OnDisable();
         }
-
-        public virtual void ExecuteCommand(ICommand command)
-        {
-            command.Execute();
-        }
-
+        
         public void Pause()
         {
             if (!CallActions || !Alive)

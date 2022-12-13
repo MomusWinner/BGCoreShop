@@ -8,6 +8,5 @@ namespace Core.Entities
         bool IsActive { get; }
         void Enable();
         void Disable();
-        void ExecuteCommand(ICommand command);
     }
 }
