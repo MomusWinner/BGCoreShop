@@ -10,13 +10,5 @@ namespace Game.LocationObjects
         {
             parentLocation = parent;
         }
-
-        public override void SetAlive()
-        {
-            base.SetAlive();
-            Initialize();
-        }
-
-        protected abstract void Initialize();
     }
 }

@@ -39,7 +39,7 @@ namespace Core.Locations.Model
                 locationView.Refresh();
                 GEvent.Call(GlobalEvents.LocationViewLoaded, this);
 
-                InitializeChildViews();
+                SetAliveLocationObjects();
                 
                 SceneManager.SetActiveScene(mainScene);
             }
@@ -59,14 +59,14 @@ namespace Core.Locations.Model
                 locationView.Initialize();
                 GEvent.Call(GlobalEvents.LocationViewLoaded, this);
                 
-                InitializeChildViews();
+                SetAliveLocationObjects();
 
                 SceneManager.SetActiveScene(mainScene);
             }
             Debug.Log($"Stop initialize view {Name}");
         }
         
-        protected abstract void InitializeChildViews();
+        protected abstract void SetAliveLocationObjects();
 
         protected override void OnDrop()
         {

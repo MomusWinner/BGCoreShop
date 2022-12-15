@@ -4,7 +4,7 @@ namespace Core.Entities.Loopables
     {
         public bool IsActive { get; private set; }
 
-        protected ControlLoopable(string name) : base(name)
+        protected ControlLoopable()
         {
             CallActions = false;
         }
