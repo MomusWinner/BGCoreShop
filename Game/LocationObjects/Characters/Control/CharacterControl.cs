@@ -1,15 +1,15 @@
 using System.Collections.Generic;
-using Core.ObjectsSystem;
+using Core.Entities.Loopables;
 using Game.Characters.Model;
 
 namespace Game.Characters.Control
 {
-    public abstract class CharacterControl : BaseDroppable, IReceiver
+    public abstract class CharacterControl : ControlLoopable, IReceiver
     {
         protected ICharacter Character { get; }
         private Queue<ICommand> commands = new Queue<ICommand>();
 
-        protected CharacterControl(ICharacter character) : base(character.Name)
+        protected CharacterControl(ICharacter character)
         {
             Character = character;
         }

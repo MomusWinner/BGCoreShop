@@ -12,7 +12,7 @@ namespace Game.Characters.Model
         where TControl : ControlLoopable
         where TBaseCharacterSetting : BaseCharacterSetting
     {
-        public GameObject PlayerRoot => View?.Root;
+        public GameObject Root => View?.Root;
         public virtual IReceiver CommandReceiver => View;
         protected TCharacterView View { get; set; }
         protected TControl Control { get; set; }

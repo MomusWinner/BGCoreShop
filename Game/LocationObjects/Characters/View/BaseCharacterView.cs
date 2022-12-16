@@ -1,4 +1,3 @@
-using System;
 using Core.ObjectsSystem;
 using Game.Characters.Control;
 using Game.Characters.Model;

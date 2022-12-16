@@ -6,7 +6,7 @@ namespace Game.Characters.Model
 {
     public interface ICharacter : IDroppable
     {
-        GameObject PlayerRoot { get; }
+        GameObject Root { get; }
         IReceiver CommandReceiver { get; }
     }
 }
