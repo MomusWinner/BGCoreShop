@@ -1,3 +1,4 @@
+using System;
 using Game.Settings.UISettings;
 using Game.UI;
 
@@ -24,7 +25,7 @@ namespace GameData
             return this;
         }
 
-        public TType GetContext<TType>() where TType : class, IContext
+        public TType GetContext<TType>(Func<TType, bool> predicate = null) where TType : class, IContext
         {
             TType result = default;
             if (typeof(TType) == typeof(UiContext))
@@ -44,7 +45,7 @@ namespace GameData
             parentContext = context;
         }
 
-        public void RemoveContext<TType>(TType context) where TType : IContext
+        public void RemoveContext<TType>() where TType : IContext
         {
         }
     }

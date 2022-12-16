@@ -13,9 +13,10 @@ namespace GameData
             contexts = new Dictionary<Type, IContext>();
         }
 
-        public TType GetContext<TType>() where TType : class, IContext
+        public TType GetContext<TType>(Func<TType, bool> predicate = null) where TType : class, IContext
         {
-            return (TType) contexts.FirstOrDefault(c => c.Value is TType).Value;
+            contexts.TryGetValue(typeof(TType), out var context);
+            return (TType) context;
         }
 
         public void AddContext<TType>(TType context) where TType : IContext
@@ -36,14 +37,9 @@ namespace GameData
             contexts.Add(type, context);
         }
 
-        public void RemoveContext<TType>(TType context) where TType : IContext
+        public void RemoveContext<TType>() where TType : IContext
         {
-            if (context is null)
-            {
-                return;
-            }
-
-            contexts.Remove(context.GetType());
+            contexts.Remove(typeof(TType));
         }
     }
 }
