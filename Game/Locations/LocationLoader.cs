@@ -22,7 +22,6 @@ namespace Core.Locations
                 LoadingScenes(statLocation, dynLocation);
             }
 
-            Debug.Log("Start load");
             if (staticScene.isLoaded && statLocation.RootSceneName != staticScene.name ||
                 dynamicScene.isLoaded && dynLocation.RootSceneName != dynamicScene.name ||
                 !staticScene.isLoaded || !dynamicScene.isLoaded)
@@ -93,36 +92,30 @@ namespace Core.Locations
 
             if (!haveStatic)
             {
-                Debug.LogWarning("Static location is null");
                 isLoadedStaticLocation = true;
             }
             else
             {
-                Debug.Log("Static scene start loading");
                 var loadingStatic = SceneManager.LoadSceneAsync(statLocation.RootSceneName, LoadSceneMode.Additive);
 
                 loadingStatic.completed += _ =>
                 {
                     staticScene = SceneManager.GetSceneByName(statLocation.RootSceneName);
-                    Debug.Log("Static scene loaded");
                     isLoadedStaticLocation = true;
                 };
             }
 
             if (!haveDynamic)
             {
-                Debug.LogWarning("Dynamic location is null");
                 isLoadedDynamicLocation = true;
             }
             else
             {
-                Debug.Log("Dynamic scene start loading");
                 var loadingDynamic = SceneManager.LoadSceneAsync(dynLocation.RootSceneName, LoadSceneMode.Additive);
 
                 loadingDynamic.completed += _ =>
                 {
                     dynamicScene = SceneManager.GetSceneByName(dynLocation.RootSceneName);
-                    Debug.Log("Dynamic scene loaded");
                     isLoadedDynamicLocation = true;
                 };
             }

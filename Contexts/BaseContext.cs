@@ -19,7 +19,7 @@ namespace GameData
             return (TType) context;
         }
 
-        public void AddContext<TType>(TType context) where TType : IContext
+        public virtual void AddContext<TType>(TType context) where TType : IContext
         {
             if (context is null)
             {

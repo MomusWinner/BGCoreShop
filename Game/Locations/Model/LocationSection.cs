@@ -11,7 +11,7 @@ namespace Core.Locations.Model
 
         private readonly LocationSetting statLocationSetting;
         private readonly LocationSetting dynLocationSetting;
-        private IContext sectionContext;
+        private readonly IContext sectionContext;
 
         public LocationSection(string name, LocationSetting statLocationSetting, LocationSetting dynLocationSetting,
             IContext context) :

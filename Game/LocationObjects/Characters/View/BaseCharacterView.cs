@@ -9,11 +9,11 @@ namespace Game.Characters.View
 {
     public abstract class BaseCharacterView : BaseDroppable, ICharacterView
     {
-        public GameObject Root { get; private set; }
+        public GameObject Root { get; protected set; }
         public Transform ParentTransform { get; }
         public IContext Context { get; }
 
-        private readonly Object resource;
+        protected readonly Object resource;
 
         protected BaseCharacterView(string name, BaseCharacterSetting setting, IContext context, Transform parent = null) : base(name)
         {
