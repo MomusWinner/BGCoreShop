@@ -1,3 +1,4 @@
+using Core.ObjectsSystem;
 using Game.Characters.Model;
 
 namespace Game.Characters.Control
@@ -13,7 +14,7 @@ namespace Game.Characters.Control
         void ExecuteCommands();
     }
 
-    public interface IReceiver : IExecutor
+    public interface IReceiver : IExecutor, IDroppable
     {
         void Pull(ICommand command);
         void Action(ICommand command);
