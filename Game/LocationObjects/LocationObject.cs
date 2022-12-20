@@ -5,6 +5,7 @@ namespace Game.LocationObjects
     public abstract class LocationObject<TView> : BaseDroppable where TView : BaseDroppable
     {
         protected TView view;
+        
         protected LocationObject(string name) : base(name)
         {
         }
