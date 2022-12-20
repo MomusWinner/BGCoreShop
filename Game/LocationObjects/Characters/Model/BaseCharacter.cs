@@ -7,19 +7,18 @@ using UnityEngine;
 
 namespace Game.Characters.Model
 {
-    public abstract class BaseCharacter<TCharacterView, TControl, TBaseCharacterSetting> : LocationObject, ICharacter
+    public abstract class BaseCharacter<TCharacterView, TControl, TBaseCharacterSetting> : LocationObject<TCharacterView>, ICharacter
         where TCharacterView : BaseCharacterView
         where TControl : ControlLoopable
         where TBaseCharacterSetting : BaseCharacterSetting
     {
-        public GameObject Root => View?.Root;
-        public virtual IReceiver CommandReceiver => View;
-        protected TCharacterView View { get; set; }
+        public GameObject Root => view?.Root;
+        public virtual IReceiver CommandReceiver => view;
         protected TControl Control { get; set; }
 
         protected readonly TBaseCharacterSetting setting;
 
-        protected BaseCharacter(Location parentLocation, string name, TBaseCharacterSetting setting) : base(parentLocation, name)
+        protected BaseCharacter(string name, TBaseCharacterSetting setting) : base(name)
         {
             this.setting = setting;
         }

@@ -1,14 +1,25 @@
-using Core.Locations.Model;
 using Core.ObjectsSystem;
 
 namespace Game.LocationObjects
 {
-    public abstract class LocationObject : BaseDroppable
+    public abstract class LocationObject<TView> : BaseDroppable where TView : BaseDroppable
     {
-        protected readonly Location parentLocation; 
-        protected LocationObject(Location parent, string name) : base(name)
+        protected TView view;
+        protected LocationObject(string name) : base(name)
         {
-            parentLocation = parent;
+        }
+
+        public override void SetAlive()
+        {
+            base.SetAlive();
+            view?.SetAlive();
+        }
+
+        protected override void OnDrop()
+        {
+            base.OnDrop();
+            view?.Drop();
+            view = null;
         }
     }
 }
