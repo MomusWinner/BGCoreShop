@@ -87,7 +87,6 @@ namespace Core.Locations.Model
         {
             foreach (var droppable in droppables)
                 droppable?.SetAlive();
-            RemoveContext();
         }
 
         protected override void OnDrop()
@@ -96,6 +95,7 @@ namespace Core.Locations.Model
             foreach (var droppable in droppables)
                 droppable?.Drop();
             droppables.Clear();
+            RemoveContext();
         }
     }
 }
