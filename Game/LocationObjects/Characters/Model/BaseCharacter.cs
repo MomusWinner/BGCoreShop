@@ -1,8 +1,8 @@
 using Core.Entities.Loopables;
-using Core.Locations.Model;
 using Game.Characters.Control;
 using Game.Characters.View;
 using Game.LocationObjects;
+using GameData;
 using UnityEngine;
 
 namespace Game.Characters.Model
@@ -18,7 +18,7 @@ namespace Game.Characters.Model
 
         protected readonly TBaseCharacterSetting setting;
 
-        protected BaseCharacter(string name, TBaseCharacterSetting setting) : base(name)
+        protected BaseCharacter(string name, TBaseCharacterSetting setting, IContext context) : base(name, context)
         {
             this.setting = setting;
         }

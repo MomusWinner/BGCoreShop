@@ -1,5 +1,4 @@
-﻿using System;
-using BGCore.Game.Factories;
+﻿using BGCore.Game.Factories;
 using Core.ObjectsSystem;
 using UI.View;
 using GameData;
@@ -11,21 +10,19 @@ namespace Game.UI
 {
     public abstract class UiElement : BaseDroppable, IUiElement
     {
-        private Action OnInitialize { get; set; }
-
         public abstract Transform ContentHolder { get; protected set; }
 
-        public bool IsShown { get; }
+        public bool IsShown { get; private set; }
 
         public string RootObjectResourcesPath { get; }
 
-        protected IUiElement[] ChildUiElements { get; set; }
+        private IUiElement[] ChildUiElements { get; set; }
 
 
         protected Transform parent;
         protected readonly IContext context;
         protected UiElementView view;
-        protected readonly UISetting setting;
+        private readonly UISetting setting;
 
 
         protected UiElement(string name, UISetting setting, IContext context) : base(name)
@@ -33,33 +30,22 @@ namespace Game.UI
             this.context = context;
             this.setting = setting;
             RootObjectResourcesPath = setting.RootObjectPath;
-
             view = GeneralFactory.CreateItem<UiElementView, UiElement>(this, context);
         }
 
-        public override void SetAlive()
+        protected override void OnAlive()
         {
-            base.SetAlive();
-
+            base.OnAlive();
             Initialize();
-            SetParent();
-
             SetAliveChilds();
         }
 
-        public void Show()
-        {
-        }
+        public virtual void Show() { IsShown = true; }
 
-        public void Hide()
-        {
-        }
+        public virtual void Hide() { IsShown = false; }
 
-        public void Update<TUiAgs>(object sender, TUiAgs ags)
-        {
-        }
-
-
+        public void Update<TUiAgs>(object sender, TUiAgs ags) { }
+        
         protected override void OnDrop()
         {
             base.OnDrop();
@@ -106,26 +92,6 @@ namespace Game.UI
             {
                 childUiElement.SetAlive();
             }
-        }
-
-        protected abstract void SetParent();
-
-        public TType GetContext<TType>() where TType : class, IContext
-        {
-            return this is TType result ? result : default;
-        }
-
-        public void AddContext<TType>(IContext context) where TType : class, IContext
-        {
-            if (context is IUiElement uiElement)
-            {
-                parent = uiElement.ContentHolder;
-            }
-        }
-
-        public void RemoveContext<TType>(IContext context) where TType : IContext
-        {
-            throw new NotImplementedException();
         }
     }
 }

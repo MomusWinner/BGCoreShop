@@ -42,7 +42,7 @@ namespace UI.View
             }
             
             Root = Object.Instantiate(rootResource, parent);
-            Root.name = "[UI Element] " + rootResource.name;
+            Root.name = $"[{GetType().Name}] {rootResource.name}";
         }
 
         protected override void OnDrop()

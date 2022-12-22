@@ -24,13 +24,13 @@ namespace Game.Characters.View
             Context = context;
         }
         
-        public override void SetAlive()
+        protected override void OnAlive()
         {
-            base.SetAlive();
+            base.OnAlive();
             if (resource)
             {
                 Root = (GameObject) Object.Instantiate(resource, ChapterContainer.ActiveSection.DynLocation.Root.transform);
-                Root.name = Name;
+                Root.name = $"[{Name}]";
             }
 
             foreach (var receiver in receivers.Values)

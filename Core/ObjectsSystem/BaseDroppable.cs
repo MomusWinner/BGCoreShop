@@ -13,13 +13,10 @@ namespace Core.ObjectsSystem
             Name = name;
         }
         
-        protected virtual void OnDrop()
-        {
-        }
-        
-        public virtual void SetAlive()
+        public void SetAlive()
         {
             Alive = true;
+            OnAlive();
         }
         
         public void Drop()
@@ -33,6 +30,14 @@ namespace Core.ObjectsSystem
             Alive = false;
             Dropped?.Invoke(this);
             Dropped = null;
+        }
+
+        protected virtual void OnAlive()
+        {
+        }
+
+        protected virtual void OnDrop()
+        {
         }
     }
 }

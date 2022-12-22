@@ -54,9 +54,9 @@ namespace Core.Entities.Loopables
             OnPlay();
         }
 
-        public override void SetAlive()
+        protected override void OnAlive()
         {
-            base.SetAlive();
+            base.OnAlive();
             Enable();
             CallActions = false;
         }
