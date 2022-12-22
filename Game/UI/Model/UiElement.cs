@@ -40,12 +40,22 @@ namespace Game.UI
             SetAliveChilds();
         }
 
-        public virtual void Show() { IsShown = true; }
+        public virtual void Show()
+        {
+            IsShown = true;
+            view.Show();
+        }
 
-        public virtual void Hide() { IsShown = false; }
+        public virtual void Hide()
+        {
+            IsShown = false;
+            view.Hide();
+        }
 
-        public void Update<TUiAgs>(object sender, TUiAgs ags) { }
-        
+        public void Update<TUiAgs>(object sender, TUiAgs ags)
+        {
+        }
+
         protected override void OnDrop()
         {
             base.OnDrop();
@@ -67,7 +77,8 @@ namespace Game.UI
 
         protected virtual void AssignChilds()
         {
-            var childContext = ((UiContext) GeneralFactory.CreateItem<IContext, UISetting>(setting, context))?.SendParent(this);
+            var childContext =
+                ((UiContext) GeneralFactory.CreateItem<IContext, UISetting>(setting, context))?.SendParent(this);
             if (childContext != null)
             {
                 childContext.AddContext(context.GetContext<GeneralContext>());
@@ -75,7 +86,9 @@ namespace Game.UI
 
                 for (var i = 0; i < ChildUiElements.Length; i++)
                 {
-                    ChildUiElements[i] = GeneralFactory.CreateItem<IUiElement, UISetting>(setting.childUiElementSettings[i], childContext);
+                    ChildUiElements[i] =
+                        GeneralFactory.CreateItem<IUiElement, UISetting>(setting.childUiElementSettings[i],
+                            childContext);
                     childContext.SetSelf(ChildUiElements[i]);
                 }
             }

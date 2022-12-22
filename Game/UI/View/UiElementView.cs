@@ -1,6 +1,7 @@
 ﻿using Core.ObjectsSystem;
 using Game.UI;
 using GameData;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace UI.View
@@ -11,7 +12,8 @@ namespace UI.View
         protected UiElement ParentUiElement { get; }
 
         protected readonly IContext context;
-        protected GameObject rootResource;
+        protected readonly GameObject rootResource;
+        protected Transform parent;
 
         protected UiElementView(UiElement uiElementParent, IContext ctx) : base(uiElementParent.Name)
         {
@@ -22,19 +24,32 @@ namespace UI.View
 
         public void Initialize(Transform parent = null)
         {
-            InnerInitialize(parent);
+            this.parent = parent;
+            SetAlive();
         }
 
         public void SetParent(Transform parent)
         {
             if (Root)
             {
+                this.parent = parent;
                 Root.transform.SetParent(parent);
             }
         }
 
-        protected virtual void InnerInitialize(Transform parent = null)
+        public virtual void Show()
         {
+            Root.SetActive(true);
+        }
+
+        public virtual void Hide()
+        {
+            Root.SetActive(false);
+        }
+        
+        protected override void OnAlive()
+        {
+            base.OnAlive();
             if (rootResource is null)
             {
                 Debug.LogWarning($"View for {Name} not created");
