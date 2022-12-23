@@ -49,10 +49,10 @@ namespace Core.Locations.Model
             }
         }
         
-        public TDroppable GetFirstOrDefaultObject<TDroppable>(Func<TDroppable, bool> predicate)
+        public TDroppable GetFirstOrDefaultObject<TDroppable>(Func<TDroppable, bool> predicate = null)
             where TDroppable : IDroppable
         {
-            return droppables.Where(d => d is TDroppable).Cast<TDroppable>().FirstOrDefault(predicate);
+            return droppables.Where(d => d is TDroppable).Cast<TDroppable>().FirstOrDefault(d => predicate is null || predicate(d));
         }
 
         protected virtual void InitializeView(params object[] objects)
