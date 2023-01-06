@@ -1,7 +1,6 @@
 ﻿using Core.ObjectsSystem;
 using Game.UI;
 using GameData;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace UI.View
