@@ -2,7 +2,6 @@ using System;
 using Core.ObjectsSystem;
 using GameData;
 using GameLogic.GameData.Contexts;
-using Models.LocationObjectModels;
 
 namespace Game.LocationObjects
 {
