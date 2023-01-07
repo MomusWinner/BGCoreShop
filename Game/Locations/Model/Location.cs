@@ -11,42 +11,33 @@ using UnityEngine.SceneManagement;
 namespace Core.Locations.Model
 {
     public abstract class Location : BaseDroppable
+
     {
         public GameObject Root => locationView.Root;
         public string RootSceneName { get; }
         public string RootObjectResourcesPath { get; }
 
-        private readonly LocationView locationView;
+        private LocationView locationView;
         protected readonly IContext context;
         protected readonly IList<IDroppable> droppables = new List<IDroppable>();
+        protected readonly LocationSetting setting;
 
-        protected Location(LocationSetting settings, IContext baseContext) : base(settings.SceneName)
+        protected Location(LocationSetting setting, IContext context) : base(setting.SceneName)
         {
-            RootSceneName = settings.SceneName;
-            RootObjectResourcesPath = settings.RootObjectPath;
-            context = baseContext;
-
-            locationView = GeneralFactory.CreateItem<LocationView, Location>(this, baseContext);
-
-            GEvent.Attach(GlobalEvents.LocationScenesLoaded, InitializeView);
+            this.setting = setting;
+            RootSceneName = setting.SceneName;
+            RootObjectResourcesPath = setting.RootObjectPath;
+            this.context = context;
+            locationView = GeneralFactory.CreateItem<LocationView, Location>(this, context);
+            Initialize();
         }
 
         public void Refresh()
         {
-            if (!Alive && locationView is { })
-            {
-                SetAlive();
+            if (Alive || locationView is null)
+                return;
 
-                var mainScene = SceneManager.GetActiveScene();
-                SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
-
-                locationView.Refresh();
-                GEvent.Call(GlobalEvents.LocationViewLoaded, this);
-
-                SetAliveLocationObjects();
-
-                SceneManager.SetActiveScene(mainScene);
-            }
+            Initialize();
         }
 
         public IEnumerable<TDroppable> GetAllObjects<TDroppable>()
@@ -54,36 +45,41 @@ namespace Core.Locations.Model
             return droppables.Where(o => o.GetType() == typeof(TDroppable)).Cast<TDroppable>();
         }
 
-        public TDroppable GetFirstOrDefaultObject<TDroppable>(Func<TDroppable, bool> predicate = null) where TDroppable : IDroppable
+        public TDroppable GetFirstOrDefaultObject<TDroppable>(Func<TDroppable, bool> predicate = null)
+            where TDroppable : IDroppable
         {
             return droppables.Where(d => d is TDroppable).Cast<TDroppable>().FirstOrDefault(d => predicate is null || predicate(d));
         }
 
-        protected virtual void InitializeView(params object[] objects)
+        protected override void OnAlive()
         {
-            AddContext();
             GEvent.Call(GlobalEvents.LocationViewLoaded, locationView);
-            GEvent.Detach(GlobalEvents.LocationScenesLoaded, InitializeView);
 
-            if (locationView is { })
-            {
-                var mainScene = SceneManager.GetActiveScene();
-                SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
+            if (locationView is null)
+                return;
+            AddContext();
 
-                locationView.Initialize();
-                GEvent.Call(GlobalEvents.LocationViewLoaded, this);
+            var mainScene = SceneManager.GetActiveScene();
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
 
-                SetAliveLocationObjects();
+            locationView.SetAlive();
 
-                SceneManager.SetActiveScene(mainScene);
-            }
+            GEvent.Call(GlobalEvents.LocationViewLoaded, this);
+
+            SetAliveLocationObjects();
+
+            SceneManager.SetActiveScene(mainScene);
         }
-        
+
         protected virtual void AddContext()
         {
         }
 
         protected virtual void RemoveContext()
+        {
+        }
+
+        protected virtual void OnInitialize()
         {
         }
 
@@ -100,6 +96,11 @@ namespace Core.Locations.Model
                 droppable?.Drop();
             droppables.Clear();
             RemoveContext();
+        }
+
+        private void Initialize()
+        {
+            OnInitialize();
         }
     }
 }

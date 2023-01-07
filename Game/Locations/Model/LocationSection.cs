@@ -28,12 +28,6 @@ namespace Core.Locations.Model
         private async void OnStart(params object[] obj)
 #pragma warning restore CS1998
         {
-            void OnSceneLoaded()
-            {
-                GEvent.Call(GlobalEvents.LocationScenesLoaded);
-                SetAlive();
-            }
-
             GEvent.Attach(GlobalEvents.DropSection, Drop);
             GEvent.AttachOnce(GlobalEvents.Restart, OnRestart);
 
@@ -41,11 +35,11 @@ namespace Core.Locations.Model
             DynLocation = GeneralFactory.CreateItem<Location, LocationSetting>(dynLocationSetting, sectionContext);
 
 #if UNITY_WEBGL
-            LocationLoader.LoadBoth(StatLocation, DynLocation, OnSceneLoaded);
+            LocationLoader.LoadBoth(StatLocation, DynLocation, SetAlive);
 
 #else
             await LocationLoader.LoadBothAsync(StatLocation, DynLocation);
-            OnSceneLoaded();
+            SetAlive();
 #endif
         }
 
@@ -55,8 +49,16 @@ namespace Core.Locations.Model
             base.Drop();
         }
 
+        protected override void OnAlive()
+        {
+            base.OnAlive();
+            StatLocation?.SetAlive();
+            DynLocation?.SetAlive();
+        }
+
         protected override void OnDrop()
         {
+            base.OnDrop();
             StatLocation?.Drop();
             DynLocation?.Drop();
         }
@@ -67,6 +69,7 @@ namespace Core.Locations.Model
             {
                 location.Drop();
                 location.Refresh();
+                location.SetAlive();
             }
         }
     }

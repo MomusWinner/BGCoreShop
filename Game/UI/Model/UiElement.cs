@@ -20,14 +20,15 @@ namespace Game.UI
 
 
         protected Transform parent;
-        protected readonly IContext context;
+        protected readonly UiContext uiContext;
         protected UiElementView view;
         private readonly UISetting setting;
 
 
-        protected UiElement(string name, UISetting setting, IContext context) : base(name)
+        protected UiElement(string name, UISetting setting, UiContext context) : base(name)
         {
-            this.context = context;
+            uiContext = context;
+            uiContext.SetSelf(this);
             this.setting = setting;
             RootObjectResourcesPath = setting.RootObjectPath;
             view = GeneralFactory.CreateItem<UiElementView, UiElement>(this, context);
@@ -77,20 +78,14 @@ namespace Game.UI
 
         protected virtual void AssignChilds()
         {
-            var childContext =
-                ((UiContext) GeneralFactory.CreateItem<IContext, UISetting>(setting, context))?.SendParent(this);
-            if (childContext != null)
+            ChildUiElements = new IUiElement[setting.childUiElementSettings.Length];
+            for (var i = 0; i < ChildUiElements.Length; i++)
             {
-                childContext.AddContext(context.GetContext<GeneralContext>());
-                ChildUiElements = new IUiElement[setting.childUiElementSettings.Length];
-
-                for (var i = 0; i < ChildUiElements.Length; i++)
-                {
-                    ChildUiElements[i] =
-                        GeneralFactory.CreateItem<IUiElement, UISetting>(setting.childUiElementSettings[i],
-                            childContext);
-                    childContext.SetSelf(ChildUiElements[i]);
-                }
+                var childContext = ((UiContext)GeneralFactory.CreateItem<IContext, UISetting>(setting, uiContext))?.SendParent(this);
+                if (childContext is null)
+                    continue;
+                childContext.AddContext(uiContext.GetContext<GeneralContext>());
+                ChildUiElements[i] = GeneralFactory.CreateItem<IUiElement, UISetting>(setting.childUiElementSettings[i], childContext);
             }
         }
 

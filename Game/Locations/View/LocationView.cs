@@ -21,25 +21,11 @@ namespace Core.Locations.View
             context = ctx;
         }
 
-        public void Initialize()
+        protected override void OnAlive()
         {
-            if (rootResource)
-            {
-                InnerInitialize();
-            }
-        }
-        
-        public void Refresh()
-        {
-            if (!Alive)
-            {
-                Initialize();
-                SetAlive();
-            }
-        }
-        
-        protected virtual void InnerInitialize()
-        {
+            base.OnAlive();
+            if(!rootResource)
+                return;
             Root = Object.Instantiate(rootResource);
             Root.name = "[Location Root] " + rootResource.name;
         }
@@ -48,6 +34,7 @@ namespace Core.Locations.View
         {
             base.OnDrop();
             Object.Destroy(Root);
+            Root = null;
         }
     }
 }

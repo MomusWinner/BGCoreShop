@@ -38,7 +38,6 @@ namespace UI.View
 
         public virtual void Show()
         {
-            Debug.Log("SSSSSSSSSSSSSSSSS");
             Root.SetActive(true);
         }
 
