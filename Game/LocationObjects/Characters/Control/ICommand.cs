@@ -19,9 +19,4 @@ namespace Game.Characters.Control
         void Pull(ICommand command);
         void Action(ICommand command);
     }
-
-    public interface ISender : IExecutor
-    {
-        void Push(ICommand command);
-    }
 }
