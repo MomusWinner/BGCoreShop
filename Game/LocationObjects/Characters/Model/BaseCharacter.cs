@@ -18,7 +18,7 @@ namespace Game.Characters.Model
 
         protected readonly TBaseCharacterSetting setting;
 
-        protected BaseCharacter(string name, TBaseCharacterSetting setting, IContext context) : base(name, context)
+        protected BaseCharacter(TBaseCharacterSetting setting, IContext context) : base(context)
         {
             this.setting = setting;
         }

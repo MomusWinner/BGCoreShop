@@ -14,7 +14,7 @@ namespace Core.Locations.View
         protected readonly IContext context;
         private readonly GameObject rootResource;
 
-        protected LocationView(Location location, IContext ctx) : base(location.Name)
+        protected LocationView(Location location, IContext ctx)
         {
             ParentLocation = location;
             rootResource = Resources.Load<GameObject>(location.RootObjectResourcesPath);

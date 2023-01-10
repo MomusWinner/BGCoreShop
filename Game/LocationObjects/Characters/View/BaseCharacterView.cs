@@ -18,7 +18,7 @@ namespace Game.Characters.View
         protected readonly Object resource;
         protected readonly IDictionary<Type, IReceiver> receivers = new Dictionary<Type, IReceiver>();
         
-        protected BaseCharacterView(string name, BaseCharacterSetting setting, IContext context) : base(name)
+        protected BaseCharacterView(BaseCharacterSetting setting, IContext context)
         {
             resource = Resources.Load(setting.RootObjectPath);
             Context = context;
@@ -30,7 +30,7 @@ namespace Game.Characters.View
             if (resource)
             {
                 Root = (GameObject) Object.Instantiate(resource, ChapterContainer.ActiveSection.DynLocation.Root.transform);
-                Root.name = $"[{Name}]";
+                Root.name = $"[{Name}] {resource.name}";
             }
 
             foreach (var receiver in receivers.Values)

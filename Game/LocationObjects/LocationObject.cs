@@ -11,7 +11,7 @@ namespace Game.LocationObjects
         protected TView view;
         protected IContext context;
         
-        protected LocationObject(string name, IContext context) : base(name)
+        protected LocationObject(IContext context)
         {
             this.context = context.GetContext<GeneralContext>();
         }

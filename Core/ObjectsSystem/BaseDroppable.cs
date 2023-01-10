@@ -8,9 +8,9 @@ namespace Core.ObjectsSystem
         public bool Alive { get; protected set; } = true;
         public event Action<IDroppable> Dropped;
 
-        protected BaseDroppable(string name)
+        protected BaseDroppable()
         {
-            Name = name;
+            Name = GetType().Name;
         }
         
         public void SetAlive()

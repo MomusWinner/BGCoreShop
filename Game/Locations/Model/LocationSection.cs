@@ -13,9 +13,7 @@ namespace Core.Locations.Model
         private readonly LocationSetting dynLocationSetting;
         private readonly IContext sectionContext;
 
-        public LocationSection(string name, LocationSetting statLocationSetting, LocationSetting dynLocationSetting,
-            IContext context) :
-            base(name)
+        public LocationSection(LocationSetting statLocationSetting, LocationSetting dynLocationSetting, IContext context)
         {
             sectionContext = context;
             this.statLocationSetting = statLocationSetting;

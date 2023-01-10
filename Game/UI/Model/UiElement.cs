@@ -25,7 +25,7 @@ namespace Game.UI
         private readonly UISetting setting;
 
 
-        protected UiElement(string name, UISetting setting, UiContext context) : base(name)
+        protected UiElement(UISetting setting, UiContext context)
         {
             uiContext = context;
             uiContext.SetSelf(this);

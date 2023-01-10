@@ -17,13 +17,14 @@ namespace Core.Locations.Model
         public string RootSceneName { get; }
         public string RootObjectResourcesPath { get; }
 
-        private LocationView locationView;
+        private readonly LocationView locationView;
         protected readonly IContext context;
         protected readonly IList<IDroppable> droppables = new List<IDroppable>();
         protected readonly LocationSetting setting;
 
-        protected Location(LocationSetting setting, IContext context) : base(setting.SceneName)
+        protected Location(LocationSetting setting, IContext context)
         {
+            Name = setting.SceneName;
             this.setting = setting;
             RootSceneName = setting.SceneName;
             RootObjectResourcesPath = setting.RootObjectPath;

@@ -14,7 +14,7 @@ namespace UI.View
         protected readonly GameObject rootResource;
         protected Transform parent;
 
-        protected UiElementView(UiElement uiElementParent, IContext ctx) : base(uiElementParent.Name)
+        protected UiElementView(UiElement uiElementParent, IContext ctx)
         {
             ParentUiElement = uiElementParent;
             rootResource = Resources.Load<GameObject>(uiElementParent.RootObjectResourcesPath);
