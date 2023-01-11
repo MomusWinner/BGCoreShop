@@ -25,28 +25,35 @@ namespace GameLogic.Views
         
         protected readonly TSetting setting;
         protected readonly TObject resource;
-        private readonly Location location;
+        protected readonly Location location;
         
         protected LocationObjectView(Location location, TSetting setting)
         {
             this.location = location; 
             resource = Resources.Load<TObject>(setting.RootObjectPath);
+            if(!resource)
+                Debug.LogError($"<COLOR=YELLOW>{typeof(TObject).Name}</COLOR> is not loaded from {setting.RootObjectPath}");
             this.setting = setting;
         }
 
         protected override void OnAlive()
         {
             base.OnAlive();
-            Root = Object.Instantiate(resource, location?.Root.transform);
-            Root.name = $"[{GetType().Name}] {resource.name}";
+            CreateView(location?.Root.transform);
         }
-
+        
         protected override void OnDrop()
         {
             base.OnDrop();
             if(Root)
                 Object.DestroyImmediate(Root.gameObject);
             Root = null;
+        }
+        
+        protected void CreateView(Transform parent)
+        {
+            Root = Object.Instantiate(resource, parent);
+            Root.name = $"[{GetType().Name}] {resource.name}";
         }
     }
 }

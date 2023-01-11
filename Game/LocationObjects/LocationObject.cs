@@ -2,6 +2,7 @@ using System;
 using Core.ObjectsSystem;
 using GameData;
 using GameLogic.GameData.Contexts;
+using UnityEngine;
 
 namespace Game.LocationObjects
 {
