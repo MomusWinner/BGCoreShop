@@ -2,7 +2,6 @@ using System;
 using Core.ObjectsSystem;
 using GameData;
 using GameLogic.GameData.Contexts;
-using UnityEngine;
 
 namespace Game.LocationObjects
 {
@@ -29,7 +28,6 @@ namespace Game.LocationObjects
             context.GetContext<LocationObjectInventory>().RemoveObject(Id);
             base.OnDrop();
             view?.Drop();
-            view = null;
         }
     }
 
