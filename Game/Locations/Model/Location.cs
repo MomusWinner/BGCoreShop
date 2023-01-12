@@ -29,7 +29,7 @@ namespace Core.Locations.Model
             RootSceneName = setting.SceneName;
             RootObjectResourcesPath = setting.RootObjectPath;
             this.context = context;
-            locationView = GeneralFactory.CreateItem<LocationView, Location>(this, context);
+            locationView = (LocationView) GeneralFactory.CreateItem(this, context);
             Initialize();
         }
 
@@ -49,7 +49,8 @@ namespace Core.Locations.Model
         public TDroppable GetFirstOrDefaultObject<TDroppable>(Func<TDroppable, bool> predicate = null)
             where TDroppable : IDroppable
         {
-            return droppables.Where(d => d is TDroppable).Cast<TDroppable>().FirstOrDefault(d => predicate is null || predicate(d));
+            return droppables.Where(d => d is TDroppable).Cast<TDroppable>()
+                .FirstOrDefault(d => predicate is null || predicate(d));
         }
 
         protected override void OnAlive()
@@ -63,7 +64,7 @@ namespace Core.Locations.Model
             var mainScene = SceneManager.GetActiveScene();
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
 
-            locationView.SetAlive();
+            locationView.SetAlive(location);
 
             GEvent.Call(GlobalEvents.LocationViewLoaded, this);
 
@@ -87,7 +88,7 @@ namespace Core.Locations.Model
         protected virtual void SetAliveLocationObjects()
         {
             foreach (var droppable in droppables)
-                droppable?.SetAlive();
+                droppable?.SetAlive(this);
         }
 
         protected override void OnDrop()

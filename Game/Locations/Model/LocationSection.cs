@@ -29,15 +29,15 @@ namespace Core.Locations.Model
             GEvent.Attach(GlobalEvents.DropSection, Drop);
             GEvent.AttachOnce(GlobalEvents.Restart, OnRestart);
 
-            StatLocation = GeneralFactory.CreateItem<Location, LocationSetting>(statLocationSetting, sectionContext);
-            DynLocation = GeneralFactory.CreateItem<Location, LocationSetting>(dynLocationSetting, sectionContext);
+            StatLocation =  (Location) GeneralFactory.CreateItem(statLocationSetting, sectionContext);
+            DynLocation = (Location) GeneralFactory.CreateItem(dynLocationSetting, sectionContext);
 
 #if UNITY_WEBGL
             LocationLoader.LoadBoth(StatLocation, DynLocation, SetAlive);
 
 #else
             await LocationLoader.LoadBothAsync(StatLocation, DynLocation);
-            SetAlive();
+            SetAlive(null);
 #endif
         }
 
@@ -50,8 +50,8 @@ namespace Core.Locations.Model
         protected override void OnAlive()
         {
             base.OnAlive();
-            StatLocation?.SetAlive();
-            DynLocation?.SetAlive();
+            StatLocation?.SetAlive(null);
+            DynLocation?.SetAlive(null);
         }
 
         protected override void OnDrop()
@@ -67,7 +67,7 @@ namespace Core.Locations.Model
             {
                 location.Drop();
                 location.Refresh();
-                location.SetAlive();
+                location.SetAlive(null);
             }
         }
     }

@@ -24,7 +24,7 @@ namespace UI.View
         public void Initialize(Transform parent = null)
         {
             this.parent = parent;
-            SetAlive();
+            SetAlive(location);
         }
 
         public void SetParent(Transform parent)

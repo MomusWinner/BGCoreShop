@@ -1,4 +1,6 @@
 using System;
+using Core.Locations.Model;
+using Core.Timers;
 
 namespace Core.ObjectsSystem
 {
@@ -8,14 +10,17 @@ namespace Core.ObjectsSystem
         public bool Alive { get; protected set; } = true;
         public event Action<IDroppable> Dropped;
 
+        protected Location location;
+
         protected BaseDroppable()
         {
             Name = GetType().Name;
         }
         
-        public void SetAlive()
+        public void SetAlive(Location location = null)
         {
             Alive = true;
+            this.location = location;
             OnAlive();
         }
         

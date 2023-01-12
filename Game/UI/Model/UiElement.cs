@@ -31,7 +31,7 @@ namespace Game.UI
             uiContext.SetSelf(this);
             this.setting = setting;
             RootObjectResourcesPath = setting.RootObjectPath;
-            view = GeneralFactory.CreateItem<UiElementView, UiElement>(this, context);
+            view = (UiElementView) GeneralFactory.CreateItem(this, context);
         }
 
         protected override void OnAlive()
@@ -81,11 +81,11 @@ namespace Game.UI
             ChildUiElements = new IUiElement[setting.childUiElementSettings.Length];
             for (var i = 0; i < ChildUiElements.Length; i++)
             {
-                var childContext = ((UiContext)GeneralFactory.CreateItem<IContext, UISetting>(setting, uiContext))?.SendParent(this);
+                var childContext = ((UiContext) GeneralFactory.CreateItem(setting, uiContext))?.SendParent(this);
                 if (childContext is null)
                     continue;
                 childContext.AddContext(uiContext.GetContext<GeneralContext>());
-                ChildUiElements[i] = GeneralFactory.CreateItem<IUiElement, UISetting>(setting.childUiElementSettings[i], childContext);
+                ChildUiElements[i] = (IUiElement) GeneralFactory.CreateItem(setting.childUiElementSettings[i], childContext);
             }
         }
 
@@ -98,7 +98,7 @@ namespace Game.UI
 
             foreach (var childUiElement in ChildUiElements)
             {
-                childUiElement.SetAlive();
+                childUiElement.SetAlive(location);
             }
         }
     }

@@ -29,12 +29,12 @@ namespace Game.Characters.View
             base.OnAlive();
             if (resource)
             {
-                Root = (GameObject) Object.Instantiate(resource, ChapterContainer.ActiveSection.DynLocation.Root.transform);
+                Root = (GameObject) Object.Instantiate(resource);
                 Root.name = $"[{Name}] {resource.name}";
             }
 
             foreach (var receiver in receivers.Values)
-                receiver.SetAlive();
+                receiver.SetAlive(location);
         }
 
         protected override void OnDrop()

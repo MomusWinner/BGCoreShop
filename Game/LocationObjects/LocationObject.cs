@@ -19,7 +19,7 @@ namespace Game.LocationObjects
         protected override void OnAlive()
         {
             base.OnAlive();
-            view?.SetAlive();
+            view?.SetAlive(location);
             context.GetContext<LocationObjectInventory>().AddObject(this);
         }
 

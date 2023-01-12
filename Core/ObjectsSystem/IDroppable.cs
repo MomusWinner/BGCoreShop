@@ -1,4 +1,5 @@
 using System;
+using Core.Locations.Model;
 
 namespace Core.ObjectsSystem
 {
@@ -8,6 +9,6 @@ namespace Core.ObjectsSystem
         bool Alive { get; }
         event Action<IDroppable> Dropped;
         void Drop();
-        void SetAlive();
+        void SetAlive(Location location);
     }
 }
