@@ -28,7 +28,6 @@ namespace Game.LocationObjects
             context.GetContext<LocationObjectInventory>().RemoveObject(Id);
             base.OnDrop();
             view?.Drop();
-            view = null;
         }
     }
 
