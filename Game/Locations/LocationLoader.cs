@@ -60,7 +60,7 @@ namespace Core.Locations
             void InnerLoadingScenes(object[] obj)
             {
                 GEvent.Detach(GlobalEvents.LocationScenesUnloaded, InnerLoadingScenes);
-                Scheduler.Instance.InvokeWhen(() => isLoadedDynamicLocation && isLoadedStaticLocation,
+                Scheduler.InvokeWhen(() => isLoadedDynamicLocation && isLoadedStaticLocation,
                     afterSceneLoaded.Invoke);
                 LoadingScenes(statLocation, dynLocation);
             }
@@ -196,7 +196,7 @@ namespace Core.Locations
                 isLoadedDynamicLocation = false;
             }
 
-            Scheduler.Instance.InvokeWhen(() => !isLoadedDynamicLocation && !isLoadedStaticLocation,
+            Scheduler.InvokeWhen(() => !isLoadedDynamicLocation && !isLoadedStaticLocation,
                 () => { GEvent.Call(GlobalEvents.LocationScenesUnloaded); });
         }
     }

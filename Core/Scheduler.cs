@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Core.LoopSystem;
 using Core.Timers;
-using GameLogic.Core.Main;
 using UnityEngine;
 
 namespace Core
 {
-    public class Scheduler : Singleton<Scheduler>
+    public static class Scheduler
     {
+        private static MonoBehaviour instance;
         private static List<ITimer> delayTimers = new List<ITimer>();
         
         public static void Invoke(Action action, float delay = 0)
@@ -41,12 +41,14 @@ namespace Core
             action.Invoke();
         }
 
-        public void InvokeWhen(Func<bool> condition, Action action)
+        public static void InvokeWhen(Func<bool> condition, Action action)
         {
-            StartCoroutine(ConditionUntil(action, condition));
+            if (!instance)
+                instance = new GameObject(nameof(Scheduler)).AddComponent<MonoBehaviour>();
+            instance.StartCoroutine(ConditionUntil(action, condition));
         }
 
-        private IEnumerator ConditionUntil(Action action, Func<bool> condition)
+        private static IEnumerator ConditionUntil(Action action, Func<bool> condition)
         {
             yield return new WaitUntil(condition.Invoke);
             yield return new WaitForEndOfFrame();
