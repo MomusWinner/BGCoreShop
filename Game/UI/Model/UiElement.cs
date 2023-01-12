@@ -28,7 +28,7 @@ namespace Game.UI
         protected UiElement(UISetting setting, UiContext context)
         {
             uiContext = context;
-            uiContext.SetSelf(this);
+            uiContext?.SetSelf(this);
             this.setting = setting;
             RootObjectResourcesPath = setting.RootObjectPath;
             view = (UiElementView) GeneralFactory.CreateItem(this, context);
@@ -60,13 +60,13 @@ namespace Game.UI
         protected override void OnDrop()
         {
             base.OnDrop();
-            view.Drop();
+            view?.Drop();
 
             if (ChildUiElements is { })
             {
                 foreach (var childUiElement in ChildUiElements)
                 {
-                    childUiElement.Drop();
+                    childUiElement?.Drop();
                 }
             }
 
@@ -81,9 +81,7 @@ namespace Game.UI
             ChildUiElements = new IUiElement[setting.childUiElementSettings.Length];
             for (var i = 0; i < ChildUiElements.Length; i++)
             {
-                var childContext = ((UiContext) GeneralFactory.CreateItem(setting, uiContext))?.SendParent(this);
-                if (childContext is null)
-                    continue;
+                var childContext = new UiContext().SendParent(this);
                 childContext.AddContext(uiContext.GetContext<GeneralContext>());
                 ChildUiElements[i] = (IUiElement) GeneralFactory.CreateItem(setting.childUiElementSettings[i], childContext);
             }
