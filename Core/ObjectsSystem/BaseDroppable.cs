@@ -7,7 +7,7 @@ namespace Core.ObjectsSystem
     public abstract class BaseDroppable : IDroppable
     {
         public string Name { get; protected set; }
-        public bool Alive { get; protected set; } = true;
+        public bool Alive { get; private set; }
         public event Action<IDroppable> Dropped;
 
         protected Location location;
@@ -19,9 +19,9 @@ namespace Core.ObjectsSystem
         
         public void SetAlive(Location location = null)
         {
-            Alive = true;
             this.location = location;
             OnAlive();
+            Alive = true;
         }
         
         public void Drop()

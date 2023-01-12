@@ -21,11 +21,6 @@ namespace Core.Entities.Loopables
 
         protected void LoopOn(int type, Action action, bool callNow = false)
         {
-            if (!Alive)
-            {
-                throw new Exception($"{Name} is dead");
-            }
-            
             if (actions[type] is null)
             {
                 CallWhenAdded = callNow;
