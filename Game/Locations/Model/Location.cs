@@ -17,7 +17,7 @@ namespace Core.Locations.Model
         public string RootSceneName { get; }
         public string RootObjectResourcesPath { get; }
 
-        private readonly LocationView locationView;
+        protected LocationView locationView;
         protected readonly IContext context;
         protected readonly IList<IDroppable> droppables = new List<IDroppable>();
         protected readonly LocationSetting setting;
@@ -29,7 +29,6 @@ namespace Core.Locations.Model
             RootSceneName = setting.SceneName;
             RootObjectResourcesPath = setting.RootObjectPath;
             this.context = context;
-            locationView = (LocationView) GeneralFactory.CreateItem(this, context);
             Initialize();
         }
 

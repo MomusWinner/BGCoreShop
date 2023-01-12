@@ -8,20 +8,19 @@ using UnityEngine;
 
 namespace Game.UI
 {
-    public abstract class UiElement : BaseDroppable, IUiElement
+    public abstract class UiElement<TView, TSetting, TComponent> : BaseDroppable, IUiElement 
+        where TView : UiElementView<TSetting, TComponent>
+        where TSetting : UISetting
+        where TComponent : Component
     {
-        public abstract Transform ContentHolder { get; protected set; }
+        public Transform ContentHolder { get; protected set; }
 
         public bool IsShown { get; private set; }
 
-        public string RootObjectResourcesPath { get; }
-
         private IUiElement[] ChildUiElements { get; set; }
 
-
-        protected Transform parent;
         protected readonly UiContext uiContext;
-        protected UiElementView view;
+        protected TView view;
         private readonly UISetting setting;
 
 
@@ -30,14 +29,15 @@ namespace Game.UI
             uiContext = context;
             uiContext?.SetSelf(this);
             this.setting = setting;
-            RootObjectResourcesPath = setting.RootObjectPath;
-            view = (UiElementView) GeneralFactory.CreateItem(this, context);
         }
 
         protected override void OnAlive()
         {
             base.OnAlive();
-            Initialize();
+
+            AssignChilds();
+            view.SetAlive(location);
+            ContentHolder = view.Root.transform;
             SetAliveChilds();
         }
 
@@ -74,8 +74,6 @@ namespace Game.UI
             view = null;
         }
 
-        protected abstract void Initialize();
-
         protected virtual void AssignChilds()
         {
             ChildUiElements = new IUiElement[setting.childUiElementSettings.Length];
@@ -83,7 +81,8 @@ namespace Game.UI
             {
                 var childContext = new UiContext().SendParent(this);
                 childContext.AddContext(uiContext.GetContext<GeneralContext>());
-                ChildUiElements[i] = (IUiElement) GeneralFactory.CreateItem(setting.childUiElementSettings[i], childContext);
+                ChildUiElements[i] =
+                    (IUiElement) GeneralFactory.CreateItem(setting.childUiElementSettings[i], childContext);
             }
         }
 

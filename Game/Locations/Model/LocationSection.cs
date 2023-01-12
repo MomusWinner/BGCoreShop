@@ -50,8 +50,8 @@ namespace Core.Locations.Model
         protected override void OnAlive()
         {
             base.OnAlive();
-            StatLocation?.SetAlive(null);
-            DynLocation?.SetAlive(null);
+            StatLocation?.SetAlive();
+            DynLocation?.SetAlive();
         }
 
         protected override void OnDrop()
@@ -67,7 +67,7 @@ namespace Core.Locations.Model
             {
                 location.Drop();
                 location.Refresh();
-                location.SetAlive(null);
+                location.SetAlive();
             }
         }
     }

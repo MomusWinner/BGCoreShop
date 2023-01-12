@@ -1,49 +1,34 @@
 ﻿using Core.ObjectsSystem;
-using Game.UI;
+using Game.Settings.UISettings;
 using GameData;
 using UnityEngine;
 
 namespace UI.View
 {
-    public abstract class UiElementView : BaseDroppable
+    public abstract class UiElementView<TSetting, TComponent> : BaseDroppable
+        where TComponent : Component
+        where TSetting : UISetting
     {
-        public GameObject Root { get; protected set; }
-        protected UiElement ParentUiElement { get; }
+        public TComponent Root { get; protected set; }
+        protected readonly UiContext context;
+        protected readonly TSetting setting;
+        private readonly TComponent rootResource;
 
-        protected readonly IContext context;
-        protected readonly GameObject rootResource;
-        protected Transform parent;
-
-        protected UiElementView(UiElement uiElementParent, IContext ctx)
+        protected UiElementView(TSetting setting, UiContext ctx)
         {
-            ParentUiElement = uiElementParent;
-            rootResource = Resources.Load<GameObject>(uiElementParent.RootObjectResourcesPath);
+            this.setting = setting;
+            rootResource = Resources.Load<TComponent>(setting.RootObjectPath);
             context = ctx;
         }
-
-        public void Initialize(Transform parent = null)
-        {
-            this.parent = parent;
-            SetAlive(location);
-        }
-
-        public void SetParent(Transform parent)
-        {
-            if (Root)
-            {
-                this.parent = parent;
-                Root.transform.SetParent(parent);
-            }
-        }
-
+        
         public virtual void Show()
         {
-            Root.SetActive(true);
+            Root.gameObject.SetActive(true);
         }
 
         public virtual void Hide()
         {
-            Root.SetActive(false);
+            Root.gameObject.SetActive(false);
         }
         
         protected override void OnAlive()
@@ -54,7 +39,8 @@ namespace UI.View
                 Debug.LogWarning($"View for {Name} not created");
                 return;
             }
-            
+
+            var parent = context is {ParentUiElement: { }} ? context.ParentUiElement.ContentHolder : location?.Root.transform;
             Root = Object.Instantiate(rootResource, parent);
             Root.name = $"[{GetType().Name}] {rootResource.name}";
         }
