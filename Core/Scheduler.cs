@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Core.LoopSystem;
 using Core.Timers;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Core
 {
@@ -44,7 +45,7 @@ namespace Core
         public static void InvokeWhen(Func<bool> condition, Action action)
         {
             if (!instance)
-                instance = new GameObject(nameof(Scheduler)).AddComponent<MonoBehaviour>();
+                instance = new GameObject(nameof(Scheduler)).AddComponent<Mask>();
             instance.StartCoroutine(ConditionUntil(action, condition));
         }
 

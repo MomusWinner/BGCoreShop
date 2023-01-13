@@ -14,6 +14,8 @@ namespace Core.Locations
         private static Scene staticScene;
         private static Scene dynamicScene;
 
+        private static object locker = new object();
+        
         public static async Task LoadBothAsync(Location statLocation, Location dynLocation)
         {
             void InnerLoadingScenes(object[] obj)
@@ -100,8 +102,11 @@ namespace Core.Locations
 
                 loadingStatic.completed += _ =>
                 {
-                    staticScene = SceneManager.GetSceneByName(statLocation.RootSceneName);
-                    isLoadedStaticLocation = true;
+                    lock (locker)
+                    {
+                        staticScene = SceneManager.GetSceneByName(statLocation.RootSceneName);
+                        isLoadedStaticLocation = true;
+                    }
                 };
             }
 
@@ -115,8 +120,11 @@ namespace Core.Locations
 
                 loadingDynamic.completed += _ =>
                 {
-                    dynamicScene = SceneManager.GetSceneByName(dynLocation.RootSceneName);
-                    isLoadedDynamicLocation = true;
+                    lock (locker)
+                    {
+                        dynamicScene = SceneManager.GetSceneByName(dynLocation.RootSceneName);
+                        isLoadedDynamicLocation = true;
+                    }
                 };
             }
 

@@ -1,6 +1,8 @@
 using BGCore.Game.Factories;
 using Core.ObjectsSystem;
 using GameData;
+using Unity.VisualScripting;
+using UnityEngine;
 
 namespace Core.Locations.Model
 {
