@@ -25,7 +25,6 @@ namespace GameLogic.Views
         
         protected readonly TSetting setting;
         protected readonly TObject resource;
-        protected readonly Location location;
         
         protected LocationObjectView(TSetting setting)
         {
