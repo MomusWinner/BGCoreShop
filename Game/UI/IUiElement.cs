@@ -5,6 +5,7 @@ namespace Game.UI
 {
     public interface IUiElement : IDroppable
     {
+        Component RootComponent { get; }
         Transform  ContentHolder { get; }
         bool IsShown { get; }
         void Show();

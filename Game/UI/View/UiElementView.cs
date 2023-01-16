@@ -1,4 +1,5 @@
-﻿using Core.ObjectsSystem;
+﻿using System.Collections.Generic;
+using Core.ObjectsSystem;
 using Game.Settings.UISettings;
 using GameData;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace UI.View
         protected readonly UiContext context;
         protected readonly TSetting setting;
         private readonly TComponent rootResource;
+
+        private readonly List<Component> childComponents = new List<Component>();
 
         protected UiElementView(TSetting setting, UiContext ctx)
         {
@@ -30,7 +33,17 @@ namespace UI.View
         {
             Root.gameObject.SetActive(false);
         }
-        
+
+        public void AddChildComponent(Component component)
+        {
+            childComponents.Add(component);
+            OnAddChildComponent(component);
+        }
+
+        protected virtual void OnAddChildComponent(Component component)
+        {
+        }
+
         protected override void OnAlive()
         {
             base.OnAlive();
@@ -48,6 +61,7 @@ namespace UI.View
         protected override void OnDrop()
         {
             base.OnDrop();
+            childComponents.Clear();
             Object.Destroy(Root);
         }
     }
