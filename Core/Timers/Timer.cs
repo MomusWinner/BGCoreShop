@@ -11,10 +11,11 @@ namespace Core.Timers
 
         public bool IsPlaying { get; private set; }
 
-        private readonly int loop; 
+        private readonly int loop;
+        private readonly bool invokeOnce;
+        private readonly bool playOnAwake;
+        
         private float value;
-
-        private bool invokeOnce;
 
         private Action<object> onReachedPeriod;
 
@@ -24,15 +25,13 @@ namespace Core.Timers
             Period = period;
             onReachedPeriod = onReachedPeriodAction;
             invokeOnce = once;
-        
+            
             if (playOnAwake)
             {
                 Play();
             }
-
-            LoopOn(loopType, Execute, playOnAwake);
         }
-        
+
         public void Play()
         {
             IsPlaying = true;
@@ -78,6 +77,12 @@ namespace Core.Timers
         public void AddPeriod(float step)
         {
             Period += step;
+        }
+
+        protected override void OnAlive()
+        {
+            base.OnAlive();
+            LoopOn(loop, Execute, playOnAwake);
         }
 
         private void Execute()

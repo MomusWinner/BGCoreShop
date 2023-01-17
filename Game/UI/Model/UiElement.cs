@@ -10,11 +10,11 @@ using UnityEngine;
 namespace Game.UI
 {
     public abstract class UiElement<TView, TSetting, TComponent> : BaseDroppable, IUiElement 
-        where TView : UiElementView<TSetting, TComponent>
-        where TSetting : UISetting
-        where TComponent : Component
+                    where TView : UiElementView<TSetting, TComponent>
+                    where TSetting : UISetting
+                    where TComponent : Component, IUIGraphicComponent
     {
-        public Component RootComponent => view.Root;
+        public IUIGraphicComponent RootComponent => view.Root;
         public Transform ContentHolder { get; protected set; }
 
         public bool IsShown { get; private set; }
@@ -85,8 +85,8 @@ namespace Game.UI
             for (var i = 0; i < ChildUiElements.Length; i++)
             {
                 var childContext = new UiContext().SendParent(this);
-                childContext.AddContext(uiContext.GetContext<GeneralContext>());
-                ChildUiElements[i] = (IUiElement) GeneralFactory.CreateItem(setting.childUiElementSettings[i], childContext);
+                childContext.AddContext(uiContext.GetContext<MainContext>());
+                ChildUiElements[i] = (IUiElement) Factory.CreateItem(setting.childUiElementSettings[i], childContext);
             }
         }
 

@@ -4,7 +4,7 @@ using GameData;
 
 namespace Game.LocationObjects
 {
-    public class LocationObjectInventory : BaseContext
+    public class LocationContext : BaseContext
     {
         private readonly Dictionary<Guid, ILocationObject> objectContexts = new Dictionary<Guid, ILocationObject>();
 

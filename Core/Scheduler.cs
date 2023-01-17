@@ -27,6 +27,7 @@ namespace Core
 
             
             var delayTimer = TimerFactory.CreateTimer(Loops.Update, delay, InvokeAction);
+            delayTimer.SetAlive();
             delayTimers.Add(delayTimer);
         }
 

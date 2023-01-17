@@ -7,16 +7,14 @@ using UnityEngine;
 namespace UI.View
 {
     public abstract class UiElementView<TSetting, TComponent> : BaseDroppable
-        where TComponent : Component
+        where TComponent : Component, IUIGraphicComponent
         where TSetting : UISetting
     {
         public TComponent Root { get; protected set; }
         protected readonly UiContext context;
         protected readonly TSetting setting;
         private readonly TComponent rootResource;
-
-        private readonly List<Component> childComponents = new List<Component>();
-
+        
         protected UiElementView(TSetting setting, UiContext ctx)
         {
             this.setting = setting;
@@ -34,13 +32,13 @@ namespace UI.View
             Root.gameObject.SetActive(false);
         }
 
-        public void AddChildComponent(Component component)
+        public void AddChildComponent(IUIGraphicComponent graphic)
         {
-            childComponents.Add(component);
-            OnAddChildComponent(component);
+            Root.GraphicMaskable.AddMaskable(graphic.GraphicMaskable);
+            OnAddChildComponent(graphic);
         }
 
-        protected virtual void OnAddChildComponent(Component component)
+        protected virtual void OnAddChildComponent(IUIGraphicComponent component)
         {
         }
 
@@ -61,7 +59,6 @@ namespace UI.View
         protected override void OnDrop()
         {
             base.OnDrop();
-            childComponents.Clear();
             Object.Destroy(Root);
         }
     }

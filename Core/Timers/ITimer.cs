@@ -1,8 +1,9 @@
 using System;
+using Core.ObjectsSystem;
 
 namespace Core.Timers
 {
-    public interface ITimer
+    public interface ITimer : IDroppable
     {
         event Action<TimerArgs> OnTimerTick;
         float Period { get; }

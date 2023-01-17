@@ -9,23 +9,23 @@ namespace Game.LocationObjects
     {
         public Guid Id { get; } = Guid.NewGuid();
         protected TView view;
-        protected IContext context;
+        protected readonly IContext context;
         
         protected LocationObject(IContext context)
         {
-            this.context = context.GetContext<GeneralContext>();
+            this.context = context.GetContext<MainContext>();
         }
 
         protected override void OnAlive()
         {
             base.OnAlive();
             view?.SetAlive(location);
-            context.GetContext<LocationObjectInventory>().AddObject(this);
+            context.GetContext<LocationContext>().AddObject(this);
         }
 
         protected override void OnDrop()
         {
-            context.GetContext<LocationObjectInventory>().RemoveObject(Id);
+            context.GetContext<LocationContext>().RemoveObject(Id);
             base.OnDrop();
             view?.Drop();
         }

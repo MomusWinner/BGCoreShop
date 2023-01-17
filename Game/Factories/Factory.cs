@@ -7,7 +7,7 @@ using GameData;
 
 namespace BGCore.Game.Factories
 {
-    public static class GeneralFactory
+    public static class Factory
     {
         private static Dictionary<Type, IFactory> Factories { get; set; }
 
