@@ -9,14 +9,11 @@ namespace Core.Locations.View
     {
         public GameObject Root { get; private set; }
         
-        protected Location ParentLocation { get; }
-
         protected readonly IContext context;
         private readonly GameObject rootResource;
 
         protected LocationView(Location location, IContext ctx)
         {
-            ParentLocation = location;
             rootResource = Resources.Load<GameObject>(location.RootObjectResourcesPath);
             context = ctx;
         }

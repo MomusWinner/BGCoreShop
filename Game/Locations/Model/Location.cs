@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using BGCore.Game.Factories;
 using Core.Locations.View;
 using Core.ObjectsSystem;
 using GameData;
@@ -14,7 +13,6 @@ namespace Core.Locations.Model
 
     {
         public GameObject Root => locationView.Root;
-        public string RootSceneName { get; }
         public string RootObjectResourcesPath { get; }
 
         protected LocationView locationView;
@@ -24,11 +22,10 @@ namespace Core.Locations.Model
 
         protected Location(LocationSetting setting, IContext context)
         {
-            Name = setting.SceneName;
-            this.setting = setting;
-            RootSceneName = setting.SceneName;
-            RootObjectResourcesPath = setting.RootObjectPath;
             this.context = context;
+            this.setting = setting;
+            Name = setting.SceneName;
+            RootObjectResourcesPath = setting.RootObjectPath;
             Initialize();
         }
 
@@ -61,7 +58,7 @@ namespace Core.Locations.Model
             AddContext();
 
             var mainScene = SceneManager.GetActiveScene();
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(RootSceneName));
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(Name));
 
             locationView.SetAlive(location);
 

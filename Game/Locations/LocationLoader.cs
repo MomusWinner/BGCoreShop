@@ -24,8 +24,8 @@ namespace Core.Locations
                 LoadingScenes(statLocation, dynLocation);
             }
 
-            if (staticScene.isLoaded && statLocation.RootSceneName != staticScene.name ||
-                dynamicScene.isLoaded && dynLocation.RootSceneName != dynamicScene.name ||
+            if (staticScene.isLoaded && statLocation.Name != staticScene.name ||
+                dynamicScene.isLoaded && dynLocation.Name != dynamicScene.name ||
                 !staticScene.isLoaded || !dynamicScene.isLoaded)
             {
                 GEvent.Attach(GlobalEvents.LocationScenesUnloaded, InnerLoadingScenes);
@@ -68,8 +68,8 @@ namespace Core.Locations
             }
 
             Debug.Log("Start load");
-            if (staticScene.isLoaded && statLocation.RootSceneName != staticScene.name ||
-                dynamicScene.isLoaded && dynLocation.RootSceneName != dynamicScene.name ||
+            if (staticScene.isLoaded && statLocation.Name != staticScene.name ||
+                dynamicScene.isLoaded && dynLocation.Name != dynamicScene.name ||
                 !staticScene.isLoaded || !dynamicScene.isLoaded)
             {
                 GEvent.Attach(GlobalEvents.LocationScenesUnloaded, InnerLoadingScenes);
@@ -98,13 +98,13 @@ namespace Core.Locations
             }
             else
             {
-                var loadingStatic = SceneManager.LoadSceneAsync(statLocation.RootSceneName, LoadSceneMode.Additive);
+                var loadingStatic = SceneManager.LoadSceneAsync(statLocation.Name, LoadSceneMode.Additive);
 
                 loadingStatic.completed += _ =>
                 {
                     lock (locker)
                     {
-                        staticScene = SceneManager.GetSceneByName(statLocation.RootSceneName);
+                        staticScene = SceneManager.GetSceneByName(statLocation.Name);
                         isLoadedStaticLocation = true;
                     }
                 };
@@ -116,13 +116,13 @@ namespace Core.Locations
             }
             else
             {
-                var loadingDynamic = SceneManager.LoadSceneAsync(dynLocation.RootSceneName, LoadSceneMode.Additive);
+                var loadingDynamic = SceneManager.LoadSceneAsync(dynLocation.Name, LoadSceneMode.Additive);
 
                 loadingDynamic.completed += _ =>
                 {
                     lock (locker)
                     {
-                        dynamicScene = SceneManager.GetSceneByName(dynLocation.RootSceneName);
+                        dynamicScene = SceneManager.GetSceneByName(dynLocation.Name);
                         isLoadedDynamicLocation = true;
                     }
                 };

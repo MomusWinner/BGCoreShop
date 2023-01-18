@@ -1,8 +1,6 @@
 using BGCore.Game.Factories;
 using Core.ObjectsSystem;
 using GameData;
-using Unity.VisualScripting;
-using UnityEngine;
 
 namespace Core.Locations.Model
 {
@@ -13,11 +11,11 @@ namespace Core.Locations.Model
 
         private readonly LocationSetting statLocationSetting;
         private readonly LocationSetting dynLocationSetting;
-        private readonly IContext sectionContext;
+        private readonly IContext context;
 
         public LocationSection(LocationSetting statLocationSetting, LocationSetting dynLocationSetting, IContext context)
         {
-            sectionContext = context;
+            this.context = context;
             this.statLocationSetting = statLocationSetting;
             this.dynLocationSetting = dynLocationSetting;
 
@@ -31,8 +29,8 @@ namespace Core.Locations.Model
             GEvent.Attach(GlobalEvents.DropSection, Drop);
             GEvent.AttachOnce(GlobalEvents.Restart, OnRestart);
 
-            StatLocation =  (Location) Factory.CreateItem(statLocationSetting, sectionContext);
-            DynLocation = (Location) Factory.CreateItem(dynLocationSetting, sectionContext);
+            StatLocation =  (Location) Factory.CreateItem(statLocationSetting, context);
+            DynLocation = (Location) Factory.CreateItem(dynLocationSetting, context);
 
 #if UNITY_WEBGL
             LocationLoader.LoadBoth(StatLocation, DynLocation, SetAlive);
