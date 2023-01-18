@@ -24,12 +24,12 @@ namespace UI.View
         
         public virtual void Show()
         {
-            Root.gameObject.SetActive(true);
+            Root.Show();
         }
 
         public virtual void Hide()
         {
-            Root.gameObject.SetActive(false);
+            Root.Hide();
         }
 
         public void AddChildComponent(IUIGraphicComponent graphic)

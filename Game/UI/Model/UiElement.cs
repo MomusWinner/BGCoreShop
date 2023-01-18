@@ -23,10 +23,10 @@ namespace Game.UI
         protected readonly UiContext uiContext;
         
         protected TView view;
-        private readonly UISetting setting;
+        protected readonly TSetting setting;
 
 
-        protected UiElement(UISetting setting, UiContext context)
+        protected UiElement(TSetting setting, UiContext context)
         {
             uiContext = context;
             uiContext?.SetSelf(this);
