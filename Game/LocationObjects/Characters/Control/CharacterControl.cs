@@ -24,9 +24,7 @@ namespace Game.Characters.Control
         public void ExecuteCommands()
         {
             while (commands.Count > 0)
-            {
                 commands.Dequeue().Execute(this);
-            }
         }
     }
 }

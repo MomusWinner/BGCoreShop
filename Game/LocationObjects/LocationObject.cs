@@ -7,12 +7,13 @@ namespace Game.LocationObjects
 {
     public abstract class LocationObject<TView> : BaseDroppable, ILocationObject where TView : BaseDroppable
     {
-        public Guid Id { get; } = Guid.NewGuid();
+        public Guid Id { get; } 
         protected TView view;
         protected readonly IContext context;
         
         protected LocationObject(IContext context)
         {
+            Id = Guid.NewGuid();
             this.context = context.GetContext<MainContext>();
         }
 
