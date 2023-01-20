@@ -24,7 +24,7 @@ namespace Core.Locations.View
             if(!rootResource)
                 return;
             Root = Object.Instantiate(rootResource);
-            Root.name = "[Location Root] " + rootResource.name;
+            Root.name = $"[{GetType().Name}]"+ rootResource.name;
         }
         
         protected override void OnDrop()

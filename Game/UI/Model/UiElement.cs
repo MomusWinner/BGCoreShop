@@ -31,6 +31,7 @@ namespace Game.UI
             uiContext = context;
             uiContext?.SetSelf(this);
             this.setting = setting;
+            AssignChilds();
         }
         
         public virtual void Show()
@@ -57,11 +58,14 @@ namespace Game.UI
         protected override void OnAlive()
         {
             base.OnAlive();
-
-            AssignChilds();
             view.SetAlive(location);
+            SetContentHolder();
+            ChildSetAlive();
+        }
+
+        protected virtual void SetContentHolder()
+        {
             ContentHolder = view.Root.transform;
-            SetAliveChilds();
         }
 
         protected override void OnDrop()
@@ -78,19 +82,8 @@ namespace Game.UI
             ChildUiElements = null;
             view = null;
         }
-
-        protected virtual void AssignChilds()
-        {
-            ChildUiElements = new IUiElement[setting.childUiElementSettings.Length];
-            for (var i = 0; i < ChildUiElements.Length; i++)
-            {
-                var childContext = new UiContext().SendParent(this);
-                childContext.AddContext(uiContext.GetContext<MainContext>());
-                ChildUiElements[i] = (IUiElement) Factory.CreateItem(setting.childUiElementSettings[i], childContext);
-            }
-        }
-
-        private void SetAliveChilds()
+        
+        protected void ChildSetAlive()
         {
             if (ChildUiElements is null)
                 return;
@@ -99,6 +92,17 @@ namespace Game.UI
             {
                 childUiElement.SetAlive(location);
                 view.AddChildComponent(childUiElement.RootComponent);
+            }
+        }
+        
+        private void AssignChilds()
+        {
+            ChildUiElements = new IUiElement[setting.childUiElementSettings.Length];
+            for (var i = 0; i < ChildUiElements.Length; i++)
+            {
+                var childContext = new UiContext().SendParent(this);
+                childContext.AddContext(uiContext.GetContext<MainContext>());
+                ChildUiElements[i] = (IUiElement) Factory.CreateItem(setting.childUiElementSettings[i], childContext);
             }
         }
     }
