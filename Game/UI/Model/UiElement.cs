@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BGCore.Game.Factories;
 using Core.ObjectsSystem;
 using UI.View;
@@ -19,7 +20,7 @@ namespace Game.UI
 
         public bool IsShown { get; private set; }
 
-        protected IUiElement[] ChildUiElements { get; set; }
+        protected List<IUiElement> ChildUiElements { get; set; }
         protected readonly UiContext uiContext;
         
         protected TView view;
@@ -31,7 +32,7 @@ namespace Game.UI
             uiContext = context;
             uiContext?.SetSelf(this);
             this.setting = setting;
-            AssignChilds();
+            AssignChild();
         }
         
         public virtual void Show()
@@ -95,14 +96,14 @@ namespace Game.UI
             }
         }
         
-        private void AssignChilds()
+        private void AssignChild()
         {
-            ChildUiElements = new IUiElement[setting.childUiElementSettings.Length];
-            for (var i = 0; i < ChildUiElements.Length; i++)
+            ChildUiElements = new List<IUiElement>();
+            foreach (var uiSetting in setting.childUiElementSettings)
             {
                 var childContext = new UiContext().SendParent(this);
                 childContext.AddContext(uiContext.GetContext<MainContext>());
-                ChildUiElements[i] = (IUiElement) Factory.CreateItem(setting.childUiElementSettings[i], childContext);
+                ChildUiElements.Add((IUiElement) Factory.CreateItem(uiSetting, childContext));
             }
         }
     }
