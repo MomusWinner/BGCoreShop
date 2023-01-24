@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BGCore.Game.Factories;
 using Core.ObjectsSystem;
@@ -26,12 +27,12 @@ namespace Game.UI
         protected TView view;
         protected readonly TSetting setting;
 
-
         protected UiElement(TSetting setting, UiContext context)
         {
             uiContext = context;
             uiContext?.SetSelf(this);
             this.setting = setting;
+            view = (TView) Activator.CreateInstance(typeof(TView), setting, context);
             AssignChild();
         }
         
