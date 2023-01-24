@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Core.ObjectsSystem;
+﻿using Core.ObjectsSystem;
 using Game.Settings.UISettings;
 using GameData;
 using UnityEngine;
