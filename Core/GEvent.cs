@@ -69,16 +69,16 @@ namespace Core
             }
         }
 
-        public static void Call(string category, params object[] objects)
+        public static bool Call(string category, params object[] objects)
         {
             if (!actions.TryGetValue(category, out var actionsList))
             {
-                return;
+                return false;
             }
 
             if (actionsList is {Count: 0})
             {
-                return;
+                return true;
             }
 
             var copy = new Action<object[]>[actionsList.Count];
@@ -88,6 +88,8 @@ namespace Core
             {
                 action(objects);
             }
+
+            return true;
         }
     }
 }

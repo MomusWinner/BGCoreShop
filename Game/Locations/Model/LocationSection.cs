@@ -33,7 +33,7 @@ namespace Core.Locations.Model
             DynLocation = (Location) Factory.CreateItem(dynLocationSetting, context);
 
 #if UNITY_WEBGL
-            LocationLoader.LoadBoth(StatLocation, DynLocation, SetAlive);
+            LocationLoader.LoadBoth(StatLocation, DynLocation,()=> SetAlive());
 
 #else
             await LocationLoader.LoadBothAsync(StatLocation, DynLocation);
