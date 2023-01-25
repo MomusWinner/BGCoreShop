@@ -1,6 +1,7 @@
 using System;
 using Core.Locations.Model;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Core.Chapters
 {
@@ -8,18 +9,18 @@ namespace Core.Chapters
     public class Chapter
     {
         public string ChapterName => chapterName;
-        public LocationSetting StaticLocationSetting => statLocationSetting;
-        public LocationSetting DynamicLocationSetting => dynamicLocationSetting;
+        public LocationSetting StaticLocationSetting => staticSetting;
+        public LocationSetting DynamicLocationSetting => dynamicSetting;
 
         [SerializeField, HideInInspector] private string chapterName;
-        [SerializeField] private LocationSetting statLocationSetting;
-        [SerializeField] private LocationSetting dynamicLocationSetting;
+        [FormerlySerializedAs("statLocationSetting")] [SerializeField] private LocationSetting staticSetting;
+        [FormerlySerializedAs("dynamicLocationSetting")] [SerializeField] private LocationSetting dynamicSetting;
 
         public void OnValidate()
         {
-            var none = "NONE";
-            chapterName = $"{(statLocationSetting ? statLocationSetting.name : none)}~" +
-                          $"{(dynamicLocationSetting ? dynamicLocationSetting.name : none)}";
+            const string none = "NONE";
+            chapterName = $"{(staticSetting ? staticSetting.name : none)}~" +
+                          $"{(dynamicSetting ? dynamicSetting.name : none)}";
         }
     }
 }

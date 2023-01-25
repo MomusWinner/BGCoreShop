@@ -17,15 +17,12 @@ namespace Core.LoopSystem
 
             public int Compare(Loopable x, Loopable y)
             {
-                if (x.GetOrder(loopType) > y.GetOrder(loopType))
-                {
+                if (x is { } && y is { } && x.GetOrder(loopType) > y.GetOrder(loopType))
                     return 1;
-                }
 
-                if (x.GetOrder(loopType) < y.GetOrder(loopType))
-                {
+                if (x is { } && y is { } && x.GetOrder(loopType) < y.GetOrder(loopType))
                     return -1;
-                }
+                
                 return 0;
             }
         }
@@ -59,7 +56,7 @@ namespace Core.LoopSystem
         {
             InnerRemove(loopable);
         }
-        
+
         public void SyncAction(Action method)
         {
             lock (session.SyncRoot)
@@ -72,30 +69,23 @@ namespace Core.LoopSystem
         private void CallAllLoopables()
         {
             Modify();
-
             InnerCall(session.Process, session);
 
             if (session.Destroyed)
             {
                 return;
             }
-            
-            for (;;)
+
+            while (true)
             {
                 var newLoops = Modify();
                 if (newLoops != null)
                 {
                     InnerCall(newLoops, session);
-                    
                     if (session.Destroyed)
-                    {
                         return;
-                    }
                 }
-                else
-                {
-                    break;
-                }
+                else break;
             }
         }
 
@@ -104,46 +94,34 @@ namespace Core.LoopSystem
             for (var i = 0; i < loopables.Count; i++)
             {
                 if (session.Destroyed)
-                {
                     return;
-                }
 
                 var current = loopables[i];
                 if (current.CallActions)
-                {
                     current.GetAction(loopType)?.Invoke();
-                }
             }
         }
-        
+
         private void InnerRemove(Loopable behaviour)
         {
             var idx = session.ForAdd.IndexOf(behaviour);
-            
+
             if (idx != -1)
-            {
                 session.ForAdd.RemoveAt(idx);
-            }
             else
-            {
                 session.ForRemove.Add(behaviour);
-            }
         }
 
         private void ProcessSync()
         {
             if (session.ActionsCount is 0)
-            {
                 return;
-            }
 
             List<Action> actions;
             lock (session.SyncRoot)
             {
                 if (session.ActionsCount is 0)
-                {
                     return;
-                }
 
                 actions = new List<Action>(session.Actions);
                 session.ActionsCount = 0;
@@ -153,14 +131,11 @@ namespace Core.LoopSystem
             foreach (var action in actions)
             {
                 if (session.Destroyed)
-                {
                     return;
-                }
-
                 action();
             }
         }
-        
+
 
         private List<Loopable> Modify()
         {
@@ -170,10 +145,9 @@ namespace Core.LoopSystem
                 {
                     var index = GetIndex(loopable);
                     if (index >= 0)
-                    {
                         session.Process.RemoveAt(index);
-                    }
                 }
+
                 session.ForRemove.Clear();
             }
 
@@ -186,12 +160,10 @@ namespace Core.LoopSystem
                     session.Process.Add(loopable);
 
                     if (loopable.CallActions && loopable.CallWhenAdded)
-                    {
                         newLoops.Add(loopable);
-                    }
                     loopable.SetOrder(loopType, behaviourOrder++);
                 }
-                
+
                 session.ForAdd.Clear();
                 return newLoops;
             }
@@ -199,9 +171,6 @@ namespace Core.LoopSystem
             return null;
         }
 
-        private int GetIndex(Loopable loopable)
-        {
-            return session.Process.BinarySearch(loopable, comparer);
-        }
+        private int GetIndex(Loopable loopable) => session.Process.BinarySearch(loopable, comparer);
     }
 }
