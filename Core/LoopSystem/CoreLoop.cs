@@ -22,7 +22,7 @@ namespace Core.LoopSystem
 
                 if (x is { } && y is { } && x.GetOrder(loopType) < y.GetOrder(loopType))
                     return -1;
-                
+
                 return 0;
             }
         }
@@ -76,7 +76,7 @@ namespace Core.LoopSystem
                 return;
             }
 
-            while (true)
+            for (;;)
             {
                 var newLoops = Modify();
                 if (newLoops != null)
