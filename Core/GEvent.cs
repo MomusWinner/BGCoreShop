@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core.ObjectsSystem;
+using GameLogic.Networks;
 using UnityEngine;
 
 namespace Core
@@ -11,6 +12,8 @@ namespace Core
 
         private static readonly Dictionary<string, Dictionary<int, Action<object[]>>> actions =
             new Dictionary<string, Dictionary<int, Action<object[]>>>();
+
+        private static ThreadDispatcher threadDispatcher;
 
         public static string GetUniqueCategory()
         {
@@ -26,6 +29,7 @@ namespace Core
                     Debug.LogWarning($"Same method attaching {method.Method}");
                     return;
                 }
+
                 actionsList.Add(method.GetHashCode(), method);
             }
             else
@@ -61,11 +65,25 @@ namespace Core
                 {
                     actionMap.Remove(hash);
                 }
-                
+
                 if (actionMap.Count is 0)
                 {
                     actions.Remove(category);
                 }
+            }
+        }
+
+        public static bool CallInMainThread(string category, params object[] objects)
+        {
+            try
+            {
+                threadDispatcher ??= new ThreadDispatcher();
+                threadDispatcher.AddEvent(() => Call(category, objects));
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
