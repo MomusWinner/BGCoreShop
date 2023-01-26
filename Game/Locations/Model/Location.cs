@@ -42,11 +42,9 @@ namespace Core.Locations.Model
             return droppables.Where(o => o.GetType() == typeof(TDroppable)).Cast<TDroppable>();
         }
 
-        public TDroppable GetFirstOrDefaultObject<TDroppable>(Func<TDroppable, bool> predicate = null)
-            where TDroppable : IDroppable
+        public TDroppable GetFirstOrDefaultObject<TDroppable>(Func<TDroppable, bool> predicate = null) where TDroppable : IDroppable
         {
-            return droppables.Where(d => d is TDroppable).Cast<TDroppable>()
-                .FirstOrDefault(d => predicate is null || predicate(d));
+            return droppables.Where(d => d is TDroppable).Cast<TDroppable>().FirstOrDefault(d => predicate is null || predicate(d));
         }
 
         protected override void OnAlive()

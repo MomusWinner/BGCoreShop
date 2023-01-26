@@ -1,3 +1,4 @@
+using System;
 using BGCore.Game.Factories;
 using Core.ObjectsSystem;
 using GameData;
@@ -22,6 +23,12 @@ namespace Core.Locations.Model
             GEvent.AttachOnce(GlobalEvents.Start, OnStart, this);
         }
 
+        public TDroppable GetObject<TDroppable>(Func<TDroppable, bool> predicate = null)
+            where TDroppable : IDroppable
+        {
+            return StatLocation.GetFirstOrDefaultObject(predicate) ?? DynLocation.GetFirstOrDefaultObject(predicate);
+        }
+
 #pragma warning disable CS1998
         private async void OnStart(params object[] obj)
 #pragma warning restore CS1998
@@ -34,7 +41,6 @@ namespace Core.Locations.Model
 
 #if UNITY_WEBGL
             LocationLoader.LoadBoth(StatLocation, DynLocation,()=> SetAlive());
-
 #else
             await LocationLoader.LoadBothAsync(StatLocation, DynLocation);
             SetAlive(null);
