@@ -77,7 +77,12 @@ namespace Core
         {
             try
             {
-                threadDispatcher ??= new ThreadDispatcher();
+                if (threadDispatcher is null)
+                {
+                    threadDispatcher = new ThreadDispatcher();
+                    threadDispatcher.SetAlive();
+                    threadDispatcher.Play();
+                }
                 threadDispatcher.AddEvent(() => Call(category, objects));
                 return true;
             }
