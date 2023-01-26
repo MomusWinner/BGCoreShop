@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Core.ObjectsSystem;
+using GameLogic;
 using GameLogic.Networks;
 using UnityEngine;
 
@@ -10,11 +11,8 @@ namespace Core
     {
         private static uint staticUniqueCounter;
 
-        private static readonly Dictionary<string, Dictionary<int, Action<object[]>>> actions =
-            new Dictionary<string, Dictionary<int, Action<object[]>>>();
-
-        private static ThreadDispatcher threadDispatcher;
-
+        private static readonly Dictionary<string, Dictionary<int, Action<object[]>>> actions = new Dictionary<string, Dictionary<int, Action<object[]>>>();
+        
         public static string GetUniqueCategory()
         {
             return "#" + staticUniqueCounter++;
@@ -77,13 +75,7 @@ namespace Core
         {
             try
             {
-                if (threadDispatcher is null)
-                {
-                    threadDispatcher = new ThreadDispatcher();
-                    threadDispatcher.SetAlive();
-                    threadDispatcher.Play();
-                }
-                threadDispatcher.AddEvent(() => Call(category, objects));
+                Container.ThreadDispatcher.AddEvent(() => Call(category, objects));
                 return true;
             }
             catch
