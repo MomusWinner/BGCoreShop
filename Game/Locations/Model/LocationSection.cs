@@ -36,7 +36,7 @@ namespace Core.Locations.Model
             GEvent.Attach(GlobalEvents.DropSection, Drop);
             GEvent.AttachOnce(GlobalEvents.Restart, OnRestart);
 
-            StatLocation =  (Location) Factory.CreateItem(statLocationSetting, context);
+            StatLocation = (Location) Factory.CreateItem(statLocationSetting, context);
             DynLocation = (Location) Factory.CreateItem(dynLocationSetting, context);
 
 #if UNITY_WEBGL
