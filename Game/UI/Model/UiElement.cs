@@ -19,7 +19,7 @@ namespace Game.UI
         public IUIGraphicComponent RootComponent => view.Root;
         public Transform ContentHolder { get; protected set; }
 
-        public bool IsShown { get; private set; }
+        public bool IsShown { get; protected set; }
 
         protected List<IUiElement> ChildUiElements { get; set; }
         protected readonly UiContext uiContext;
@@ -50,6 +50,20 @@ namespace Game.UI
 
         public void Update<TUiAgs>(object sender, TUiAgs ags)
         {
+        }
+
+        public T GetChild<T>() where T : IUiElement
+        {
+            foreach (var child in ChildUiElements)
+            {
+                if (child is T validChild)
+                    return validChild;
+                validChild = child.GetChild<T>();
+                if (validChild is { })
+                    return validChild;
+            }
+
+            return default;
         }
 
         public TUiElement GetElement<TUiElement>()
