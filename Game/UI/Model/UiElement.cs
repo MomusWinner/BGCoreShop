@@ -36,18 +36,22 @@ namespace Game.UI
             AssignChild();
         }
         
-        public virtual void Show()
+        public void Show()
         {
+            if(IsShown)
+                return;
             IsShown = true;
-            view.Show();
+            OnShow();
         }
-
-        public virtual void Hide()
+        
+        public void Hide()
         {
+            if(!IsShown)
+                return;
             IsShown = false;
-            view.Hide();
+            OnHide();
         }
-
+        
         public void Update<TUiAgs>(object sender, TUiAgs ags)
         {
         }
@@ -77,6 +81,13 @@ namespace Game.UI
             view.SetAlive(location);
             SetContentHolder();
             ChildSetAlive();
+            IsShown = setting.showOnAlive;
+            if (setting.showOnAlive)
+            {
+                view.Show();
+                return;
+            }
+            view.Hide();
         }
 
         protected virtual void SetContentHolder()
@@ -84,6 +95,18 @@ namespace Game.UI
             ContentHolder = view.Root.transform;
         }
 
+        protected virtual void OnShow()
+        {
+            view.Show();
+            ShowChild();
+        }
+        
+        protected virtual void OnHide()
+        {
+            HideChild();
+            view.Hide();
+        }
+        
         protected override void OnDrop()
         {
             base.OnDrop();
@@ -120,6 +143,18 @@ namespace Game.UI
                 childContext.AddContext(uiContext.GetContext<MainContext>());
                 ChildUiElements.Add((IUiElement) Factory.CreateItem(uiSetting, childContext));
             }
+        }
+        
+        private void ShowChild()
+        {
+            foreach (var uiElement in ChildUiElements)
+                uiElement.Show();
+        }
+
+        private void HideChild()
+        {
+            foreach (var uiElement in ChildUiElements)
+                uiElement.Hide();
         }
     }
 }

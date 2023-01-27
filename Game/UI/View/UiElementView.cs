@@ -21,12 +21,12 @@ namespace UI.View
             context = ctx;
         }
         
-        public virtual void Show()
+        public void Show()
         {
             Root.Show();
         }
 
-        public virtual void Hide()
+        public void Hide()
         {
             Root.Hide();
         }
