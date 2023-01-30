@@ -11,10 +11,12 @@ namespace Core.Chapters
         public string ChapterName => chapterName;
         public LocationSetting StaticLocationSetting => staticSetting;
         public LocationSetting DynamicLocationSetting => dynamicSetting;
+        public ScreenOrientation ScreenOrientation => screenOrientation;
 
         [SerializeField, HideInInspector] private string chapterName;
-        [FormerlySerializedAs("statLocationSetting")] [SerializeField] private LocationSetting staticSetting;
-        [FormerlySerializedAs("dynamicLocationSetting")] [SerializeField] private LocationSetting dynamicSetting;
+        [SerializeField] private LocationSetting staticSetting;
+        [SerializeField] private LocationSetting dynamicSetting;
+        [SerializeField] private ScreenOrientation screenOrientation;
 
         public void OnValidate()
         {
