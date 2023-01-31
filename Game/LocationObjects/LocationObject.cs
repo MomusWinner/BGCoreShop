@@ -21,12 +21,12 @@ namespace Game.LocationObjects
         {
             base.OnAlive();
             view?.SetAlive(location);
-            context.GetContext<LocationContext>().AddObject(this);
+            context?.GetContext<LocationContext>()?.AddObject(this);
         }
 
         protected override void OnDrop()
         {
-            context.GetContext<LocationContext>().RemoveObject(Id);
+            context?.GetContext<LocationContext>()?.RemoveObject(Id);
             base.OnDrop();
             view?.Drop();
         }

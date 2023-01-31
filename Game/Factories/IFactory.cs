@@ -4,7 +4,7 @@ using GameData;
 
 namespace BGCore.Game.Factories
 {
-    public interface IFactory : IBaseFactory
+    public interface IFactory 
     {
         Type SettingType { get; }
         IDroppable CreateItem<TConfig>(TConfig config, IContext context);

@@ -33,7 +33,7 @@ namespace BGCore.Game.Factories
             Factories.Add(factory.SettingType, factory);
         }
 
-        public static TFactory GetFactory<TFactory>() where TFactory : IBaseFactory
+        public static TFactory GetFactory<TFactory>() where TFactory : IFactory
         {
             return (TFactory) Factories.FirstOrDefault(f => f.Value.GetType() == typeof(TFactory)).Value;
         }
