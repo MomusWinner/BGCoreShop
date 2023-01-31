@@ -9,13 +9,13 @@ namespace GameLogic.Views
         where TSetting : ViewSetting
         where TObject : Component
     {
-        public virtual Vector3 Position
+        protected virtual Vector3 Position
         {
             get => Root.transform.position;
             set => Root.transform.position = value;
         }
 
-        public virtual Quaternion Rotation
+        protected virtual Quaternion Rotation
         {
             get => Root.transform.rotation;
             set => Root.transform.rotation = value;

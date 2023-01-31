@@ -1,6 +1,7 @@
 using System;
 using Core.Locations.Model;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Serialization;
 
 namespace Core.Chapters
@@ -9,18 +10,21 @@ namespace Core.Chapters
     public class Chapter
     {
         public string ChapterName => chapterName;
-        public LocationSetting StaticLocationSetting => staticSetting;
-        public LocationSetting DynamicLocationSetting => dynamicSetting;
+        public LocationSetting[] LocationSetting => locationSettings;
 
         [SerializeField, HideInInspector] private string chapterName;
-        [FormerlySerializedAs("statLocationSetting")] [SerializeField] private LocationSetting staticSetting;
-        [FormerlySerializedAs("dynamicLocationSetting")] [SerializeField] private LocationSetting dynamicSetting;
-
+        [SerializeField] private LocationSetting[] locationSettings;
+        
         public void OnValidate()
         {
             const string none = "NONE";
-            chapterName = $"{(staticSetting ? staticSetting.name : none)}~" +
-                          $"{(dynamicSetting ? dynamicSetting.name : none)}";
+            chapterName = string.Empty;
+            if(locationSettings is null)
+                return;
+            foreach (var locationSetting in locationSettings)
+            {
+                chapterName += $"{(locationSetting ? locationSetting.name : none)}~";
+            }
         }
     }
 }

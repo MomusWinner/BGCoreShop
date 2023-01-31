@@ -1,7 +1,5 @@
 using System;
 using Core.Locations.Model;
-using Core.Timers;
-using UnityEngine;
 
 namespace Core.ObjectsSystem
 {

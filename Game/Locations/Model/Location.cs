@@ -5,98 +5,83 @@ using Core.Locations.View;
 using Core.ObjectsSystem;
 using GameData;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Core.Locations.Model
 {
     public abstract class Location : BaseDroppable
 
     {
-        public GameObject Root => locationView.Root;
-        public string RootObjectResourcesPath { get; }
+    public GameObject Root => view.Root;
+    
+    protected readonly LocationView view;
+    protected readonly IContext context;
+    protected readonly IList<IDroppable> childrenDroppables = new List<IDroppable>();
+    protected readonly LocationSetting setting;
 
-        protected LocationView locationView;
-        protected readonly IContext context;
-        protected readonly IList<IDroppable> droppables = new List<IDroppable>();
-        protected readonly LocationSetting setting;
+    protected Location(LocationSetting setting, IContext context)
+    {
+        this.context = context;
+        this.setting = setting;
+        view = new LocationView(setting, context);
+        Initialize();
+    }
 
-        protected Location(LocationSetting setting, IContext context)
-        {
-            this.context = context;
-            this.setting = setting;
-            Name = setting.SceneName;
-            RootObjectResourcesPath = setting.RootObjectPath;
-            Initialize();
-        }
+    public IEnumerable<TDroppable> GetAllObjects<TDroppable>()
+    {
+        return childrenDroppables.Where(o => o.GetType() == typeof(TDroppable)).Cast<TDroppable>();
+    }
 
-        public void Refresh()
-        {
-            if (Alive || locationView is null)
-                return;
+    public TDroppable GetFirstOrDefaultObject<TDroppable>(Func<TDroppable, bool> predicate = null)
+        where TDroppable : IDroppable
+    {
+        return childrenDroppables.Where(d => d is TDroppable).Cast<TDroppable>()
+            .FirstOrDefault(d => predicate is null || predicate(d));
+    }
 
-            Initialize();
-        }
+    protected override void OnAlive()
+    {
+        if (view is null)
+            return;
+        AddContext();
+        view.SetAlive(location);
+        SetAliveChildren();
+    }
 
-        public IEnumerable<TDroppable> GetAllObjects<TDroppable>()
-        {
-            return droppables.Where(o => o.GetType() == typeof(TDroppable)).Cast<TDroppable>();
-        }
+    protected virtual void AddContext()
+    {
+    }
 
-        public TDroppable GetFirstOrDefaultObject<TDroppable>(Func<TDroppable, bool> predicate = null) where TDroppable : IDroppable
-        {
-            return droppables.Where(d => d is TDroppable).Cast<TDroppable>().FirstOrDefault(d => predicate is null || predicate(d));
-        }
+    protected virtual void RemoveContext()
+    {
+    }
 
-        protected override void OnAlive()
-        {
-            GEvent.Call(GlobalEvents.LocationViewLoaded, locationView);
+    protected virtual void OnInitialize()
+    {
+    }
 
-            if (locationView is null)
-                return;
-            AddContext();
+    protected virtual void SetAliveChildren()
+    {
+        foreach (var droppable in childrenDroppables)
+            droppable?.SetAlive(location);
+    }
 
-            var mainScene = SceneManager.GetActiveScene();
-            SceneManager.SetActiveScene(SceneManager.GetSceneByName(Name));
+    protected override void OnDrop()
+    {
+        view?.Drop();
+        DropChildren();
+        RemoveContext();
+    }
 
-            locationView.SetAlive(location);
+    private void DropChildren()
+    {
+        foreach (var droppable in childrenDroppables)
+            droppable?.Drop();
+        childrenDroppables.Clear();
+    }
 
-            GEvent.Call(GlobalEvents.LocationViewLoaded, this);
-
-            SetAliveLocationObjects();
-
-            SceneManager.SetActiveScene(mainScene);
-        }
-
-        protected virtual void AddContext()
-        {
-        }
-
-        protected virtual void RemoveContext()
-        {
-        }
-
-        protected virtual void OnInitialize()
-        {
-        }
-
-        protected virtual void SetAliveLocationObjects()
-        {
-            foreach (var droppable in droppables)
-                droppable?.SetAlive(this);
-        }
-
-        protected override void OnDrop()
-        {
-            locationView?.Drop();
-            foreach (var droppable in droppables)
-                droppable?.Drop();
-            droppables.Clear();
-            RemoveContext();
-        }
-
-        private void Initialize()
-        {
-            OnInitialize();
-        }
+    private void Initialize()
+    {
+        OnInitialize();
+    }
     }
 }
