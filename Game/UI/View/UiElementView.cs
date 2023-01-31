@@ -46,7 +46,7 @@ namespace UI.View
             base.OnAlive();
             if (rootResource is null)
             {
-                Debug.LogWarning($"View for {Name} not created");
+                Debug.LogWarning($"{Name} for {setting.name} not created");
                 return;
             }
 

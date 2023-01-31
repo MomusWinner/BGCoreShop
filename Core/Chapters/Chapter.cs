@@ -1,8 +1,6 @@
 using System;
 using Core.Locations.Model;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.Serialization;
 
 namespace Core.Chapters
 {
