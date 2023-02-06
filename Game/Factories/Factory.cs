@@ -13,8 +13,7 @@ namespace BGCore.Game.Factories
 
         public static IDroppable CreateItem(BaseSetting config, IContext context)
         {
-            var factory = Factories?.FirstOrDefault(e => config.GetType().IsSubclassOf(e.Key));
-            return factory?.Value?.CreateItem(config, context);
+            return InnerCreate(config, context, Factories);
         }
 
         public static IDroppable CreateItem(IDroppable parentObject, IContext context)
@@ -36,6 +35,19 @@ namespace BGCore.Game.Factories
         public static TFactory GetFactory<TFactory>() where TFactory : IFactory
         {
             return (TFactory) Factories.FirstOrDefault(f => f.Value.GetType() == typeof(TFactory)).Value;
+        }
+
+        private static IDroppable InnerCreate(BaseSetting config, IContext context, IEnumerable<KeyValuePair<Type, IFactory>> proposeFactories)
+        {
+            var incomeCollection = proposeFactories as KeyValuePair<Type, IFactory>[] ?? proposeFactories.ToArray();
+            var factory = incomeCollection.FirstOrDefault(e => config.GetType().IsSubclassOf(e.Key));
+            if (factory.Value is null)
+                return null;
+            var result = factory.Value.CreateItem(config, context);
+            if (result is not null)
+                return result;
+            var outcomeCollection = incomeCollection.Except(new[] {factory});
+            return InnerCreate(config, context, outcomeCollection);
         }
     }
 }
