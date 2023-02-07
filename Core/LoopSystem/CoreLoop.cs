@@ -97,7 +97,7 @@ namespace Core.LoopSystem
                     return;
 
                 var current = loopables[i];
-                if (current.CallActions)
+                if (current.IsPlaying)
                     current.GetAction(loopType)?.Invoke();
             }
         }
@@ -159,7 +159,7 @@ namespace Core.LoopSystem
                 {
                     session.Process.Add(loopable);
 
-                    if (loopable.CallActions && loopable.CallWhenAdded)
+                    if (loopable.IsPlaying && loopable.CallWhenAdded)
                         newLoops.Add(loopable);
                     loopable.SetOrder(loopType, behaviourOrder++);
                 }
