@@ -75,7 +75,7 @@ namespace Core
         {
             try
             {
-                Container.ThreadDispatcher.AddEvent(() => Call(category, objects));
+                //Container.ThreadDispatcher.AddEvent(() => Call(category, objects));
                 return true;
             }
             catch

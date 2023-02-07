@@ -6,7 +6,7 @@ namespace Core.Entities.Loopables
 {
     public abstract class Loopable : BaseDroppable
     {
-        public bool CallActions { get; protected set; }
+        public bool IsPlaying { get; protected set; }
         public bool CallWhenAdded { get; protected set; }
 
         private readonly Action[] actions;
@@ -16,7 +16,7 @@ namespace Core.Entities.Loopables
         {
             actions = new Action[CoreLoopService.LoopsCount];
             orders = new uint[CoreLoopService.LoopsCount];
-            CallActions = true;
+            IsPlaying = true;
         }
 
         protected void LoopOn(int type, Action action, bool callNow = false)
@@ -59,7 +59,7 @@ namespace Core.Entities.Loopables
 
         protected override void OnDrop()
         {
-            CallActions = false;
+            IsPlaying = false;
             for (var i = 0; i < actions.Length; i++)
             {
                 LoopOff(i);

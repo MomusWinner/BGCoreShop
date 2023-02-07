@@ -11,7 +11,6 @@ namespace Game.UI
         bool IsShown { get; }
         void Show();
         void Hide();
-        void Update<TUiAgs>(object sender, TUiAgs ags);
         T GetChild<T>() where T : IUiElement;
     }
 }
