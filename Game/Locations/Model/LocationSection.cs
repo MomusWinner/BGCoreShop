@@ -1,7 +1,9 @@
 using System;
 using BGCore.Game.Factories;
 using Core.ObjectsSystem;
+using Game.Settings;
 using GameData;
+using UnityEngine;
 
 namespace Core.Locations.Model
 {
@@ -14,7 +16,8 @@ namespace Core.Locations.Model
         private readonly LocationSetting dynLocationSetting;
         private readonly IContext context;
 
-        public LocationSection(LocationSetting statLocationSetting, LocationSetting dynLocationSetting, IContext context)
+        public LocationSection(LocationSetting statLocationSetting, LocationSetting dynLocationSetting,
+            IContext context)
         {
             this.context = context;
             this.statLocationSetting = statLocationSetting;
@@ -27,6 +30,11 @@ namespace Core.Locations.Model
             where TDroppable : IDroppable
         {
             return StatLocation.GetFirstOrDefaultObject(predicate) ?? DynLocation.GetFirstOrDefaultObject(predicate);
+        }
+
+        public T GetConfig<T>() where T : BaseSetting
+        {
+            return dynLocationSetting.GetConfig<T>();
         }
 
 #pragma warning disable CS1998
@@ -43,8 +51,8 @@ namespace Core.Locations.Model
             LocationLoader.LoadBoth(StatLocation, DynLocation,()=> SetAlive());
 #else
             await LocationLoader.LoadBothAsync(StatLocation, DynLocation);
-            SetAlive(null);
 #endif
+            SetAlive(null);
         }
 
         private void Drop(params object[] objects)
@@ -56,8 +64,10 @@ namespace Core.Locations.Model
         protected override void OnAlive()
         {
             base.OnAlive();
-            StatLocation?.SetAlive();
-            DynLocation?.SetAlive();
+            StatLocation.SetAlive();
+            DynLocation.SetAlive();
+            Name += "~" + StatLocation.Name + "~" + DynLocation.Name;
+            Debug.Log($"Section {Name} lively");
         }
 
         protected override void OnDrop()
@@ -65,6 +75,7 @@ namespace Core.Locations.Model
             base.OnDrop();
             StatLocation?.Drop();
             DynLocation?.Drop();
+            Debug.Log($"Section {Name} dropped");
         }
 
         private void OnRestart(params object[] objs)
