@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BGCore.Game.Factories;
 using Core.ObjectsSystem;
-using Game.Settings;
 using GameData;
 
 namespace Core.Locations.Model

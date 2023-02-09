@@ -1,5 +1,6 @@
 using System.Linq;
 using Game.Settings;
+using UnityEngine;
 
 namespace Core.Locations.Model
 {

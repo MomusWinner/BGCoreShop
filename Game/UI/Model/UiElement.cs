@@ -52,6 +52,10 @@ namespace Game.UI
             OnHide();
         }
         
+        public void Update<TUiAgs>(object sender, TUiAgs ags)
+        {
+        }
+
         public T GetChild<T>() where T : IUiElement
         {
             foreach (var child in ChildUiElements)
@@ -65,7 +69,7 @@ namespace Game.UI
 
             return default;
         }
-        
+
         public TUiElement GetElement<TUiElement>()
         {
             return (TUiElement) ChildUiElements.FirstOrDefault(e => e is TUiElement);

@@ -8,7 +8,6 @@ namespace Core.LoopSystem
         public static int LateUpdate { get; private set; }
         public static int Gizmos { get; private set; }
         public static int GizmosSelected { get; private set; }
-        public static int OnGUI { get; private set; }
 
         public static void Initiate()
         {
@@ -18,7 +17,6 @@ namespace Core.LoopSystem
             LateUpdate = CoreLoopService.AddNewLoop();
             Gizmos = CoreLoopService.AddNewLoop();
             GizmosSelected = CoreLoopService.AddNewLoop();
-            OnGUI = CoreLoopService.AddNewLoop();
         }
     }
 }

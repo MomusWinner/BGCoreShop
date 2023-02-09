@@ -12,7 +12,7 @@ namespace Core
     public static class Scheduler
     {
         private static MonoBehaviour instance;
-        private static Dictionary<Action, ITimer> delayTimers = new Dictionary<Action, ITimer>();
+        private static List<ITimer> delayTimers = new List<ITimer>();
         
         public static void Invoke(Action action, float delay = 0)
         {
@@ -21,14 +21,14 @@ namespace Core
                 if (o is ITimer timer)
                 {
                     action?.Invoke();
-                    delayTimers.Remove(action);
+                    delayTimers.Remove(timer);
                 }
             }
 
             
             var delayTimer = TimerFactory.CreateTimer(Loops.Update, delay, InvokeAction, true, true);
             delayTimer.SetAlive();
-            delayTimers.Add(action, delayTimer);
+            delayTimers.Add(delayTimer);
         }
 
         public static async void AsyncInvokeWhen(Func<bool> condition, Action action)
@@ -48,16 +48,6 @@ namespace Core
             if (!instance)
                 instance = new GameObject(nameof(Scheduler)).AddComponent<Mask>();
             instance.StartCoroutine(ConditionUntil(action, condition));
-        }
-
-        public static void StopAll()
-        {
-            foreach (var delayTimer in delayTimers)
-            {
-                delayTimer.Value.Stop();
-                delayTimer.Value.Drop();
-            }
-            delayTimers.Clear();
         }
 
         private static IEnumerator ConditionUntil(Action action, Func<bool> condition)
