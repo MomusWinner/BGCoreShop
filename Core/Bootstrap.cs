@@ -9,7 +9,7 @@ namespace Core.Main
         {
             GEvent.Attach(GlobalEvents.Start, OnStart);
             GEvent.Attach(GlobalEvents.Restart, OnRestart);
-            Application.targetFrameRate = 60;
+            Application.targetFrameRate = 30;
         }
 
         private static void OnStart(object _)

@@ -1,5 +1,3 @@
-using System;
-
 namespace Core.Entities.Loopables
 {
     public abstract class ControlLoopable : Loopable, IControllable
@@ -8,7 +6,7 @@ namespace Core.Entities.Loopables
 
         protected ControlLoopable()
         {
-            IsPlaying = false;
+            CallActions = false;
         }
 
         public virtual void Enable()
@@ -36,23 +34,23 @@ namespace Core.Entities.Loopables
         
         public void Pause()
         {
-            if (!IsPlaying || !Alive)
+            if (!CallActions || !Alive)
             {
                 return;
             }
 
-            IsPlaying = false;
+            CallActions = false;
             OnPause();
         }
 
         public void Play()
         {
-            if (IsPlaying || !Alive)
+            if (CallActions || !Alive)
             {
                 return;
             }
             
-            IsPlaying = true;
+            CallActions = true;
             OnPlay();
         }
 
@@ -60,7 +58,7 @@ namespace Core.Entities.Loopables
         {
             base.OnAlive();
             Enable();
-            IsPlaying = false;
+            CallActions = false;
         }
 
         protected override void OnDrop()

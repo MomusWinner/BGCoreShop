@@ -32,10 +32,5 @@ namespace Core.LoopSystem
         {
             CoreLoopService.Execute(Loops.GizmosSelected);
         }
-
-        public static void OnGUI()
-        {
-            CoreLoopService.Execute(Loops.OnGUI);
-        }
     }
 }
