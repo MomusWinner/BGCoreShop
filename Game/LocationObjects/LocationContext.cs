@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GameData;
 
 namespace Game.LocationObjects
@@ -8,9 +9,16 @@ namespace Game.LocationObjects
     {
         private readonly Dictionary<Guid, ILocationObject> objectContexts = new Dictionary<Guid, ILocationObject>();
 
-        public TLocationObject Get<TLocationObject>(Guid passengerId) where TLocationObject : ILocationObject
+        public TLocationObject Get<TLocationObject>(Guid objectId = default) where TLocationObject : ILocationObject
         {
-            return objectContexts.TryGetValue(passengerId, out var context) ? (TLocationObject) context : default;
+            if (objectId == default)
+                return Gets<TLocationObject>().FirstOrDefault();
+            return objectContexts.TryGetValue(objectId, out var context) ? (TLocationObject) context : default;
+        }
+
+        private TLocationObject[] Gets<TLocationObject>()
+        {
+            return objectContexts.Values.Where(o => o is TLocationObject).Cast<TLocationObject>().ToArray();
         }
 
         public void AddObject(ILocationObject locationObject)

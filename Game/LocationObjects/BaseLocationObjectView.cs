@@ -1,5 +1,7 @@
 using Core.ObjectsSystem;
+using Game.Characters.View;
 using Game.Settings;
+using GameData;
 using UnityEngine;
 
 namespace GameLogic.Views
@@ -24,9 +26,10 @@ namespace GameLogic.Views
         
         protected readonly TSetting setting;
         protected readonly TObject resource;
-        
-        protected BaseLocationObjectView(TSetting setting)
+        protected readonly IContext context;
+        protected BaseLocationObjectView(TSetting setting, IContext context)
         {
+            this.context = context;
             resource = Resources.Load<TObject>(setting.rootObjectPath);
             if(!resource)
                 Debug.LogError($"<COLOR=YELLOW>{typeof(TObject).Name}</COLOR> is not loaded from {setting.rootObjectPath}");

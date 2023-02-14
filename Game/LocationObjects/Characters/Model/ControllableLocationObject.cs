@@ -17,22 +17,23 @@ namespace Game.Characters.Model
     {
         public GameObject Root => view?.Root.gameObject;
         public virtual IReceiver CommandReceiver => view;
-        protected TControl Control { get; }
+        
+        protected readonly TControl control;
 
         protected ControllableLocationObject(TSetting setting, IContext context) : base(setting, context)
         {
-            Control = Utilities.Instantiate<TControl>(setting, context);
+            control = Utilities.Instantiate<TControl>(setting, context);
         }
 
         protected override void OnAlive()
         {
             base.OnAlive();
-            Control.SetAlive();
+            control.SetAlive();
         }
 
         protected override void OnDrop()
         {
-            Control.Drop();
+            control.Drop();
             base.OnDrop();
         }
     }

@@ -5,7 +5,6 @@ using Game.Settings;
 using GameData;
 using GameLogic.Views;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Game.Characters.View
 {
@@ -13,23 +12,15 @@ namespace Game.Characters.View
         where TSetting : BaseLocationObjectSetting
         where TObject : Component
     {
-        public TObject Root { get; protected set; }
-
         protected readonly IDictionary<Type, IReceiver> receivers = new Dictionary<Type, IReceiver>();
         
-        protected ReceiverView(TSetting setting, IContext context) : base(setting)
+        protected ReceiverView(TSetting setting, IContext context) : base(setting, context)
         {
         }
         
         protected override void OnAlive()
         {
             base.OnAlive();
-            if (resource)
-            {
-                Root = (TObject) Object.Instantiate(resource);
-                Root.name = $"[{Name}] {resource.name}";
-            }
-
             foreach (var receiver in receivers.Values)
                 receiver.SetAlive(location);
         }
@@ -39,7 +30,6 @@ namespace Game.Characters.View
             base.OnDrop();
             foreach (var receiver in receivers.Values)
                 receiver.Drop();
-            Object.DestroyImmediate(Root);
         }
 
         public virtual void Pull(ICommand command)
