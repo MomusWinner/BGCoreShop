@@ -1,57 +1,13 @@
-using Core.Locations.Model;
-using Core.ObjectsSystem;
-using Game.Settings;
+﻿using BGCore.Game.Settings;
+using GameLogic.Views;
 using UnityEngine;
 
-namespace GameLogic.Views
+namespace BGCore.Game.LocationObjects
 {
-    public abstract class LocationObjectView<TSetting, TObject> : BaseDroppable
-        where TSetting : ViewSetting
-        where TObject : Component
+    public class LocationObjectView : BaseLocationObjectView<LocationObjectSetting, Transform>
     {
-        protected virtual Vector3 Position
+        public LocationObjectView(LocationObjectSetting setting) : base(setting)
         {
-            get => Root.transform.position;
-            set => Root.transform.position = value;
-        }
-
-        protected virtual Quaternion Rotation
-        {
-            get => Root.transform.rotation;
-            set => Root.transform.rotation = value;
-        }
-        
-        public TObject Root { get; set; }
-        
-        protected readonly TSetting setting;
-        protected readonly TObject resource;
-        
-        protected LocationObjectView(TSetting setting)
-        {
-            resource = Resources.Load<TObject>(setting.rootObjectPath);
-            if(!resource)
-                Debug.LogError($"<COLOR=YELLOW>{typeof(TObject).Name}</COLOR> is not loaded from {setting.rootObjectPath}");
-            this.setting = setting;
-        }
-
-        protected override void OnAlive()
-        {
-            base.OnAlive();
-            CreateView(location?.Root.transform);
-        }
-        
-        protected override void OnDrop()
-        {
-            base.OnDrop();
-            if(Root)
-                Object.DestroyImmediate(Root.gameObject);
-            Root = null;
-        }
-        
-        protected void CreateView(Transform parent)
-        {
-            Root = Object.Instantiate(resource, parent);
-            Root.name = $"[{GetType().Name}] {resource.name}";
         }
     }
 }

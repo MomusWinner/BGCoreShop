@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BGCore.Game.Factories;
+using Core;
 using Core.ObjectsSystem;
 using UI.View;
 using GameData;
@@ -32,7 +33,7 @@ namespace Game.UI
             uiContext = context;
             uiContext?.SetSelf(this);
             this.setting = setting;
-            view = (TView) Activator.CreateInstance(typeof(TView), setting, context);
+            view = Utilities.Instantiate<TView>(setting, context);
             AssignChild();
         }
         

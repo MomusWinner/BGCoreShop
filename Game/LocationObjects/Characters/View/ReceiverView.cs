@@ -1,27 +1,24 @@
 using System;
 using System.Collections.Generic;
-using Core.ObjectsSystem;
 using Game.Characters.Control;
-using Game.Characters.Model;
+using Game.Settings;
 using GameData;
-using GameLogic;
+using GameLogic.Views;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Game.Characters.View
 {
-    public abstract class BaseCharacterView : BaseDroppable, ICharacterView
+    public abstract class ReceiverView<TSetting, TObject> : BaseLocationObjectView<TSetting, TObject>, IReceiver
+        where TSetting : BaseLocationObjectSetting
+        where TObject : Component
     {
-        public GameObject Root { get; protected set; }
-        protected IContext Context { get; }
+        public TObject Root { get; protected set; }
 
-        protected readonly Object resource;
         protected readonly IDictionary<Type, IReceiver> receivers = new Dictionary<Type, IReceiver>();
         
-        protected BaseCharacterView(BaseCharacterSetting setting, IContext context)
+        protected ReceiverView(TSetting setting, IContext context) : base(setting)
         {
-            resource = Resources.Load(setting.rootObjectPath);
-            Context = context;
         }
         
         protected override void OnAlive()
@@ -29,7 +26,7 @@ namespace Game.Characters.View
             base.OnAlive();
             if (resource)
             {
-                Root = (GameObject) Object.Instantiate(resource);
+                Root = (TObject) Object.Instantiate(resource);
                 Root.name = $"[{Name}] {resource.name}";
             }
 

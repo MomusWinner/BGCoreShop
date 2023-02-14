@@ -1,4 +1,3 @@
-using System.Data;
 using System.Linq;
 using BGCore.Game.Factories;
 using Core.Locations.Model;
@@ -16,12 +15,14 @@ namespace GameLogic.Locations
         {
             foreach (var objectsSetting in setting.childSettings)
                 droppables.Add(Factory.CreateItem(objectsSetting, ctx));
+            
             scene = SceneManager.GetSceneByName(setting.SceneName);
             if (scene is {isLoaded: true})
             {
                 SetAlive(this);
                 return;
             }
+            
             var operation = SceneManager.LoadSceneAsync(setting.SceneName, LoadSceneMode.Additive);
             operation.completed += _ =>
             {

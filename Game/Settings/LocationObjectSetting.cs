@@ -1,7 +1,10 @@
+﻿using Game.Settings;
+using UnityEngine;
 
-namespace Game.Settings
+namespace BGCore.Game.Settings
 {
-    public abstract class LocationObjectSetting : ViewSetting
+    [CreateAssetMenu(menuName = "Game/Settings/" + nameof(LocationObjectSetting), fileName = nameof(LocationObjectSetting))]
+    public class LocationObjectSetting : BaseLocationObjectSetting
     {
     }
 }

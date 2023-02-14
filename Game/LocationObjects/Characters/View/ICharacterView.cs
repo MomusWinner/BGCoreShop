@@ -5,6 +5,5 @@ namespace Game.Characters.View
 {
     public interface ICharacterView : IReceiver
     {
-        GameObject Root { get; }
     }
 }

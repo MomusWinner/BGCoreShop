@@ -1,39 +1,13 @@
-using System;
-using Core.ObjectsSystem;
+﻿using BGCore.Game.Settings;
+using Game.LocationObjects;
 using GameData;
-using GameLogic.GameData.Contexts;
 
-namespace Game.LocationObjects
+namespace BGCore.Game.LocationObjects
 {
-    public abstract class LocationObject<TView> : BaseDroppable, ILocationObject where TView : BaseDroppable
+    public class LocationObject : BaseLocationObject<LocationObjectView, LocationObjectSetting>
     {
-        public Guid Id { get; } 
-        protected TView view;
-        protected readonly IContext context;
-        
-        protected LocationObject(IContext context)
+        public LocationObject(LocationObjectSetting setting, IContext context) : base(setting, context)
         {
-            Id = Guid.NewGuid();
-            this.context = context.GetContext<MainContext>();
         }
-
-        protected override void OnAlive()
-        {
-            base.OnAlive();
-            view?.SetAlive(location);
-            context?.GetContext<LocationContext>()?.AddObject(this);
-        }
-
-        protected override void OnDrop()
-        {
-            context?.GetContext<LocationContext>()?.RemoveObject(Id);
-            base.OnDrop();
-            view?.Drop();
-        }
-    }
-
-    public interface ILocationObject
-    {
-        public Guid Id { get; }
     }
 }
