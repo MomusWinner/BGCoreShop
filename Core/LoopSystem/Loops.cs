@@ -5,6 +5,7 @@ namespace Core.LoopSystem
         public static int Timer { get; private set; }
         public static int FixedUpdate { get; private set; }
         public static int Update { get; private set; }
+        public static int Update1 { get; private set; }
         public static int LateUpdate { get; private set; }
         public static int Gizmos { get; private set; }
         public static int GizmosSelected { get; private set; }
@@ -14,6 +15,7 @@ namespace Core.LoopSystem
             Timer = CoreLoopService.AddNewLoop();
             FixedUpdate = CoreLoopService.AddNewLoop();
             Update = CoreLoopService.AddNewLoop();
+            Update1 = CoreLoopService.AddNewLoop();
             LateUpdate = CoreLoopService.AddNewLoop();
             Gizmos = CoreLoopService.AddNewLoop();
             GizmosSelected = CoreLoopService.AddNewLoop();

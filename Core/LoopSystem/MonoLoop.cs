@@ -16,6 +16,7 @@ namespace Core.LoopSystem
         {
             CoreLoopService.Execute(Loops.Timer);
             CoreLoopService.Execute(Loops.Update);
+            CoreLoopService.Execute(Loops.Update1);
         }
 
         public static void LateUpdate()
