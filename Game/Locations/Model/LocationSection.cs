@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using BGCore.Game.Factories;
 using Core.ObjectsSystem;
-using Game.Settings;
 using GameData;
 
 namespace Core.Locations.Model
@@ -13,7 +12,7 @@ namespace Core.Locations.Model
         public Location[] Locations { get; }
         private readonly IContext context;
 
-        public LocationSection(IContext context, params ViewSetting[] locationSettings)
+        public LocationSection(IContext context, params LocationSetting[] locationSettings)
         {
             this.context = context;
             Locations = new Location[locationSettings.Length];
@@ -27,6 +26,13 @@ namespace Core.Locations.Model
             GEvent.Detach(GlobalEvents.Start, OnStart);
             await Task.Run(AwaitLoad);
             SetAlive();
+        }
+
+        protected override void OnDrop()
+        {
+            foreach (var loc in Locations)
+                loc.Drop();
+            base.OnDrop();
         }
 
         private void AwaitLoad() { while (Locations.Any(l => l is {Alive: false})) { } }

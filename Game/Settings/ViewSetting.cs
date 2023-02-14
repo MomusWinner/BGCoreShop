@@ -5,10 +5,8 @@ namespace Game.Settings
 {
     public abstract class ViewSetting : BaseSetting
     {
-        public string RootObjectPath => rootObjectPath;
-
-        [SerializeField] private Object rootObject;
-        [SerializeField] private string rootObjectPath;
+        public Object rootObject;
+        public string rootObjectPath;
 
         protected virtual void OnValidate()
         {

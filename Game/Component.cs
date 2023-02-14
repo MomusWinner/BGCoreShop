@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace MonoComponents
+namespace Game
 {
     public abstract class Component<T> : MonoBehaviour where T : Component
     {

@@ -14,7 +14,7 @@ namespace Core.Locations.View
 
         public LocationView(LocationSetting setting, IContext ctx)
         {
-            resources = Resources.Load<GameObject>(setting.RootObjectPath);
+            resources = Resources.Load<GameObject>(setting.rootObjectPath);
             context = ctx;
         }
 

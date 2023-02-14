@@ -1,4 +1,5 @@
-﻿using MonoComponents;
+﻿using Game;
+using MonoComponents;
 using UnityEngine;
 
 namespace UI.View

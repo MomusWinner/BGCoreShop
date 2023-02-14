@@ -20,7 +20,7 @@ namespace Game.Characters.View
         
         protected BaseCharacterView(BaseCharacterSetting setting, IContext context)
         {
-            resource = Resources.Load(setting.RootObjectPath);
+            resource = Resources.Load(setting.rootObjectPath);
             Context = context;
         }
         

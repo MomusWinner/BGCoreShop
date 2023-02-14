@@ -28,9 +28,9 @@ namespace GameLogic.Views
         
         protected LocationObjectView(TSetting setting)
         {
-            resource = Resources.Load<TObject>(setting.RootObjectPath);
+            resource = Resources.Load<TObject>(setting.rootObjectPath);
             if(!resource)
-                Debug.LogError($"<COLOR=YELLOW>{typeof(TObject).Name}</COLOR> is not loaded from {setting.RootObjectPath}");
+                Debug.LogError($"<COLOR=YELLOW>{typeof(TObject).Name}</COLOR> is not loaded from {setting.rootObjectPath}");
             this.setting = setting;
         }
 

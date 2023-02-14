@@ -1,4 +1,6 @@
-namespace Core.LoopSystem
+using Core.LoopSystem;
+
+namespace Game
 {
     public static class MonoLoop
     {

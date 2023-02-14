@@ -17,7 +17,7 @@ namespace UI.View
         protected UiElementView(TSetting setting, UiContext ctx)
         {
             this.setting = setting;
-            rootResource = Resources.Load<TComponent>(setting.RootObjectPath);
+            rootResource = Resources.Load<TComponent>(setting.rootObjectPath);
             context = ctx;
         }
         
