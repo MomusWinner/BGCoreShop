@@ -11,7 +11,7 @@ namespace GameLogic.Locations
         
         public SceneLocation(SceneLocationSetting setting, IContext ctx) : base(setting, ctx)
         {
-            foreach (var objectsSetting in setting.locationObjectsSettings)
+            foreach (var objectsSetting in setting.childSettings)
                 droppables.Add(Factory.CreateItem(objectsSetting, ctx));
             var operation = SceneManager.LoadSceneAsync(setting.SceneName, LoadSceneMode.Additive);
             operation.completed += _ =>

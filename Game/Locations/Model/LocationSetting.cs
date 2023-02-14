@@ -12,6 +12,5 @@ namespace Core.Locations.Model
         {
             return childSettings.FirstOrDefault(s => s is T) as T;
         }
-        public BaseSetting[] locationObjectsSettings;
     }
 }
