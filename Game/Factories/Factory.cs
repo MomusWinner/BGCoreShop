@@ -37,14 +37,15 @@ namespace BGCore.Game.Factories
             return (TFactory) Factories.FirstOrDefault(f => f.Value.GetType() == typeof(TFactory)).Value;
         }
 
-        private static IDroppable InnerCreate(BaseSetting config, IContext context, IEnumerable<KeyValuePair<Type, IFactory>> proposeFactories)
+        private static IDroppable InnerCreate(BaseSetting config, IContext context,
+            IEnumerable<KeyValuePair<Type, IFactory>> proposeFactories)
         {
             var incomeCollection = proposeFactories as KeyValuePair<Type, IFactory>[] ?? proposeFactories.ToArray();
             var factory = incomeCollection.FirstOrDefault(e => config.GetType().IsSubclassOf(e.Key));
             if (factory.Value is null)
                 return null;
             var result = factory.Value.CreateItem(config, context);
-            if (result is not null)
+            if (result is { })
                 return result;
             var outcomeCollection = incomeCollection.Except(new[] {factory});
             return InnerCreate(config, context, outcomeCollection);
