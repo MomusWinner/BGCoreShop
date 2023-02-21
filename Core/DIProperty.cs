@@ -23,6 +23,12 @@ namespace BGCore.Core
             actions = new Dictionary<Action<T>, Action<T>>();
         }
 
+        public DIProperty(T value)
+        {
+            this.value = value;
+            actions = new Dictionary<Action<T>, Action<T>>();
+        }
+
         public void Subscribe(Action<T> action)
         {
             if (!actions.ContainsKey(action))
