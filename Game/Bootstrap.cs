@@ -18,11 +18,6 @@ namespace Game
         }
 
         static partial void Initiate();
-        
-        partial void Update() => MonoLoop.Update();
-        partial void FixedUpdate() => MonoLoop.FixedUpdate();
-        partial void LateUpdate() => MonoLoop.LateUpdate();
-
     }
 
     [Serializable]
