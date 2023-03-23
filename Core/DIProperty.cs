@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace BGCore.Core
 {
-    public class DIProperty<T>
+    public abstract class DIProperty<T>
     {
-        public T Value
+        protected T Value
         {
             get => value;
             set

@@ -5,6 +5,7 @@ using Core.Locations.Model;
 using Game;
 using GameLogic.GameData.Contexts;
 using GameLogic.Networks;
+using UnityEngine;
 
 namespace GameLogic
 {
@@ -17,6 +18,11 @@ namespace GameLogic
 
         public static void Initiate(ContainerData data)
         {
+            if (data is null)
+            {
+                Debug.LogWarning("Data file is null");
+                return;
+            }
             chapters = data.chapters;
             ThreadDispatcher = new ThreadDispatcher();
             GEvent.Attach(GlobalEvents.DropSection, OnDrop);
