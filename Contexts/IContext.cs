@@ -1,6 +1,6 @@
 using System;
 
-namespace GameData
+namespace Contexts
 {
     public interface IContext
     {

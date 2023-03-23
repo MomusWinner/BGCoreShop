@@ -1,5 +1,5 @@
+using Contexts;
 using Core.Chapters;
-using GameData;
 
 namespace GameLogic.GameData.Contexts
 {

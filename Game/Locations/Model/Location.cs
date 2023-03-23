@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Contexts;
 using Core.Locations.View;
 using Core.ObjectsSystem;
-using GameData;
 using UnityEngine;
 
 namespace Core.Locations.Model
@@ -41,14 +41,14 @@ namespace Core.Locations.Model
         {
             if (view is null)
                 return;
-            view.SetAlive(location);
+            view.SetAlive(parent);
             SetAliveChildren();
         }
         
         protected virtual void SetAliveChildren()
         {
             foreach (var droppable in droppables)
-                droppable?.SetAlive(location);
+                droppable?.SetAlive(parent);
         }
 
         protected override void OnDrop()

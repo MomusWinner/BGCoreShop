@@ -1,8 +1,8 @@
 ﻿using System;
+using Contexts;
 using Core;
 using Core.ObjectsSystem;
 using Game.Settings;
-using GameData;
 using GameLogic.GameData.Contexts;
 
 namespace Game.LocationObjects
@@ -25,7 +25,7 @@ namespace Game.LocationObjects
         protected override void OnAlive()
         {
             base.OnAlive();
-            view?.SetAlive(location);
+            view?.SetAlive(parent);
             context?.GetContext<LocationContext>()?.AddObject(this);
         }
 

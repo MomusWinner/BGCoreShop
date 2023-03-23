@@ -1,7 +1,7 @@
+using Contexts;
+using Core.Locations.Model;
 using Core.ObjectsSystem;
-using Game.Characters.View;
 using Game.Settings;
-using GameData;
 using UnityEngine;
 
 namespace GameLogic.Views
@@ -39,9 +39,10 @@ namespace GameLogic.Views
         protected override void OnAlive()
         {
             base.OnAlive();
-            CreateView(location?.Root.transform);
+            if (parent is Location location)
+                CreateView(location.Root.transform);
         }
-        
+
         protected override void OnDrop()
         {
             base.OnDrop();

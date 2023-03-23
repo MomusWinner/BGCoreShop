@@ -1,6 +1,7 @@
-﻿using Core.ObjectsSystem;
+﻿using Core.Locations.Model;
+using Core.ObjectsSystem;
+using Game;
 using Game.Settings.UISettings;
-using GameData;
 using UnityEngine;
 
 namespace UI.View
@@ -49,9 +50,9 @@ namespace UI.View
                 Debug.LogWarning($"{Name} for {setting.name} not created");
                 return;
             }
-
-            var parent = context is {ParentUiElement: { }} ? context.ParentUiElement.ContentHolder : location?.Root.transform;
-            Root = Object.Instantiate(rootResource, parent);
+            
+            var parentUiTransform = context is {ParentUiElement: { }} ? context.ParentUiElement.ContentHolder : parent is Location location ? location.Root.transform : null;
+            Root = Object.Instantiate(rootResource, parentUiTransform);
             Root.name = $"[{GetType().Name}] {rootResource.name}";
         }
 

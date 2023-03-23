@@ -2,8 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using BGCore.Game.Factories;
+using Contexts;
 using Core.ObjectsSystem;
-using GameData;
 
 namespace Core.Locations.Model
 {

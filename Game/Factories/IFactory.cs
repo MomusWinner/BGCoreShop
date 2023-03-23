@@ -1,6 +1,6 @@
 ﻿using System;
+using Contexts;
 using Core.ObjectsSystem;
-using GameData;
 
 namespace BGCore.Game.Factories
 {

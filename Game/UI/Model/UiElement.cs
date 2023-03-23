@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using BGCore.Game.Factories;
 using Core;
 using Core.ObjectsSystem;
 using UI.View;
-using GameData;
 using Game.Settings.UISettings;
 using GameLogic.GameData.Contexts;
 using UnityEngine;
@@ -79,7 +77,7 @@ namespace Game.UI
         protected override void OnAlive()
         {
             base.OnAlive();
-            view.SetAlive(location);
+            view.SetAlive(parent);
             SetContentHolder();
             ChildSetAlive();
             IsShown = setting.showOnAlive;
@@ -130,7 +128,7 @@ namespace Game.UI
 
             foreach (var childUiElement in ChildUiElements)
             {
-                childUiElement.SetAlive(location);
+                childUiElement.SetAlive(parent);
                 view.AddChildComponent(childUiElement.RootComponent);
             }
         }

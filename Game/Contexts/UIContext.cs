@@ -1,12 +1,14 @@
 using System;
+using Contexts;
 using Game.UI;
 
-namespace GameData
+namespace Game
 {
     public class UiContext : IContext
     {
         public IUiElement MainUiElement { get; private set; }
         public IUiElement ParentUiElement { get; private set; }
+        
         private IContext parentContext;
         
         public UiContext SetSelf(IUiElement uiElement)

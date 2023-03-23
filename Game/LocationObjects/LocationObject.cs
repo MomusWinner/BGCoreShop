@@ -1,6 +1,6 @@
 ﻿using BGCore.Game.Settings;
+using Contexts;
 using Game.LocationObjects;
-using GameData;
 
 namespace BGCore.Game.LocationObjects
 {

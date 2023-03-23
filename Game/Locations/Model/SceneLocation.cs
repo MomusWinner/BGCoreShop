@@ -1,7 +1,7 @@
 using System.Linq;
 using BGCore.Game.Factories;
+using Contexts;
 using Core.Locations.Model;
-using GameData;
 using GameLogic.GameData.Contexts;
 using UnityEngine.SceneManagement;
 

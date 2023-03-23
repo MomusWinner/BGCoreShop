@@ -1,10 +1,10 @@
+using Contexts;
 using Core;
 using Core.Entities.Loopables;
 using Game.Characters.Control;
 using Game.Characters.View;
 using Game.LocationObjects;
 using Game.Settings;
-using GameData;
 using UnityEngine;
 
 namespace Game.Characters.Model

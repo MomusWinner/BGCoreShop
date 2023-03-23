@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Contexts;
 using Game.Characters.Control;
 using Game.Settings;
-using GameData;
 using GameLogic.Views;
 using UnityEngine;
 
@@ -22,7 +22,7 @@ namespace Game.Characters.View
         {
             base.OnAlive();
             foreach (var receiver in receivers.Values)
-                receiver.SetAlive(location);
+                receiver.SetAlive(parent);
         }
 
         protected override void OnDrop()

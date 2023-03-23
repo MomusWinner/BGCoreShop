@@ -1,7 +1,7 @@
 ﻿using System;
+using Contexts;
 using Core.Locations.Model;
 using Core.ObjectsSystem;
-using GameData;
 using GameLogic.Locations;
 
 namespace BGCore.Game.Factories

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Contexts;
 using Core.ObjectsSystem;
 using Game.Settings;
-using GameData;
 
 namespace BGCore.Game.Factories
 {
