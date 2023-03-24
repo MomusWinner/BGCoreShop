@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Contexts;
 using Game.Characters.Control;
+using Game.LocationObjects;
 using Game.Settings;
 using GameLogic.Views;
 using UnityEngine;

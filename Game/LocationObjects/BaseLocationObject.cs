@@ -4,14 +4,16 @@ using Core;
 using Core.ObjectsSystem;
 using Game.Settings;
 using GameLogic.GameData.Contexts;
+using UnityEngine;
 
 namespace Game.LocationObjects
 {
     public abstract class BaseLocationObject<TView, TSetting> : BaseDroppable, ILocationObject
-        where TView : BaseDroppable
+        where TView : BaseDroppable, ILocationObject
         where TSetting : BaseLocationObjectSetting
     {
         public Guid Id { get; }
+        public Transform Transform => view.Transform;
         protected readonly TView view;
         protected readonly IContext context;
 
