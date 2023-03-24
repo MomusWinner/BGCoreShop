@@ -11,7 +11,7 @@ namespace Core.Entities.Loopables
 
         public virtual void Enable()
         {
-            if (IsActive || !Alive)
+            if (IsActive)
             {
                 return;
             }
@@ -22,7 +22,7 @@ namespace Core.Entities.Loopables
 
         public virtual void Disable()
         {
-            if (!IsActive || !Alive)
+            if (!IsActive)
             {
                 return;
             }
