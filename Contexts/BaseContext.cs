@@ -6,7 +6,7 @@ namespace Contexts
 {
     public abstract class BaseContext : IContext
     {
-        private readonly IDictionary<Type, IContext> contexts;
+        protected readonly IDictionary<Type, IContext> contexts;
 
         protected BaseContext()
         {

@@ -11,7 +11,7 @@ namespace BGCore.Game.Factories
     {
         private static Dictionary<Type, IFactory> Factories { get; set; }
 
-        public static IDroppable CreateItem(BaseSetting config, IContext context)
+        public static IDroppable CreateItem<TType>(TType config, IContext context)
         {
             return InnerCreate(config, context, Factories);
         }
@@ -37,7 +37,7 @@ namespace BGCore.Game.Factories
             return (TFactory) Factories.FirstOrDefault(f => f.Value.GetType() == typeof(TFactory)).Value;
         }
 
-        private static IDroppable InnerCreate(BaseSetting config, IContext context,
+        private static IDroppable InnerCreate<TType>(TType config, IContext context,
             IEnumerable<KeyValuePair<Type, IFactory>> proposeFactories)
         {
             var incomeCollection = proposeFactories as KeyValuePair<Type, IFactory>[] ?? proposeFactories.ToArray();
