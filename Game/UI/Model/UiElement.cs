@@ -26,6 +26,13 @@ namespace Game.UI
         protected TView view;
         protected readonly TSetting setting;
 
+        public void AddChild(IUiElement uiElement)
+        {
+            ChildUiElements.Add(uiElement);
+            uiElement.SetAlive(parent);
+            view.AddChildComponent(uiElement.RootComponent);
+        }
+
         protected UiElement(TSetting setting, UiContext context)
         {
             uiContext = context;
