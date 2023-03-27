@@ -14,6 +14,20 @@ namespace Core
             var str = (string) value;
             return float.TryParse(str, out var number) ? ToShortString(number) : value.ToString();
         }
+        
+        public static Guid Int2Guid(this int value)
+        {
+            var bytes = new byte[16];
+            BitConverter.GetBytes(value).CopyTo(bytes, 0);
+            return new Guid(bytes);
+        }
+
+        public static int Guid2Int(this Guid value)
+        {
+            var b = value.ToByteArray();
+            var bint = BitConverter.ToInt32(b, 0);
+            return bint;
+        }
 
         public static string ToShortString(this float value)
         {
