@@ -11,7 +11,7 @@ namespace GameLogic.Locations
     {
         private Scene scene;
         
-        public SceneLocation(SceneLocationSetting setting, IContext ctx) : base(setting, ctx)
+        public SceneLocation(LocationSetting setting, IContext ctx) : base(setting, ctx)
         {
             foreach (var objectsSetting in setting.childSettings)
                 droppables.Add(Factory.CreateItem(objectsSetting, ctx));
@@ -40,7 +40,7 @@ namespace GameLogic.Locations
         protected override void OnDrop()
         {
             var chapter = context.GetContext<MainContext>().CurrentChapter;
-            var isNewScene = chapter.locationSettings.All(s => s is SceneLocationSetting sls && sls.SceneName != scene.name);
+            var isNewScene = chapter.locationSettings.All(s => s is { } sls && sls.SceneName != scene.name);
             if (isNewScene && scene.isLoaded)
                 SceneManager.UnloadSceneAsync(scene.name);
             base.OnDrop();

@@ -1,11 +1,17 @@
 using System.Linq;
 using Game.Settings;
+using UnityEngine;
 
 namespace Core.Locations.Model
 {
-    public abstract class LocationSetting : ViewSetting
+    [CreateAssetMenu(menuName = "Game/Settings/"+ nameof(LocationSetting), fileName = nameof(LocationSetting))]
+    public class LocationSetting : ViewSetting
     {
+        public string SceneName => sceneName;
+        
         public BaseSetting[] childSettings;
+
+        [SerializeField] private string sceneName;
 
         public T GetConfig<T>() where T: BaseSetting
         {
