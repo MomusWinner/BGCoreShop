@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace UI.View
 {
-    public abstract class GraphicComponent<TComponent> : Component<TComponent>, IUIGraphicComponent where TComponent : Component
+    public abstract class GraphicComponent<TComponent> : MonoBehComponent<TComponent>, IUIGraphicComponent where TComponent : Component
     {
         public Transform ContentHolder => contentHolder ? contentHolder : transform;
         public IGraphicMaskable GraphicMaskable => graphicMaskable;
