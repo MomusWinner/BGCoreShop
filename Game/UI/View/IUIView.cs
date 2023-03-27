@@ -1,7 +1,10 @@
+using UnityEngine;
+
 namespace UI.View
 {
     public interface IUIGraphicComponent
     {
+        Transform ContentHolder { get; }
         IGraphicMaskable GraphicMaskable { get; }
         void Show();
         void Hide();

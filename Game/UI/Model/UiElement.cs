@@ -98,7 +98,7 @@ namespace Game.UI
 
         protected virtual void SetContentHolder()
         {
-            ContentHolder = view.Root.transform;
+            ContentHolder = view.Root.ContentHolder;
         }
 
         protected virtual void OnShow()

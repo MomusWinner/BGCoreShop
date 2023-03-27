@@ -13,5 +13,6 @@ namespace Game.UI
         void Hide();
         void Update<TUiAgs>(object sender, TUiAgs ags);
         T GetChild<T>() where T : IUiElement;
+        void AddChild(IUiElement uiElement);
     }
 }

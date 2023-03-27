@@ -59,7 +59,7 @@ namespace UI.View
         protected override void OnDrop()
         {
             base.OnDrop();
-            Object.Destroy(Root);
+            Object.Destroy(Root.gameObject);
         }
     }
 }
