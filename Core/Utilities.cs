@@ -47,7 +47,7 @@ namespace Core
         public static string GetValidPathToResource(Object resourcesObject)
         {
             var path = AssetDatabase.GetAssetPath(resourcesObject);
-            path = path.Substring(path.IndexOf("Resources", StringComparison.Ordinal) + 10);
+            path = path[(path.IndexOf("Resources", StringComparison.Ordinal) + 10)..];
             return path.Split('.')[0];
         }
 #endif
