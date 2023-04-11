@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Contexts
+namespace Game.Contexts
 {
     public abstract class BaseContext : IContext
     {

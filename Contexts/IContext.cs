@@ -1,6 +1,6 @@
 using System;
 
-namespace Contexts
+namespace Game.Contexts
 {
     public interface IContext
     {

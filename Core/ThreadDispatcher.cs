@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using Core.Entities.Loopables;
 using Core.LoopSystem;
 
-namespace GameLogic.Networks
+namespace Game.Networks
 {
     public class ThreadDispatcher : ControlLoopable
     {

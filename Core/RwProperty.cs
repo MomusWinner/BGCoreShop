@@ -1,5 +1,5 @@
 
-namespace BGCore.Core
+namespace Core
 {
     public class RwProperty<T> : DiProperty<T>
     {

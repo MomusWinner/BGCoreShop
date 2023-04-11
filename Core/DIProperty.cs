@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BGCore.Core
+namespace Core
 {
     public abstract class DiProperty<T>
     {

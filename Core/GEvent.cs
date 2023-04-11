@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Core.ObjectsSystem;
-using GameLogic;
-using GameLogic.Networks;
+using Game;
+using Game.Networks;
 using UnityEngine;
 
 namespace Core
