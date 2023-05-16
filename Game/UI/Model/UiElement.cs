@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BGCore.Game.Factories;
+using Core;
 using Core.ObjectsSystem;
 using UI.View;
 using GameData;
@@ -11,10 +12,10 @@ using UnityEngine;
 
 namespace Game.UI
 {
-    public abstract class UiElement<TView, TSetting, TComponent> : BaseDroppable, IUiElement 
-                    where TView : UiElementView<TSetting, TComponent>
-                    where TSetting : UISetting
-                    where TComponent : Component, IUIGraphicComponent
+    public abstract class UiElement<TView, TSetting, TComponent> : BaseDroppable, IUiElement
+        where TView : UiElementView<TSetting, TComponent>
+        where TSetting : UISetting
+        where TComponent : Component, IUIGraphicComponent
     {
         public IUIGraphicComponent RootComponent => view.Root;
         public Transform ContentHolder { get; protected set; }
@@ -23,7 +24,7 @@ namespace Game.UI
 
         protected List<IUiElement> ChildUiElements { get; set; }
         protected readonly UiContext uiContext;
-        
+
         protected TView view;
         protected readonly TSetting setting;
 
@@ -32,26 +33,28 @@ namespace Game.UI
             uiContext = context;
             uiContext?.SetSelf(this);
             this.setting = setting;
-            view = (TView) Activator.CreateInstance(typeof(TView), setting, context);
+#if !UNITY_WEBGL
+            view = (TView) Activator.CreateInstance(typeof(TView), new object[] {setting, context});
             AssignChild();
+#endif
         }
-        
+
         public void Show()
         {
-            if(IsShown)
+            if (IsShown)
                 return;
             IsShown = true;
             OnShow();
         }
-        
+
         public void Hide()
         {
-            if(!IsShown)
+            if (!IsShown)
                 return;
             IsShown = false;
             OnHide();
         }
-        
+
         public void Update<TUiAgs>(object sender, TUiAgs ags)
         {
         }
@@ -74,7 +77,7 @@ namespace Game.UI
         {
             return (TUiElement) ChildUiElements.FirstOrDefault(e => e is TUiElement);
         }
-        
+
         protected override void OnAlive()
         {
             base.OnAlive();
@@ -87,6 +90,7 @@ namespace Game.UI
                 view.Show();
                 return;
             }
+
             view.Hide();
         }
 
@@ -100,13 +104,13 @@ namespace Game.UI
             view.Show();
             ShowChild();
         }
-        
+
         protected virtual void OnHide()
         {
             HideChild();
             view.Hide();
         }
-        
+
         protected override void OnDrop()
         {
             base.OnDrop();
@@ -121,7 +125,7 @@ namespace Game.UI
             ChildUiElements = null;
             view = null;
         }
-        
+
         protected void ChildSetAlive()
         {
             if (ChildUiElements is null)
@@ -133,8 +137,8 @@ namespace Game.UI
                 view.AddChildComponent(childUiElement.RootComponent);
             }
         }
-        
-        private void AssignChild()
+
+        protected void AssignChild()
         {
             ChildUiElements = new List<IUiElement>();
             foreach (var uiSetting in setting.childUiElementSettings)
@@ -144,7 +148,7 @@ namespace Game.UI
                 ChildUiElements.Add((IUiElement) Factory.CreateItem(uiSetting, childContext));
             }
         }
-        
+
         private void ShowChild()
         {
             foreach (var uiElement in ChildUiElements)
