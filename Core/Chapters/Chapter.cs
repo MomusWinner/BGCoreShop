@@ -11,12 +11,22 @@ namespace Core.Chapters
         public string ChapterName => chapterName;
         public LocationSetting StaticLocationSetting => staticSetting;
         public LocationSetting DynamicLocationSetting => dynamicSetting;
+
+#if UNITY_WEBGL
+        public bool StartAR => startAR;
+#else
         public ScreenOrientation ScreenOrientation => screenOrientation;
+#endif
+
 
         [SerializeField, HideInInspector] private string chapterName;
         [SerializeField] private LocationSetting staticSetting;
         [SerializeField] private LocationSetting dynamicSetting;
+#if UNITY_WEBGL
+        [SerializeField] private bool startAR;
+#else
         [SerializeField] private ScreenOrientation screenOrientation;
+#endif
 
         public void OnValidate()
         {
