@@ -50,6 +50,24 @@ namespace Core
             instance.StartCoroutine(ConditionUntil(action, condition));
         }
 
+        public static void StartAwaiter(IEnumerator awaiter)
+        {
+            if (!instance)
+                instance = new GameObject(nameof(Scheduler)).AddComponent<Mask>();
+            instance.StartCoroutine(awaiter);
+        }
+        
+        public static IEnumerator AwaiterInvokeWhen(Func<bool> condition, Action action)
+        {
+            return ConditionUntil(action, condition);
+        }
+
+        public static void StopAwaiter(IEnumerator awaiter)
+        {
+            if(instance)
+                instance.StopCoroutine(awaiter);
+        }
+
         private static IEnumerator ConditionUntil(Action action, Func<bool> condition)
         {
             yield return new WaitUntil(condition.Invoke);
