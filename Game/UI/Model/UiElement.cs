@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BGCore.Game.Factories;
+using Core;
 using Core.ObjectsSystem;
 using UI.View;
 using GameData;
@@ -77,10 +78,12 @@ namespace Game.UI
         
         protected override void OnAlive()
         {
+            Alive = false;
             base.OnAlive();
             view.SetAlive(location);
             SetContentHolder();
             ChildSetAlive();
+            Scheduler.InvokeWhen(()=> ChildUiElements.All(e => e.Alive) || ChildUiElements.Count is 0, () => Alive = true);
             IsShown = setting.showOnAlive;
             if (setting.showOnAlive)
             {
