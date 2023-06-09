@@ -24,11 +24,13 @@ namespace UI.View
         public void Show()
         {
             Root.Show();
+            OnShow();
         }
-
+        
         public void Hide()
         {
             Root.Hide();
+            OnHide();
         }
 
         public void AddChildComponent(IUIGraphicComponent graphic)
@@ -60,5 +62,14 @@ namespace UI.View
             base.OnDrop();
             Object.Destroy(Root);
         }
+        
+        protected virtual void OnShow()
+        {
+        }
+        
+        protected virtual void OnHide()
+        {
+        }
+
     }
 }
