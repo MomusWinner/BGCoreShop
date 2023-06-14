@@ -11,4 +11,10 @@ namespace Core
 
         public static string SerializePlayer { get; }= GEvent.GetUniqueCategory();
     }
+
+    public static class AREvents
+    {
+        public static string OnChangeInfoState { get; } = GEvent.GetUniqueCategory();
+        public static string OnRemoveTarget { get; } = GEvent.GetUniqueCategory();
+    }
 }

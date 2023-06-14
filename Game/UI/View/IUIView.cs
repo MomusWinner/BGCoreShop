@@ -10,6 +10,7 @@ namespace UI.View
     public interface IGraphicMaskable
     {
         void Initiate();
+        void Drop();
         void SetColorA(float a);
         void AddMaskable(IGraphicMaskable maskable);
     }
