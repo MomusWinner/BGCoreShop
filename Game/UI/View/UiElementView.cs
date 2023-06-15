@@ -1,6 +1,7 @@
 ﻿using Core.ObjectsSystem;
 using Game.Settings.UISettings;
 using GameData;
+using UnityEditor;
 using UnityEngine;
 
 namespace UI.View
@@ -39,8 +40,19 @@ namespace UI.View
             OnAddChildComponent(graphic);
         }
 
+        public void RemoveChildComponent(IUIGraphicComponent graphic)
+        {
+            Root.GraphicMaskable.RemoveMaskable(graphic.GraphicMaskable);
+            OnRemoveChildComponent(graphic);
+        }
+
         protected virtual void OnAddChildComponent(IUIGraphicComponent component)
         {
+        }
+
+        protected virtual void OnRemoveChildComponent(IUIGraphicComponent component)
+        {
+            
         }
 
         protected override void OnAlive()
@@ -60,7 +72,7 @@ namespace UI.View
         protected override void OnDrop()
         {
             base.OnDrop();
-            Object.Destroy(Root);
+            Object.Destroy(Root.gameObject);
         }
         
         protected virtual void OnShow()

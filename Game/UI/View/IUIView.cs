@@ -13,5 +13,6 @@ namespace UI.View
         void Drop();
         void SetColorA(float a);
         void AddMaskable(IGraphicMaskable maskable);
+        void RemoveMaskable(IGraphicMaskable maskable);
     }
 }

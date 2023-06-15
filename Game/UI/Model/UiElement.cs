@@ -104,14 +104,14 @@ namespace Game.UI
 
         protected virtual void OnShow()
         {
-            view.Show();
+            view?.Show();
             ShowChild();
         }
 
         protected virtual void OnHide()
         {
             HideChild();
-            view.Hide();
+            view?.Hide();
         }
 
         protected override void OnDrop()
@@ -141,6 +141,15 @@ namespace Game.UI
             }
         }
 
+        protected void ChildSetDrop(IUiElement element)
+        {
+            if(ChildUiElements is null)
+                return;
+            view.RemoveChildComponent(element.RootComponent);
+            element.Drop();
+            ChildUiElements.Remove(element);
+        }
+
         protected void AssignChild()
         {
             ChildUiElements = new List<IUiElement>();
@@ -154,12 +163,16 @@ namespace Game.UI
 
         private void ShowChild()
         {
+            if(ChildUiElements is null)
+                return;
             foreach (var uiElement in ChildUiElements)
                 uiElement.Show();
         }
 
         private void HideChild()
         {
+            if(ChildUiElements is null)
+                return;
             foreach (var uiElement in ChildUiElements)
                 uiElement.Hide();
         }
