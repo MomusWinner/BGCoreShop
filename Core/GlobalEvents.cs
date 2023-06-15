@@ -14,7 +14,9 @@ namespace Core
 
     public static class AREvents
     {
-        public static string OnChangeInfoState { get; } = GEvent.GetUniqueCategory();
-        public static string OnRemoveTarget { get; } = GEvent.GetUniqueCategory();
+        public static string ChangeInfoState { get; } = GEvent.GetUniqueCategory();
+        public static string LimitedState { get; } = GEvent.GetUniqueCategory();
+        public static string TrackedState { get; } = GEvent.GetUniqueCategory();
+        public static string SearchState { get; } = GEvent.GetUniqueCategory();
     }
 }
