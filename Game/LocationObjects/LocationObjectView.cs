@@ -1,43 +1,60 @@
+using System;
 using Core.Locations.Model;
 using Core.ObjectsSystem;
+using Game.LocationObjects;
 using Game.Settings;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using Object = UnityEngine.Object;
 
 namespace GameLogic.Views
 {
-    public abstract class LocationObjectView<TSetting, TObject> : BaseDroppable
+    public abstract class LocationObjectView<TSetting, TObject> : BaseDroppable, ILocationObject
         where TSetting : ViewSetting
         where TObject : Component
     {
-        public virtual Vector3 Position
-        {
-            get => Root.transform.position;
-            set => Root.transform.position = value;
-        }
+        public Guid Id { get; }
+        public Transform Transform => Root.transform;
 
-        public virtual Quaternion Rotation
-        {
-            get => Root.transform.rotation;
-            set => Root.transform.rotation = value;
-        }
-        
         public TObject Root { get; set; }
         
         protected readonly TSetting setting;
-        protected readonly TObject resource;
-        
+        protected TObject resource;
+        private bool isResourceLoaded;
+        private readonly AsyncOperationHandle<TObject> opHandler;
+
         protected LocationObjectView(TSetting setting)
         {
-            resource = Resources.Load<TObject>(setting.RootObjectPath);
-            if(!resource)
-                Debug.LogError($"<COLOR=YELLOW>{typeof(TObject).Name}</COLOR> is not loaded from {setting.RootObjectPath}");
+            isResourceLoaded = false;
+            opHandler =  Addressables.LoadAssetAsync<TObject>(setting.rootObjectPath);
+            opHandler.Completed += handle =>
+            {
+                resource = handle.Result;
+                if (!resource)
+                {
+                    Debug.LogError($"<COLOR=YELLOW>{typeof(TObject).Name}</COLOR> is not loaded from {setting.rootObjectPath}");
+                    return;
+                }
+
+                Root = Object.Instantiate(resource);
+                Root.name = $"[{GetType().Name}] {resource.name}";
+                isResourceLoaded = true;  
+            };
             this.setting = setting;
         }
 
         protected override void OnAlive()
         {
             base.OnAlive();
-            CreateView(location?.Root.transform);
+            var transform = parent switch
+            {
+                ILocationObject locationObject => locationObject.Transform,
+                Location location => location.Root.transform,
+                _ => null
+            };
+
+            CreateView(transform);
         }
         
         protected override void OnDrop()
@@ -45,13 +62,13 @@ namespace GameLogic.Views
             base.OnDrop();
             if(Root)
                 Object.DestroyImmediate(Root.gameObject);
+            Addressables.Release(opHandler);
             Root = null;
         }
         
         protected void CreateView(Transform parent)
         {
-            Root = Object.Instantiate(resource, parent);
-            Root.name = $"[{GetType().Name}] {resource.name}";
+            Root.transform.SetParent(parent);
         }
     }
 }

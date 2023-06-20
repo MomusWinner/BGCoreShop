@@ -1,15 +1,17 @@
 using Core;
+using Core.ObjectsSystem;
+using GameData;
 using UnityEngine;
 
 namespace Game.Settings
 {
     public abstract class ViewSetting : BaseSetting
     {
-        public string RootObjectPath => rootObjectPath;
+        public Object rootObject;
+        public string rootObjectPath;
 
-        [SerializeField] private Object rootObject;
-        [SerializeField] private string rootObjectPath;
-
+        public abstract BaseDroppable GetViewInstance<TContext>(TContext context) where TContext : IContext;
+        
         protected virtual void OnValidate()
         {
             if (rootObject)

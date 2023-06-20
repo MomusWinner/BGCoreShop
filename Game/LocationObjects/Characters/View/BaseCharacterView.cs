@@ -20,7 +20,7 @@ namespace Game.Characters.View
         
         protected BaseCharacterView(BaseCharacterSetting setting, IContext context)
         {
-            resource = Resources.Load(setting.RootObjectPath);
+            resource = Resources.Load(setting.rootObjectPath);
             Context = context;
         }
         
@@ -34,7 +34,7 @@ namespace Game.Characters.View
             }
 
             foreach (var receiver in receivers.Values)
-                receiver.SetAlive(location);
+                receiver.SetAlive(parent);
         }
 
         protected override void OnDrop()

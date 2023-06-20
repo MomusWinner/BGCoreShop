@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Game.Characters.Model
 {
     public abstract class BaseCharacter<TCharacterView, TControl, TBaseCharacterSetting> : LocationObject<TCharacterView>, ICharacter
-        where TCharacterView : BaseCharacterView
+        where TCharacterView : BaseCharacterView, ILocationObject
         where TControl : ControlLoopable
         where TBaseCharacterSetting : BaseCharacterSetting
     {

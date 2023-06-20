@@ -1,5 +1,6 @@
 using System;
-using BGCore.Game.Factories;
+using System.Linq;
+using System.Threading.Tasks;
 using Core.ObjectsSystem;
 using GameData;
 
@@ -7,74 +8,41 @@ namespace Core.Locations.Model
 {
     public class LocationSection : BaseDroppable
     {
-        public Location StatLocation { get; private set; }
-        public Location DynLocation { get; private set; }
-
-        private readonly LocationSetting statLocationSetting;
-        private readonly LocationSetting dynLocationSetting;
+        public Location[] Locations { get; }
         private readonly IContext context;
 
-        public LocationSection(LocationSetting statLocationSetting, LocationSetting dynLocationSetting, IContext context)
+        public LocationSection(IContext context, params LocationSetting[] locationSettings)
         {
             this.context = context;
-            this.statLocationSetting = statLocationSetting;
-            this.dynLocationSetting = dynLocationSetting;
-
-            GEvent.AttachOnce(GlobalEvents.Start, OnStart, this);
+            Locations = new Location[locationSettings.Length];
+            for (var i = 0; i < locationSettings.Length; i++)
+                Locations[i] = (Location) locationSettings[i].GetInstance(context);
+            GEvent.Attach(GlobalEvents.Start, OnStart);
         }
 
-        public TDroppable GetObject<TDroppable>(Func<TDroppable, bool> predicate = null)
-            where TDroppable : IDroppable
+        private async void OnStart(object[] obj)
         {
-            return StatLocation.GetFirstOrDefaultObject(predicate) ?? DynLocation.GetFirstOrDefaultObject(predicate);
-        }
-
-#pragma warning disable CS1998
-        private async void OnStart(params object[] obj)
-#pragma warning restore CS1998
-        {
-            GEvent.Attach(GlobalEvents.DropSection, Drop);
-            GEvent.AttachOnce(GlobalEvents.Restart, OnRestart);
-
-            StatLocation = (Location) Factory.CreateItem(statLocationSetting, context);
-            DynLocation = (Location) Factory.CreateItem(dynLocationSetting, context);
-
-#if UNITY_WEBGL
-            LocationLoader.LoadBoth(StatLocation, DynLocation,()=> SetAlive());
-#else
-            await LocationLoader.LoadBothAsync(StatLocation, DynLocation);
-            SetAlive(null);
-#endif
-        }
-
-        private void Drop(params object[] objects)
-        {
-            GEvent.Detach(GlobalEvents.DropSection, Drop);
-            base.Drop();
-        }
-
-        protected override void OnAlive()
-        {
-            base.OnAlive();
-            StatLocation?.SetAlive();
-            DynLocation?.SetAlive();
+            GEvent.Detach(GlobalEvents.Start, OnStart);
+            Scheduler.InvokeWhen(()=> Locations.All(l => l is {Alive: false}), ()=>{SetAlive();});
         }
 
         protected override void OnDrop()
         {
+            foreach (var loc in Locations)
+                loc.Drop();
             base.OnDrop();
-            StatLocation?.Drop();
-            DynLocation?.Drop();
         }
-
-        private void OnRestart(params object[] objs)
+        
+        public TDroppable GetObject<TDroppable>(Func<TDroppable, bool> predicate = null) where TDroppable : IDroppable
         {
-            if (objs.Length > 0 && objs[0] is Location {Alive: true} location)
+            foreach (var loc in Locations)
             {
-                location.Drop();
-                location.Refresh();
-                location.SetAlive();
+                var result = loc.GetFirstOrDefaultObject(predicate);
+                if (result is { })
+                    return result;
             }
+
+            return default;
         }
     }
 }

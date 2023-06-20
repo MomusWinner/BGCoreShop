@@ -3,6 +3,8 @@ using Game.Settings.UISettings;
 using GameData;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace UI.View
 {
@@ -10,15 +12,32 @@ namespace UI.View
         where TComponent : Component, IUIGraphicComponent
         where TSetting : UISetting
     {
+        
         public TComponent Root { get; protected set; }
         protected readonly UiContext context;
         protected readonly TSetting setting;
-        private readonly TComponent rootResource;
-        
+        private TComponent rootResource;
+        private bool isResourceLoaded;
+        private AsyncOperationHandle<TComponent> opHandler;
+
         protected UiElementView(TSetting setting, UiContext ctx)
         {
+            isResourceLoaded = false;
             this.setting = setting;
-            rootResource = Resources.Load<TComponent>(setting.RootObjectPath);
+            opHandler = Addressables.LoadAssetAsync<TComponent>(this.setting.rootObjectPath);
+            opHandler.Completed += handle =>
+            {
+                rootResource = handle.Result;
+                if (!rootResource)
+                {
+                    Debug.LogWarning($"{GetType()} is not loaded");
+                    return;
+                }
+
+                Root = Object.Instantiate(rootResource);
+                Root.name = $"[{GetType().Name}] {rootResource.name}";
+                isResourceLoaded = true;
+            };
             context = ctx;
         }
         
@@ -64,9 +83,8 @@ namespace UI.View
                 return;
             }
 
-            var parent = context is {ParentUiElement: { }} ? context.ParentUiElement.ContentHolder : location?.Root.transform;
-            Root = Object.Instantiate(rootResource, parent);
-            Root.name = $"[{GetType().Name}] {rootResource.name}";
+            var parent = context is {ParentUiElement: { }} ? context.ParentUiElement.ContentHolder : null;
+            Root.transform.SetParent(parent);
         }
 
         protected override void OnDrop()

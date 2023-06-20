@@ -1,16 +1,19 @@
 using System;
+using Core;
 using Core.ObjectsSystem;
+using Game.Contexts;
 using GameData;
-using GameLogic.GameData.Contexts;
+using UnityEngine;
 
 namespace Game.LocationObjects
 {
-    public abstract class LocationObject<TView> : BaseDroppable, ILocationObject where TView : BaseDroppable
+    public abstract class LocationObject<TView> : BaseDroppable, ILocationObject where TView : BaseDroppable, ILocationObject
     {
-        public Guid Id { get; } 
+        public Guid Id { get; }
+        public Transform Transform => view.Transform;
         protected TView view;
         protected readonly IContext context;
-        
+
         protected LocationObject(IContext context)
         {
             Id = Guid.NewGuid();
@@ -20,7 +23,7 @@ namespace Game.LocationObjects
         protected override void OnAlive()
         {
             base.OnAlive();
-            view?.SetAlive(location);
+            view?.SetAlive(parent);
             context.GetContext<LocationContext>().AddObject(this);
         }
 
@@ -30,10 +33,5 @@ namespace Game.LocationObjects
             base.OnDrop();
             view?.Drop();
         }
-    }
-
-    public interface ILocationObject
-    {
-        public Guid Id { get; }
     }
 }

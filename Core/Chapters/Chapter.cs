@@ -9,8 +9,6 @@ namespace Core.Chapters
     public class Chapter
     {
         public string ChapterName => chapterName;
-        public LocationSetting StaticLocationSetting => staticSetting;
-        public LocationSetting DynamicLocationSetting => dynamicSetting;
 
 #if UNITY_WEBGL
         public bool StartAR => startAR;
@@ -20,8 +18,7 @@ namespace Core.Chapters
 
 
         [SerializeField, HideInInspector] private string chapterName;
-        [SerializeField] private LocationSetting staticSetting;
-        [SerializeField] private LocationSetting dynamicSetting;
+        public LocationSetting[] locationSettings;
 #if UNITY_WEBGL
         [SerializeField] private bool startAR;
 #else
@@ -31,8 +28,8 @@ namespace Core.Chapters
         public void OnValidate()
         {
             const string none = "NONE";
-            chapterName = $"{(staticSetting ? staticSetting.name : none)}~" +
-                          $"{(dynamicSetting ? dynamicSetting.name : none)}";
+            foreach (var setting in locationSettings)
+                chapterName += $"{(setting ? setting.name : none)}~";
         }
     }
 }

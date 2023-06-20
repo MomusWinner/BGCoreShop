@@ -71,7 +71,6 @@ namespace Core
         private static IEnumerator ConditionUntil(Action action, Func<bool> condition)
         {
             yield return new WaitUntil(condition.Invoke);
-            yield return new WaitForEndOfFrame();
             action?.Invoke();
         }
     }

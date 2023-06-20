@@ -4,10 +4,10 @@ using System.Linq;
 using BGCore.Game.Factories;
 using Core;
 using Core.ObjectsSystem;
+using Game.Contexts;
 using UI.View;
 using GameData;
 using Game.Settings.UISettings;
-using GameLogic.GameData.Contexts;
 using UnityEngine;
 
 namespace Game.UI
@@ -82,11 +82,14 @@ namespace Game.UI
         {
             Alive = false;
             base.OnAlive();
-            view.SetAlive(location);
+            view.SetAlive(parent);
             SetContentHolder();
             ChildSetAlive();
             Scheduler.InvokeWhen(() => ChildUiElements.All(e => e.Alive) || ChildUiElements.Count is 0,
-                () => Alive = true);
+                () =>
+                {
+                    Alive = true;
+                });
             IsShown = setting.showOnAlive;
             if (setting.showOnAlive)
             {
@@ -136,14 +139,14 @@ namespace Game.UI
 
             foreach (var childUiElement in ChildUiElements)
             {
-                childUiElement.SetAlive(location);
+                childUiElement.SetAlive(parent);
                 view.AddChildComponent(childUiElement.RootComponent);
             }
         }
 
         protected void ChildSetDrop(IUiElement element)
         {
-            if(ChildUiElements is null)
+            if (ChildUiElements is null)
                 return;
             view.RemoveChildComponent(element.RootComponent);
             element.Drop();
@@ -163,7 +166,7 @@ namespace Game.UI
 
         private void ShowChild()
         {
-            if(ChildUiElements is null)
+            if (ChildUiElements is null)
                 return;
             foreach (var uiElement in ChildUiElements)
                 uiElement.Show();
@@ -171,7 +174,7 @@ namespace Game.UI
 
         private void HideChild()
         {
-            if(ChildUiElements is null)
+            if (ChildUiElements is null)
                 return;
             foreach (var uiElement in ChildUiElements)
                 uiElement.Hide();

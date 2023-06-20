@@ -1,7 +1,5 @@
 using System;
 using Core.Locations.Model;
-using Core.Timers;
-using UnityEngine;
 
 namespace Core.ObjectsSystem
 {
@@ -11,20 +9,20 @@ namespace Core.ObjectsSystem
         public bool Alive { get; protected set; }
         public event Action<IDroppable> Dropped;
 
-        protected Location location;
+        protected IDroppable parent;
 
         protected BaseDroppable()
         {
             Name = GetType().Name;
         }
-        
-        public void SetAlive(Location location = null)
+
+        public void SetAlive(IDroppable parent = null)
         {
-            this.location = location;
+            this.parent = parent;
             Alive = true;
             OnAlive();
         }
-        
+
         public void Drop()
         {
             if (!Alive)

@@ -5,26 +5,26 @@ using UnityEngine;
 
 namespace Core.Locations.View
 {
-    public abstract class LocationView : BaseDroppable
+    public class LocationView : BaseDroppable
     {
         public GameObject Root { get; private set; }
         
         protected readonly IContext context;
-        private readonly GameObject rootResource;
+        private readonly GameObject resources;
 
-        protected LocationView(Location location, IContext ctx)
+        public LocationView(LocationSetting setting, IContext ctx)
         {
-            rootResource = Resources.Load<GameObject>(location.RootObjectResourcesPath);
+            resources = Resources.Load<GameObject>(setting.rootObjectPath);
             context = ctx;
         }
 
         protected override void OnAlive()
         {
             base.OnAlive();
-            if(!rootResource)
+            if(!resources)
                 return;
-            Root = Object.Instantiate(rootResource);
-            Root.name = $"[{GetType().Name}]"+ rootResource.name;
+            Root = Object.Instantiate(resources);
+            Root.name = $"[{GetType().Name}]"+ resources.name;
         }
         
         protected override void OnDrop()
