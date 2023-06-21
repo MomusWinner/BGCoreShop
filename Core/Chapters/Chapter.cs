@@ -28,6 +28,7 @@ namespace Core.Chapters
         public void OnValidate()
         {
             const string none = "NONE";
+            chapterName = "";
             foreach (var setting in locationSettings)
                 chapterName += $"{(setting ? setting.name : none)}~";
         }

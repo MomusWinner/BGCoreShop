@@ -9,20 +9,18 @@ using UnityEngine;
 namespace Core.Locations.Model
 {
     public abstract class Location : BaseDroppable
-
     {
-        public GameObject Root => view.Root;
-
-        protected readonly LocationView view;
+        public Transform RootTransform => view.Root.transform;
+        protected LocationView view;
         protected readonly IContext context;
         protected readonly IList<IDroppable> droppables = new List<IDroppable>();
         protected readonly LocationSetting setting;
 
-        protected Location(LocationSetting setting, IContext context)
+        protected Location(LocationSetting setting, IContext context, IDroppable parent) : base(parent)
         {
             this.context = context;
             this.setting = setting;
-            view = (LocationView) setting.GetViewInstance(context);
+            Scheduler.InvokeWhen(() => view is {Alive: true}, SetAlive);
         }
 
         public IEnumerable<TDroppable> GetAllObjects<TDroppable>()
@@ -36,21 +34,7 @@ namespace Core.Locations.Model
             return droppables.Where(d => d is TDroppable).Cast<TDroppable>()
                 .FirstOrDefault(d => predicate is null || predicate(d));
         }
-
-        protected override void OnAlive()
-        {
-            if (view is null)
-                return;
-            view.SetAlive(parent);
-            SetAliveChildren();
-        }
         
-        protected virtual void SetAliveChildren()
-        {
-            foreach (var droppable in droppables)
-                droppable?.SetAlive(parent);
-        }
-
         protected override void OnDrop()
         {
             view?.Drop();

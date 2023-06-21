@@ -10,7 +10,7 @@ namespace Game.Settings
         public Object rootObject;
         public string rootObjectPath;
 
-        public abstract BaseDroppable GetViewInstance<TContext>(TContext context) where TContext : IContext;
+        public abstract BaseDroppable GetViewInstance<TContext>(TContext context, IDroppable parent) where TContext : IContext;
         
         protected virtual void OnValidate()
         {

@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Core.ObjectsSystem;
 using GameData;
 
@@ -11,19 +10,19 @@ namespace Core.Locations.Model
         public Location[] Locations { get; }
         private readonly IContext context;
 
-        public LocationSection(IContext context, params LocationSetting[] locationSettings)
+        public LocationSection(IContext context, IDroppable parent = null, params LocationSetting[] locationSettings) : base(parent)
         {
             this.context = context;
             Locations = new Location[locationSettings.Length];
             for (var i = 0; i < locationSettings.Length; i++)
-                Locations[i] = (Location) locationSettings[i].GetInstance(context);
+                Locations[i] = (Location) locationSettings[i].GetInstance(context, null);
             GEvent.Attach(GlobalEvents.Start, OnStart);
         }
 
-        private async void OnStart(object[] obj)
+        private void OnStart(object[] obj)
         {
             GEvent.Detach(GlobalEvents.Start, OnStart);
-            Scheduler.InvokeWhen(()=> Locations.All(l => l is {Alive: false}), ()=>{SetAlive();});
+            Scheduler.InvokeWhen(() => Locations.All(l => l is {Alive: false}), SetAlive);
         }
 
         protected override void OnDrop()
@@ -32,7 +31,7 @@ namespace Core.Locations.Model
                 loc.Drop();
             base.OnDrop();
         }
-        
+
         public TDroppable GetObject<TDroppable>(Func<TDroppable, bool> predicate = null) where TDroppable : IDroppable
         {
             foreach (var loc in Locations)

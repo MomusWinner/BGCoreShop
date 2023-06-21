@@ -9,18 +9,18 @@ namespace Core.ObjectsSystem
         public bool Alive { get; protected set; }
         public event Action<IDroppable> Dropped;
 
-        protected IDroppable parent;
+        protected readonly IDroppable parent;
 
-        protected BaseDroppable()
+        protected BaseDroppable(IDroppable parent)
         {
+            this.parent = parent;
             Name = GetType().Name;
         }
 
-        public void SetAlive(IDroppable parent = null)
+        public void SetAlive()
         {
-            this.parent = parent;
-            Alive = true;
             OnAlive();
+            Alive = true;
         }
 
         public void Drop()

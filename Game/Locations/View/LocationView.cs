@@ -1,7 +1,10 @@
 using Core.Locations.Model;
 using Core.ObjectsSystem;
+using Game.Locations;
 using GameData;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 
 namespace Core.Locations.View
 {
@@ -10,11 +13,16 @@ namespace Core.Locations.View
         public GameObject Root { get; private set; }
         
         protected readonly IContext context;
-        private readonly GameObject resources;
+        private GameObject resources;
 
-        public LocationView(LocationSetting setting, IContext ctx)
+        public LocationView(LocationSetting setting, IContext ctx, IDroppable parent) : base(parent)
         {
-            resources = Resources.Load<GameObject>(setting.rootObjectPath);
+            var loadHandler = Addressables.LoadAssetAsync<GameObject>(setting.rootObjectPath);
+            loadHandler.Completed += handle =>
+            {
+                resources = handle.Result;
+                SetAlive();
+            };
             context = ctx;
         }
 
@@ -25,6 +33,7 @@ namespace Core.Locations.View
                 return;
             Root = Object.Instantiate(resources);
             Root.name = $"[{GetType().Name}]"+ resources.name;
+            SceneManager.MoveGameObjectToScene(Root, ((SceneLocation)parent).Scene);
         }
         
         protected override void OnDrop()

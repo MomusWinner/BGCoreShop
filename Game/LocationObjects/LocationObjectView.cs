@@ -3,9 +3,8 @@ using Core.Locations.Model;
 using Core.ObjectsSystem;
 using Game.LocationObjects;
 using Game.Settings;
+using Game.UI;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using Object = UnityEngine.Object;
 
 namespace GameLogic.Views
@@ -18,29 +17,12 @@ namespace GameLogic.Views
         public Transform Transform => Root.transform;
 
         public TObject Root { get; set; }
-        
+
         protected readonly TSetting setting;
         protected TObject resource;
-        private bool isResourceLoaded;
-        private readonly AsyncOperationHandle<TObject> opHandler;
 
-        protected LocationObjectView(TSetting setting)
+        protected LocationObjectView(TSetting setting, IDroppable parent) : base(parent)
         {
-            isResourceLoaded = false;
-            opHandler =  Addressables.LoadAssetAsync<TObject>(setting.rootObjectPath);
-            opHandler.Completed += handle =>
-            {
-                resource = handle.Result;
-                if (!resource)
-                {
-                    Debug.LogError($"<COLOR=YELLOW>{typeof(TObject).Name}</COLOR> is not loaded from {setting.rootObjectPath}");
-                    return;
-                }
-
-                Root = Object.Instantiate(resource);
-                Root.name = $"[{GetType().Name}] {resource.name}";
-                isResourceLoaded = true;  
-            };
             this.setting = setting;
         }
 
@@ -50,25 +32,26 @@ namespace GameLogic.Views
             var transform = parent switch
             {
                 ILocationObject locationObject => locationObject.Transform,
-                Location location => location.Root.transform,
+                Location location => location.RootTransform,
+                IUiElement uiElement => uiElement.ContentHolder,
                 _ => null
             };
 
             CreateView(transform);
         }
-        
+
         protected override void OnDrop()
         {
             base.OnDrop();
-            if(Root)
+            if (Root)
                 Object.DestroyImmediate(Root.gameObject);
-            Addressables.Release(opHandler);
             Root = null;
         }
-        
+
         protected void CreateView(Transform parent)
         {
-            Root.transform.SetParent(parent);
+            Root = Object.Instantiate(resource, parent);
+            Root.name = $"[{GetType().Name}] {resource.name}";
         }
     }
 }

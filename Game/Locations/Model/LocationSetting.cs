@@ -1,8 +1,10 @@
 using System.Linq;
+using Configs;
 using Core.Locations.View;
 using Core.ObjectsSystem;
 using Game.Locations;
 using Game.Settings;
+using UI;
 using UnityEngine;
 
 namespace Core.Locations.Model
@@ -10,25 +12,26 @@ namespace Core.Locations.Model
     [CreateAssetMenu(menuName = "Game/Settings/" + nameof(LocationSetting), fileName = nameof(LocationSetting))]
     public class LocationSetting : ViewSetting
     {
-        public string SceneName => sceneName;
 
         public BaseSetting[] childSettings;
 
-        [SerializeField] private string sceneName;
+        public string sceneName;
+        public FadeSetting startFade;
+        public float fadeDelay;
 
         public T GetConfig<T>() where T : BaseSetting
         {
             return childSettings.FirstOrDefault(s => s is T) as T;
         }
 
-        public override IDroppable GetInstance<TContext>(TContext context)
+        public override IDroppable GetInstance<TContext>(TContext context, IDroppable parent)
         {
-            return new SceneLocation(this, context);
+            return new SceneLocation(this, context, parent);
         }
 
-        public override BaseDroppable GetViewInstance<TContext>(TContext context)
+        public override BaseDroppable GetViewInstance<TContext>(TContext context, IDroppable parent)
         {
-            return new LocationView(this, context);
+            return new LocationView(this, context, parent);
         }
     }
 }

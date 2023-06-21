@@ -1,43 +1,19 @@
 ﻿using Core.ObjectsSystem;
 using Game.Settings.UISettings;
 using GameData;
-using UnityEditor;
+using GameLogic.Views;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 
 namespace UI.View
 {
-    public abstract class UiElementView<TSetting, TComponent> : BaseDroppable
+    public abstract class UiElementView<TSetting, TComponent> : LocationObjectView<TSetting, TComponent>
         where TComponent : Component, IUIGraphicComponent
         where TSetting : UISetting
     {
+        protected readonly IContext context;
         
-        public TComponent Root { get; protected set; }
-        protected readonly UiContext context;
-        protected readonly TSetting setting;
-        private TComponent rootResource;
-        private bool isResourceLoaded;
-        private AsyncOperationHandle<TComponent> opHandler;
-
-        protected UiElementView(TSetting setting, UiContext ctx)
+        protected UiElementView(TSetting setting, IContext ctx, IDroppable parent) : base(setting, parent)
         {
-            isResourceLoaded = false;
-            this.setting = setting;
-            opHandler = Addressables.LoadAssetAsync<TComponent>(this.setting.rootObjectPath);
-            opHandler.Completed += handle =>
-            {
-                rootResource = handle.Result;
-                if (!rootResource)
-                {
-                    Debug.LogWarning($"{GetType()} is not loaded");
-                    return;
-                }
-
-                Root = Object.Instantiate(rootResource);
-                Root.name = $"[{GetType().Name}] {rootResource.name}";
-                isResourceLoaded = true;
-            };
             context = ctx;
         }
         
@@ -72,25 +48,6 @@ namespace UI.View
         protected virtual void OnRemoveChildComponent(IUIGraphicComponent component)
         {
             
-        }
-
-        protected override void OnAlive()
-        {
-            base.OnAlive();
-            if (rootResource is null)
-            {
-                Debug.LogWarning($"{Name} for {setting.name} not created");
-                return;
-            }
-
-            var parent = context is {ParentUiElement: { }} ? context.ParentUiElement.ContentHolder : null;
-            Root.transform.SetParent(parent);
-        }
-
-        protected override void OnDrop()
-        {
-            base.OnDrop();
-            Object.Destroy(Root.gameObject);
         }
         
         protected virtual void OnShow()

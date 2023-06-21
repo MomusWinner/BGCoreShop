@@ -18,7 +18,7 @@ namespace Game.Characters.View
         protected readonly Object resource;
         protected readonly IDictionary<Type, IReceiver> receivers = new Dictionary<Type, IReceiver>();
         
-        protected BaseCharacterView(BaseCharacterSetting setting, IContext context)
+        protected BaseCharacterView(BaseCharacterSetting setting, IContext context, IDroppable parent = null) : base(parent)
         {
             resource = Resources.Load(setting.rootObjectPath);
             Context = context;
@@ -34,7 +34,7 @@ namespace Game.Characters.View
             }
 
             foreach (var receiver in receivers.Values)
-                receiver.SetAlive(parent);
+                receiver.SetAlive();
         }
 
         protected override void OnDrop()

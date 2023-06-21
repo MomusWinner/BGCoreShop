@@ -12,7 +12,7 @@ namespace Core.Entities.Loopables
         private readonly Action[] actions;
         private readonly uint[] orders;
 
-        protected Loopable()
+        protected Loopable() : base(null)
         {
             actions = new Action[CoreLoopService.LoopsCount];
             orders = new uint[CoreLoopService.LoopsCount];
