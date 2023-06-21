@@ -15,7 +15,8 @@ namespace Game.LocationObjects
         where TObject : Component
     {
         public Guid Id { get; }
-        public Transform Transform => view.Transform;
+        public virtual Transform Transform => view.Transform;
+        
         protected TView view;
         protected readonly IContext context;
 

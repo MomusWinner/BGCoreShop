@@ -18,7 +18,8 @@ namespace Game.UI
         where TComponent : Component, IUIGraphicComponent
     {
         public IUIGraphicComponent RootComponent => view.Root;
-        public Transform ContentHolder { get; protected set; }
+
+        public override Transform Transform => view.Root.transform;
 
         public bool IsShown { get; protected set; }
 
@@ -31,6 +32,15 @@ namespace Game.UI
         {
             this.setting = setting;
             AssignChild();
+
+            if (setting.showOnAlive)
+            {
+                Show();
+            }
+            else
+            {
+                Hide();
+            }
         }
 
         public void Show(Action<object> onShow = null)
@@ -76,35 +86,21 @@ namespace Game.UI
         {
             Alive = false;
             base.OnAlive();
-            //view.SetAlive();
-            SetContentHolder();
-            //ChildSetAlive();
             Scheduler.InvokeWhen(() => ChildUiElements.All(e => e.Alive) || ChildUiElements.Count is 0,
                 () => { Alive = true; });
-            IsShown = setting.showOnAlive;
-            if (setting.showOnAlive)
-            {
-                view?.Show();
-                return;
-            }
-
-            view?.Hide();
-        }
-
-        protected virtual void SetContentHolder()
-        {
-            ContentHolder = view?.Root.transform;
         }
 
         protected virtual void OnShow(Action<object> onShow)
         {
             view?.Show();
-            ShowChild();
+            if (setting.showHideChildAffect)
+                ShowChild();
         }
 
         protected virtual void OnHide(Action<object> onHide)
         {
-            HideChild();
+            if (setting.showHideChildAffect)
+                HideChild();
             view?.Hide();
         }
 
@@ -154,6 +150,7 @@ namespace Game.UI
                     Debug.LogWarning($"{GetType()} have an empty config");
                     continue;
                 }
+
                 ChildUiElements.Add((IUiElement) uiSetting.GetInstance(context, this));
             }
         }

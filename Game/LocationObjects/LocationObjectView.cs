@@ -33,7 +33,6 @@ namespace GameLogic.Views
             {
                 ILocationObject locationObject => locationObject.Transform,
                 Location location => location.RootTransform,
-                IUiElement uiElement => uiElement.ContentHolder,
                 _ => null
             };
 
