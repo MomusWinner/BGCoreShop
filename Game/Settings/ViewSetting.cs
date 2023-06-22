@@ -7,12 +7,14 @@ namespace Game.Settings
 {
     public abstract class ViewSetting : BaseSetting
     {
+#if UNITY_EDITOR
         public Object rootObject;
+#endif
         public string rootObjectPath;
 
         public abstract BaseDroppable GetViewInstance<TContext>(TContext context, IDroppable parent) where TContext : IContext;
         
-        protected virtual void OnValidate()
+        public virtual void GetReference()
         {
             if (rootObject)
             {

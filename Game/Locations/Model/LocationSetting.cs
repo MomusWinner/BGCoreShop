@@ -4,13 +4,11 @@ using Core.Locations.View;
 using Core.ObjectsSystem;
 using Game.Locations;
 using Game.Settings;
-using UI;
 using UnityEngine;
 
 namespace Core.Locations.Model
 {
-    [CreateAssetMenu(menuName = "Game/Settings/" + nameof(LocationSetting), fileName = nameof(LocationSetting))]
-    public class LocationSetting : ViewSetting
+    public abstract class LocationSetting : ViewSetting
     {
 
         public BaseSetting[] childSettings;
