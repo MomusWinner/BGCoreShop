@@ -16,12 +16,12 @@ namespace Game.Settings
         
         public virtual void GetReference()
         {
+#if UNITY_EDITOR
             if (rootObject)
             {
-#if UNITY_EDITOR
                 rootObjectPath = Utilities.GetValidPathToResource(rootObject);
-#endif
             }
+#endif
         }
     }
 }
