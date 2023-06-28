@@ -11,7 +11,7 @@ namespace Core.Timers
         {
             var timer = new Timer(updateType, period, onReachedPeriodAction, playOnAwake, invokeOnce);
 
-            timer.Dropped += (d) =>
+            timer.OnDropped += (d) =>
             {
                 allTimers.Remove(timer);
             };

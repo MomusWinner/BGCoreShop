@@ -37,7 +37,7 @@ namespace Core
 
             if (puller is { })
             {
-                puller.Dropped += droppable => Detach(category, method);
+                puller.OnDropped += droppable => Detach(category, method);
             }
         }
 

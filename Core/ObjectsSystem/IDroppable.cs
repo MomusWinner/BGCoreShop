@@ -7,7 +7,8 @@ namespace Core.ObjectsSystem
     {
         string Name { get; }
         bool Alive { get; }
-        event Action<IDroppable> Dropped;
+        event Action<IDroppable> OnLively; 
+        event Action<IDroppable> OnDropped;
         void Drop();
         void SetAlive();
     }

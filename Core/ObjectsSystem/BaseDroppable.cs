@@ -1,5 +1,4 @@
 using System;
-using Core.Locations.Model;
 
 namespace Core.ObjectsSystem
 {
@@ -7,7 +6,8 @@ namespace Core.ObjectsSystem
     {
         public string Name { get; protected set; }
         public bool Alive { get; protected set; }
-        public event Action<IDroppable> Dropped;
+        public event Action<IDroppable> OnLively;
+        public event Action<IDroppable> OnDropped;
 
         protected readonly IDroppable parent;
 
@@ -21,6 +21,7 @@ namespace Core.ObjectsSystem
         {
             OnAlive();
             Alive = true;
+            OnLively?.Invoke(this);
         }
 
         public void Drop()
@@ -32,8 +33,9 @@ namespace Core.ObjectsSystem
 
             OnDrop();
             Alive = false;
-            Dropped?.Invoke(this);
-            Dropped = null;
+            OnDropped?.Invoke(this);
+            OnDropped = null;
+            OnLively = null;
         }
 
         protected virtual void OnAlive()

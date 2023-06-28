@@ -10,6 +10,7 @@ namespace Core.Locations.Model
 {
     public abstract class Location : BaseDroppable
     {
+        public int CurrentAliveChild { get; protected set; }
         public Transform RootTransform => view.Root.transform;
         protected LocationView view;
         protected readonly IContext context;

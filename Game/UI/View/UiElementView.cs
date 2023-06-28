@@ -40,7 +40,7 @@ namespace UI.View
             Root.GraphicMaskable.RemoveMaskable(graphic.GraphicMaskable);
             OnRemoveChildComponent(graphic);
         }
-
+        
         protected virtual void OnAddChildComponent(IUIGraphicComponent component)
         {
         }

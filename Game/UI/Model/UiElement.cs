@@ -23,7 +23,7 @@ namespace Game.UI
 
         public bool IsShown { get; protected set; }
 
-        protected List<IUiElement> ChildUiElements { get; set; }
+        public List<IUiElement> ChildUiElements { get; set; }
 
         protected readonly TSetting setting;
 
@@ -32,23 +32,15 @@ namespace Game.UI
         {
             this.setting = setting;
             AssignChild();
-
-            if (setting.showOnAlive)
-            {
-                Show();
-            }
-            else
-            {
-                Hide();
-            }
+            if (setting.showOnAlive) Show(); else Hide();
         }
-
+        
         public void Show(Action<object> onShow = null)
         {
             if (IsShown)
                 return;
             IsShown = true;
-            Scheduler.InvokeWhen(() => view is {Alive: true}, () => OnShow(onShow));
+            Scheduler.InvokeWhen(IsReadyForAliVe, () => OnShow(onShow));
         }
 
         public void Hide(Action<object> onHide = null)
@@ -56,7 +48,7 @@ namespace Game.UI
             if (!IsShown)
                 return;
             IsShown = false;
-            Scheduler.InvokeWhen(() => view is {Alive: true}, () => OnHide(onHide));
+            Scheduler.InvokeWhen(IsReadyForAliVe, () => OnHide(onHide));
         }
 
         public void Update<TUiAgs>(object sender, TUiAgs ags)
@@ -81,15 +73,7 @@ namespace Game.UI
         {
             return (TUiElement) ChildUiElements.FirstOrDefault(e => e is TUiElement);
         }
-
-        protected override void OnAlive()
-        {
-            Alive = false;
-            base.OnAlive();
-            Scheduler.InvokeWhen(() => ChildUiElements.All(e => e.Alive) || ChildUiElements.Count is 0,
-                () => { Alive = true; });
-        }
-
+        
         protected virtual void OnShow(Action<object> onShow)
         {
             view?.Show();
@@ -119,18 +103,6 @@ namespace Game.UI
             view = null;
         }
 
-        // protected void ChildSetAlive()
-        // {
-        //     if (ChildUiElements is null)
-        //         return;
-        //
-        //     foreach (var childUiElement in ChildUiElements)
-        //     {
-        //         childUiElement.SetAlive();
-        //         view.AddChildComponent(childUiElement.RootComponent);
-        //     }
-        // }
-
         protected void ChildSetDrop(IUiElement element)
         {
             if (ChildUiElements is null)
@@ -143,15 +115,17 @@ namespace Game.UI
         protected void AssignChild()
         {
             ChildUiElements = new List<IUiElement>();
-            foreach (var uiSetting in setting.childUiElementSettings)
+            for (var i = 0; i < setting.childUiElementSettings.Length; i++)
             {
+                var uiSetting = setting.childUiElementSettings[i];
                 if (!uiSetting)
                 {
                     Debug.LogWarning($"{GetType()} have an empty config");
                     continue;
                 }
 
-                ChildUiElements.Add((IUiElement) uiSetting.GetInstance(context, this));
+                var uiElement = (IUiElement) uiSetting.GetInstance(context, this);
+                ChildUiElements.Add(uiElement);
             }
         }
 

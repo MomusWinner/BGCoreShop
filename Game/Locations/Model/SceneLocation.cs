@@ -6,6 +6,7 @@ using Core.LoopSystem;
 using Core.ObjectsSystem;
 using Core.Timers;
 using Game.Contexts;
+using Game.LocationObjects;
 using Game.UI;
 using GameData;
 using UnityEngine.SceneManagement;
@@ -16,16 +17,22 @@ namespace Game.Locations
     {
         public Scene Scene { get; private set; }
 
-        private IUiElement fade;
+        private readonly IUiElement fade;
         private ITimer switchChapterDelayTimer;
 
         public SceneLocation(LocationSetting setting, IContext ctx, IDroppable parent) : base(setting, ctx, parent)
         {
+            CurrentAliveChild = 0;
             if (setting.startFade)
                 fade = (IUiElement) setting.startFade.GetInstance(ctx, this);
 
-            foreach (var objectsSetting in setting.childSettings)
-                droppables.Add(objectsSetting.GetInstance(ctx, this));
+            for (var i = 0; i < setting.childSettings.Length; i++)
+            {
+                var droppable = setting.childSettings[i].GetInstance(ctx, this);
+                (droppable as ILocationObject)?.SetLoadOrder(i);
+                droppable.OnLively += DroppableOnOnLively;
+                droppables.Add(droppable);
+            }
 
             Scene = SceneManager.GetSceneByName(setting.sceneName);
 
@@ -42,13 +49,28 @@ namespace Game.Locations
                 view = (LocationView) setting.GetViewInstance(context, this);
                 switchChapterDelayTimer = TimerFactory.CreateTimer(Loops.Update, setting.fadeDelay, UnFade, false);
                 switchChapterDelayTimer.SetAlive();
-
-                void OnFaded(object value)
-                {
-                    Scheduler.InvokeWhen(() => Alive, () => switchChapterDelayTimer.Play());
-                }
                 fade?.Show(OnFaded);
             };
+        }
+
+        private void DroppableOnOnLively(IDroppable droppable)
+        {
+            droppable.OnLively -= DroppableOnOnLively;
+            if(droppable is IUiElement element)
+                Scheduler.InvokeWhen(() => UIAlive(element), () =>
+                {
+                    CurrentAliveChild++;
+                });
+            else
+            {
+                CurrentAliveChild++;
+            }
+        }
+
+        private bool UIAlive(IUiElement element)
+        {
+            return element.ChildUiElements is { } &&
+                   (element.ChildUiElements.Count == 0 || element.ChildUiElements.All(c => c.Alive && UIAlive(c)));
         }
 
         protected override void OnDrop()
@@ -60,7 +82,13 @@ namespace Game.Locations
                 SceneManager.UnloadSceneAsync(Scene.name);
             base.OnDrop();
         }
-        
+
+        private void OnFaded(object value)
+        {
+            WebGLBridge.EngineStarted();
+            Scheduler.InvokeWhen(() => Alive && droppables.All(d => d is {Alive: true}), () => switchChapterDelayTimer.Play());
+        }
+
         private void UnFade(object obj)
         {
             switchChapterDelayTimer.Stop();
@@ -69,7 +97,7 @@ namespace Game.Locations
         
         private void OnUnFaded(object obj)
         {
-            //fade?.Drop();
+            fade?.Drop();
             //fade = new Fade(changeSectionFade, null);
         }
 

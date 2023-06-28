@@ -14,6 +14,13 @@ namespace GameLogic.Views
         where TObject : Component
     {
         public Guid Id { get; }
+        public int LoadOrder { get; private set; }
+        
+        public void SetLoadOrder(int order)
+        {
+            LoadOrder = order;
+        }
+
         public Transform Transform => Root.transform;
 
         public TObject Root { get; set; }
