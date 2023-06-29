@@ -20,8 +20,8 @@ namespace Core.ObjectsSystem
         public void SetAlive()
         {
             OnAlive();
-            Alive = true;
             OnLively?.Invoke(this);
+            Alive = true;
         }
 
         public void Drop()

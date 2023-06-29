@@ -8,6 +8,7 @@ namespace Game.UI
     public interface IUiElement : IDroppable
     {
         IUIGraphicComponent RootComponent { get; }
+        bool ViewALive { get; }
         List<IUiElement> ChildUiElements { get; set; }
         bool IsShown { get; }
         void Show(Action<object> onShowAction = null);

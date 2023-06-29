@@ -18,6 +18,7 @@ namespace Game.UI
         where TComponent : Component, IUIGraphicComponent
     {
         public IUIGraphicComponent RootComponent => view.Root;
+        public bool ViewALive => view.Alive;
 
         public override Transform Transform => view.Root.transform;
 
@@ -26,21 +27,23 @@ namespace Game.UI
         public List<IUiElement> ChildUiElements { get; set; }
 
         protected readonly TSetting setting;
+        private int loadedChildCount;
 
         protected UiElement(TSetting setting, IContext context, IDroppable parent) :
             base(setting, context, parent)
         {
             this.setting = setting;
             AssignChild();
-            if (setting.showOnAlive) Show(); else Hide();
+            if (setting.showOnAlive) Show();
+            else Hide();
         }
-        
+
         public void Show(Action<object> onShow = null)
         {
             if (IsShown)
                 return;
             IsShown = true;
-            Scheduler.InvokeWhen(IsReadyForAliVe, () => OnShow(onShow));
+            Scheduler.InvokeWhen(() => Alive, () => OnShow(onShow));
         }
 
         public void Hide(Action<object> onHide = null)
@@ -48,7 +51,7 @@ namespace Game.UI
             if (!IsShown)
                 return;
             IsShown = false;
-            Scheduler.InvokeWhen(IsReadyForAliVe, () => OnHide(onHide));
+            Scheduler.InvokeWhen(() => Alive, () => OnHide(onHide));
         }
 
         public void Update<TUiAgs>(object sender, TUiAgs ags)
@@ -73,7 +76,7 @@ namespace Game.UI
         {
             return (TUiElement) ChildUiElements.FirstOrDefault(e => e is TUiElement);
         }
-        
+
         protected virtual void OnShow(Action<object> onShow)
         {
             view?.Show();
@@ -114,20 +117,34 @@ namespace Game.UI
 
         protected void AssignChild()
         {
-            ChildUiElements = new List<IUiElement>();
-            for (var i = 0; i < setting.childUiElementSettings.Length; i++)
+            ChildUiElements ??= new List<IUiElement>();
+            TryCreateNextChild();
+        }
+
+        private void TryCreateNextChild()
+        {
+            if (setting.childUiElementSettings.Length > loadedChildCount)
             {
-                var uiSetting = setting.childUiElementSettings[i];
+                var uiSetting = setting.childUiElementSettings[loadedChildCount];
                 if (!uiSetting)
                 {
                     Debug.LogWarning($"{GetType()} have an empty config");
-                    continue;
+                    return;
                 }
 
-                var uiElement = (IUiElement) uiSetting.GetInstance(context, this);
-                ChildUiElements.Add(uiElement);
+                var child = (IUiElement) setting.childUiElementSettings[loadedChildCount].GetInstance(context, this);
+                child.OnLively += ChildOnOnLively;
+                ChildUiElements.Add(child);
             }
         }
+
+        private void ChildOnOnLively(IDroppable obj)
+        {
+            obj.OnLively -= ChildOnOnLively;
+            loadedChildCount++;
+            TryCreateNextChild();
+        }
+
 
         private void ShowChild()
         {

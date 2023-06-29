@@ -57,6 +57,7 @@ namespace GameLogic.Views
         protected void CreateView(Transform parent)
         {
             Root = Object.Instantiate(resource, parent);
+            Debug.Log($"Created [{GetType().Name}] {resource.name}");
             Root.name = $"[{GetType().Name}] {resource.name}";
         }
     }

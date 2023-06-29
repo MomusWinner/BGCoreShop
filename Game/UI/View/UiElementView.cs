@@ -1,5 +1,8 @@
-﻿using Core.ObjectsSystem;
+﻿using System.Linq;
+using Core.Locations.Model;
+using Core.ObjectsSystem;
 using Game.Settings.UISettings;
+using Game.UI;
 using GameData;
 using GameLogic.Views;
 using UnityEngine;
@@ -47,9 +50,17 @@ namespace UI.View
 
         protected virtual void OnRemoveChildComponent(IUIGraphicComponent component)
         {
-            
         }
-        
+
+        protected virtual bool IsReadyForALive()
+        {
+            var isOrdered = parent is Location location
+                ? location.CurrentAliveChild >= LoadOrder
+                : parent is not IUiElement uiElement ||
+                  uiElement.ChildUiElements.Select(c => c.ViewALive).Count() >= LoadOrder;
+            return base.parent is {Alive: true} && isOrdered;
+        }
+
         protected virtual void OnShow()
         {
         }

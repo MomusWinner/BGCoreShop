@@ -47,7 +47,6 @@ namespace Game.LocationObjects
         {
             base.OnAlive();
             context?.GetContext<LocationContext>().AddObject(this);
-            Debug.Log($"Set alive {Name} order {LoadOrder}");
         }
 
         protected override void OnDrop()
