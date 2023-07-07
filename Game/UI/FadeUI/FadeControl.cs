@@ -29,12 +29,14 @@ namespace UI
 
         public void Fade()
         {
+            UnFaded();
             target = fadeValue;
             Play();
         }
 
         public void UnFade()
         {
+            Faded();
             target = unFadeValue;
             Play();
         }
@@ -56,20 +58,31 @@ namespace UI
 
             if (!isUnFaded && target.Equals(unFadeValue))
             {
-                isUnFaded = true;
-                OnUnFaded?.Invoke(value);
-                Pause();
-                isFaded = false;
+                UnFaded();
                 return;
             }
             
             if (!isFaded && target.Equals(fadeValue))
             {
-                isFaded = true;
-                OnFaded?.Invoke(value);
-                Pause();
-                isUnFaded = false;
+                Faded();
             }
+        }
+
+        private void UnFaded()
+        {
+            isUnFaded = true;
+            OnUnFaded?.Invoke(value);
+            Pause();
+            isFaded = false;
+            return;
+        }
+
+        private void Faded()
+        {
+            isFaded = true;
+            OnFaded?.Invoke(value);
+            Pause();
+            isUnFaded = false;
         }
     }
 }
