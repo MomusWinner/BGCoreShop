@@ -10,8 +10,9 @@ namespace Core.ObjectsSystem
 
         protected IDroppable parent;
 
-        protected BaseDroppable()
+        protected BaseDroppable(IDroppable parent)
         {
+            this.parent = parent;
             Name = GetType().Name;
         }
         
