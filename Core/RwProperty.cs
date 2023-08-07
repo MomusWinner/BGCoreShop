@@ -1,15 +1,15 @@
 
 namespace Core
 {
-    public class RwProperty<T> : DiProperty<T>
+    public class RWProperty<T> : DiProperty<T>
     {
-        public T RwValue
+        public T RWValue
         {
             get => Value;
             set => Value = value;
         }
 
-        public RwProperty() : base() {}
-        public RwProperty(T initValue) : base(initValue){}
+        public RWProperty() : base() {}
+        public RWProperty(T initValue) : base(initValue){}
     }
 }
