@@ -38,7 +38,7 @@ namespace Game.Locations
 
             if (Scene is {isLoaded: true})
             {
-                view = (LocationView) setting.GetViewInstance(context, this);
+                CreateLocationView(setting);
                 return;
             }
 
@@ -46,11 +46,16 @@ namespace Game.Locations
             operation.completed += _ =>
             {
                 Scene = SceneManager.GetSceneByName(setting.sceneName);
-                view = (LocationView) setting.GetViewInstance(context, this);
-                switchChapterDelayTimer = TimerFactory.CreateTimer(Loops.Update, setting.fadeDelay, UnFade, false);
-                switchChapterDelayTimer.SetAlive();
-                fade?.Show(OnFaded);
+                CreateLocationView(setting);
             };
+        }
+
+        private void CreateLocationView(LocationSetting setting)
+        {
+            view = (LocationView) setting.GetViewInstance(context, this);
+            switchChapterDelayTimer = TimerFactory.CreateTimer(Loops.Update, setting.fadeDelay, UnFade, false);
+            switchChapterDelayTimer.SetAlive();
+            fade?.Show(OnFaded);
         }
 
         private void DroppableOnOnLively(IDroppable droppable)
