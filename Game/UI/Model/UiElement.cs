@@ -53,11 +53,7 @@ namespace Game.UI
             IsShown = false;
             Scheduler.InvokeWhen(() => Alive, () => OnHide(onHide));
         }
-
-        public void Update<TUiAgs>(object sender, TUiAgs ags)
-        {
-        }
-
+        
         public T GetChild<T>() where T : IUiElement
         {
             foreach (var child in ChildUiElements)
