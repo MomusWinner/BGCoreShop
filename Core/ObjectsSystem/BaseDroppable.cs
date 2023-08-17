@@ -8,7 +8,7 @@ namespace Core.ObjectsSystem
         public bool Alive { get; private set; }
         public event Action<IDroppable> Dropped;
 
-        protected IDroppable parent;
+        protected readonly IDroppable parent;
 
         protected BaseDroppable(IDroppable parent)
         {
@@ -16,9 +16,8 @@ namespace Core.ObjectsSystem
             Name = GetType().Name;
         }
         
-        public void SetAlive(IDroppable parent = null)
+        public void SetAlive()
         {
-            this.parent = parent;
             OnAlive();
             Alive = true;
         }

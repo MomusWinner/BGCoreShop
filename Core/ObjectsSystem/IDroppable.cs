@@ -7,6 +7,6 @@ namespace Core.ObjectsSystem
         bool Alive { get; }
         event Action<IDroppable> Dropped;
         void Drop();
-        void SetAlive(IDroppable parent = null);
+        void SetAlive();
     }
 }
