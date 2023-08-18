@@ -18,5 +18,10 @@ namespace Core.LoopSystem
             Gizmos = CoreLoopService.AddNewLoop();
             GizmosSelected = CoreLoopService.AddNewLoop();
         }
+
+        public static void Dispose()
+        {
+            CoreLoopService.ClearLoops();
+        }
     }
 }
