@@ -5,7 +5,7 @@ namespace Core.ObjectsSystem
     public abstract class BaseDroppable : IDroppable
     {
         public string Name { get; protected set; }
-        public bool Alive { get; private set; }
+        public virtual bool IsAlive { get; private set; }
         public event Action<IDroppable> Dropped;
 
         protected readonly IDroppable parent;
@@ -18,19 +18,19 @@ namespace Core.ObjectsSystem
         
         public void SetAlive()
         {
+            IsAlive = true;
             OnAlive();
-            Alive = true;
         }
         
         public void Drop()
         {
-            if (!Alive)
+            if (!IsAlive)
             {
                 return;
             }
 
             OnDrop();
-            Alive = false;
+            IsAlive = false;
             Dropped?.Invoke(this);
             Dropped = null;
         }

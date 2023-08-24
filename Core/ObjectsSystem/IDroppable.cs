@@ -4,9 +4,9 @@ namespace Core.ObjectsSystem
 {
     public interface IDroppable
     {
-        bool Alive { get; }
+        bool IsAlive { get; }
         event Action<IDroppable> Dropped;
-        void Drop();
         void SetAlive();
+        void Drop();
     }
 }

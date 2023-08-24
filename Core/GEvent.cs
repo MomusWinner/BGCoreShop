@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Core.ObjectsSystem;
-using Game;
 using Game.Networks;
 using UnityEngine;
 
@@ -10,6 +9,7 @@ namespace Core
     public static class GEvent
     {
         private static uint staticUniqueCounter;
+        private static ThreadDispatcher threadDispatcher;
 
         private static readonly Dictionary<string, Dictionary<int, Action<object[]>>> actions = new Dictionary<string, Dictionary<int, Action<object[]>>>();
         
@@ -75,7 +75,12 @@ namespace Core
         {
             try
             {
-                //Container.ThreadDispatcher.AddEvent(() => Call(category, objects));
+                if (threadDispatcher is null)
+                {
+                    threadDispatcher ??= new ThreadDispatcher();
+                    threadDispatcher.SetAlive();
+                }
+                threadDispatcher.AddEvent(() => Call(category, objects));
                 return true;
             }
             catch

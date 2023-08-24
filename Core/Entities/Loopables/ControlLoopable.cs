@@ -34,7 +34,7 @@ namespace Core.Entities.Loopables
         
         public void Pause()
         {
-            if (!CallActions || !Alive)
+            if (!CallActions || !IsAlive)
             {
                 return;
             }
@@ -45,7 +45,7 @@ namespace Core.Entities.Loopables
 
         public void Play()
         {
-            if (CallActions || !Alive)
+            if (CallActions || !IsAlive)
             {
                 return;
             }
