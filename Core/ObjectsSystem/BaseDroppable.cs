@@ -19,17 +19,18 @@ namespace Core.ObjectsSystem
 
         public void SetAlive()
         {
+            if(Alive)
+                return;
+            
+            Alive = true;
             OnAlive();
             OnLively?.Invoke(this);
-            Alive = true;
         }
 
         public void Drop()
         {
             if (!Alive)
-            {
                 return;
-            }
 
             OnDrop();
             Alive = false;

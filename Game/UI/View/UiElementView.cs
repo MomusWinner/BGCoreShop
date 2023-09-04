@@ -14,21 +14,23 @@ namespace UI.View
         where TSetting : UISetting
     {
         protected readonly IContext context;
-        
+
         protected UiElementView(TSetting setting, IContext ctx, IDroppable parent) : base(setting, parent)
         {
             context = ctx;
         }
-        
+
         public void Show()
         {
-            Root.Show();
+            if (Root)
+                Root.Show();
             OnShow();
         }
-        
+
         public void Hide()
         {
-            Root.Hide();
+            if (Root)
+                Root.Hide();
             OnHide();
         }
 
@@ -43,7 +45,7 @@ namespace UI.View
             Root.GraphicMaskable.RemoveMaskable(graphic.GraphicMaskable);
             OnRemoveChildComponent(graphic);
         }
-        
+
         protected virtual void OnAddChildComponent(IUIGraphicComponent component)
         {
         }
@@ -64,10 +66,9 @@ namespace UI.View
         protected virtual void OnShow()
         {
         }
-        
+
         protected virtual void OnHide()
         {
         }
-
     }
 }

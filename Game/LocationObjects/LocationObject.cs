@@ -26,7 +26,7 @@ namespace Game.LocationObjects
 
         public virtual Transform Transform => view.Transform;
         
-        protected TView view;
+        protected readonly TView view;
         protected readonly IContext context;
 
         protected LocationObject(TSetting setting, IContext context, IDroppable parent) : base(parent)
@@ -47,6 +47,7 @@ namespace Game.LocationObjects
         {
             base.OnAlive();
             context?.GetContext<LocationContext>().AddObject(this);
+            view.SetAlive();
         }
 
         protected override void OnDrop()

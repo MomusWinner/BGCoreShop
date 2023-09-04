@@ -27,13 +27,11 @@ namespace Game.UI
         public List<IUiElement> ChildUiElements { get; set; }
 
         protected readonly TSetting setting;
-        private int loadedChildCount;
 
         protected UiElement(TSetting setting, IContext context, IDroppable parent) :
             base(setting, context, parent)
         {
             this.setting = setting;
-            AssignChild();
             if (setting.showOnAlive) Show();
             else Hide();
         }
@@ -53,7 +51,7 @@ namespace Game.UI
             IsShown = false;
             Scheduler.InvokeWhen(() => Alive, () => OnHide(onHide));
         }
-        
+
         public T GetChild<T>() where T : IUiElement
         {
             foreach (var child in ChildUiElements)
@@ -78,6 +76,7 @@ namespace Game.UI
             view?.Show();
             if (setting.showHideChildAffect)
                 ShowChild();
+            onShow?.Invoke(this);
         }
 
         protected virtual void OnHide(Action<object> onHide)
@@ -85,23 +84,21 @@ namespace Game.UI
             if (setting.showHideChildAffect)
                 HideChild();
             view?.Hide();
+            onHide?.Invoke(this);
+        }
+
+        protected override void OnAlive()
+        {
+            AssignChild();
+            base.OnAlive();
         }
 
         protected override void OnDrop()
         {
+            DropChild();
             base.OnDrop();
-            view?.Drop();
-
-            if (ChildUiElements is { })
-            {
-                foreach (var childUiElement in ChildUiElements)
-                    childUiElement?.Drop();
-            }
-
-            ChildUiElements = null;
-            view = null;
         }
-
+        
         protected void ChildSetDrop(IUiElement element)
         {
             if (ChildUiElements is null)
@@ -111,24 +108,20 @@ namespace Game.UI
             ChildUiElements.Remove(element);
         }
 
-        protected void AssignChild()
-        {
-            ChildUiElements ??= new List<IUiElement>();
-            TryCreateNextChild();
-        }
 
         private void TryCreateNextChild()
         {
-            if (setting.childUiElementSettings.Length > loadedChildCount)
+            var nextIndex = ChildUiElements.Count;
+            if (setting.childUiElementSettings.Length > nextIndex)
             {
-                var uiSetting = setting.childUiElementSettings[loadedChildCount];
+                var uiSetting = setting.childUiElementSettings[nextIndex];
                 if (!uiSetting)
                 {
                     Debug.LogWarning($"{GetType()} have an empty config");
                     return;
                 }
 
-                var child = (IUiElement) setting.childUiElementSettings[loadedChildCount].GetInstance(context, this);
+                var child = (IUiElement) setting.childUiElementSettings[nextIndex].GetInstance(context, this);
                 child.OnLively += ChildOnOnLively;
                 ChildUiElements.Add(child);
             }
@@ -137,10 +130,25 @@ namespace Game.UI
         private void ChildOnOnLively(IDroppable obj)
         {
             obj.OnLively -= ChildOnOnLively;
-            loadedChildCount++;
             TryCreateNextChild();
         }
 
+        private void AssignChild()
+        {
+            ChildUiElements ??= new List<IUiElement>();
+            TryCreateNextChild();
+        }
+        
+        private void DropChild()
+        {
+            if (ChildUiElements is { })
+            {
+                foreach (var childUiElement in ChildUiElements)
+                    childUiElement?.Drop();
+            }
+
+            ChildUiElements.Clear();
+        }
 
         private void ShowChild()
         {

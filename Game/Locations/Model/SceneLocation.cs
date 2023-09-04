@@ -19,6 +19,7 @@ namespace Game.Locations
 
         private readonly IUiElement fade;
         private ITimer switchChapterDelayTimer;
+        
 
         public SceneLocation(LocationSetting setting, IContext ctx, IDroppable parent) : base(setting, ctx, parent)
         {
