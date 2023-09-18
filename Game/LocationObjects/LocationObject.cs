@@ -16,14 +16,7 @@ namespace Game.LocationObjects
         where TObject : Component
     {
         public Guid Id { get; }
-        public int LoadOrder { get; private set; }
         
-        public void SetLoadOrder(int order)
-        {
-            LoadOrder = order;
-            view.SetLoadOrder(order);
-        }
-
         public virtual Transform Transform => view.Transform;
         
         protected readonly TView view;
@@ -39,20 +32,17 @@ namespace Game.LocationObjects
 
         protected virtual bool IsReadyForAliVe()
         {
-            var isOrdered = parent is not Location location || location.CurrentAliveChild >= LoadOrder;
-            return parent is {Alive: true} && view is {Alive: true} && isOrdered;
+            return parent is {Alive: true} && view is {Alive: true};
         }
 
         protected override void OnAlive()
         {
             base.OnAlive();
-            context?.GetContext<LocationContext>().AddObject(this);
             view.SetAlive();
         }
 
         protected override void OnDrop()
         {
-            context.GetContext<LocationContext>().RemoveObject(Id);
             base.OnDrop();
             view?.Drop();
         }

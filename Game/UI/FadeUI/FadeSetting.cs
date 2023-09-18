@@ -1,5 +1,6 @@
 using Core.ObjectsSystem;
 using Game.Settings.UISettings;
+using Game.UI;
 using GameData;
 
 namespace Configs

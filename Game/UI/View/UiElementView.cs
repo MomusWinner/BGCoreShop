@@ -18,6 +18,7 @@ namespace UI.View
         protected UiElementView(TSetting setting, IContext ctx, IDroppable parent) : base(setting, parent)
         {
             context = ctx;
+            Debug.Log($"Construct {base.setting.name} -> {Name}");
         }
 
         public void Show()
@@ -56,11 +57,7 @@ namespace UI.View
 
         protected virtual bool IsReadyForALive()
         {
-            var isOrdered = parent is Location location
-                ? location.CurrentAliveChild >= LoadOrder
-                : parent is not IUiElement uiElement ||
-                  uiElement.ChildUiElements.Select(c => c.ViewALive).Count() >= LoadOrder;
-            return base.parent is {Alive: true} && isOrdered;
+            return base.parent is {Alive: true};
         }
 
         protected virtual void OnShow()

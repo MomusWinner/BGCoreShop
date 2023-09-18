@@ -8,9 +8,7 @@ using UnityEngine;
 
 namespace UI
 {
-    public class Fade<TView> : UiElement<TView, FadeSetting, FadeComponent>
-        where TView : FadeView
-
+    public class Fade : UiElement<FadeView, FadeSetting, FadeComponent>
     {
     public bool IsActive { get; private set; }
     private readonly FadeControl fadeControl;

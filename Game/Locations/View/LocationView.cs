@@ -3,7 +3,6 @@ using Core.ObjectsSystem;
 using Game.Locations;
 using GameData;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 
 namespace Core.Locations.View
@@ -11,31 +10,26 @@ namespace Core.Locations.View
     public class LocationView : BaseDroppable
     {
         public GameObject Root { get; private set; }
-        
+
         protected readonly IContext context;
-        private GameObject resources;
+        private readonly GameObject resources;
 
         public LocationView(LocationSetting setting, IContext ctx, IDroppable parent) : base(parent)
         {
-            var loadHandler = Addressables.LoadAssetAsync<GameObject>(setting.rootObjectPath);
-            loadHandler.Completed += handle =>
-            {
-                resources = handle.Result;
-                SetAlive();
-            };
+            resources = Resources.Load<GameObject>(setting.rootObjectPath);
             context = ctx;
         }
 
         protected override void OnAlive()
         {
             base.OnAlive();
-            if(!resources)
+            if (!resources)
                 return;
             Root = Object.Instantiate(resources);
-            Root.name = $"[{GetType().Name}]"+ resources.name;
-            SceneManager.MoveGameObjectToScene(Root, ((SceneLocation)parent).Scene);
+            Root.name = $"[{GetType().Name}]" + resources.name;
+            SceneManager.MoveGameObjectToScene(Root, ((SceneLocation) parent).Scene);
         }
-        
+
         protected override void OnDrop()
         {
             base.OnDrop();

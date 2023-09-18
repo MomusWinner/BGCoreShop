@@ -1,7 +1,8 @@
+using System;
 using Core;
 using Core.ObjectsSystem;
 using GameData;
-using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Game.Settings
 {
@@ -22,6 +23,11 @@ namespace Game.Settings
                 rootObjectPath = Utilities.GetValidPathToResource(rootObject);
             }
 #endif
+        }
+
+        protected void OnValidate()
+        {
+            GetReference();
         }
     }
 }

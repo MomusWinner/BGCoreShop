@@ -32,8 +32,6 @@ namespace Game.UI
             base(setting, context, parent)
         {
             this.setting = setting;
-            if (setting.showOnAlive) Show();
-            else Hide();
         }
 
         public void Show(Action<object> onShow = null)
@@ -41,7 +39,7 @@ namespace Game.UI
             if (IsShown)
                 return;
             IsShown = true;
-            Scheduler.InvokeWhen(() => Alive, () => OnShow(onShow));
+            OnShow(onShow);
         }
 
         public void Hide(Action<object> onHide = null)
@@ -49,7 +47,7 @@ namespace Game.UI
             if (!IsShown)
                 return;
             IsShown = false;
-            Scheduler.InvokeWhen(() => Alive, () => OnHide(onHide));
+            OnHide(onHide);
         }
 
         public T GetChild<T>() where T : IUiElement
@@ -87,10 +85,16 @@ namespace Game.UI
             onHide?.Invoke(this);
         }
 
+
         protected override void OnAlive()
         {
-            AssignChild();
             base.OnAlive();
+            AssignChild();
+
+            foreach (var ui in ChildUiElements)
+                ui.SetAlive();
+            if (setting.showOnAlive) Show();
+            else Hide();
         }
 
         protected override void OnDrop()
@@ -98,7 +102,7 @@ namespace Game.UI
             DropChild();
             base.OnDrop();
         }
-        
+
         protected void ChildSetDrop(IUiElement element)
         {
             if (ChildUiElements is null)
@@ -109,36 +113,13 @@ namespace Game.UI
         }
 
 
-        private void TryCreateNextChild()
-        {
-            var nextIndex = ChildUiElements.Count;
-            if (setting.childUiElementSettings.Length > nextIndex)
-            {
-                var uiSetting = setting.childUiElementSettings[nextIndex];
-                if (!uiSetting)
-                {
-                    Debug.LogWarning($"{GetType()} have an empty config");
-                    return;
-                }
-
-                var child = (IUiElement) setting.childUiElementSettings[nextIndex].GetInstance(context, this);
-                child.OnLively += ChildOnOnLively;
-                ChildUiElements.Add(child);
-            }
-        }
-
-        private void ChildOnOnLively(IDroppable obj)
-        {
-            obj.OnLively -= ChildOnOnLively;
-            TryCreateNextChild();
-        }
-
-        private void AssignChild()
+        protected void AssignChild()
         {
             ChildUiElements ??= new List<IUiElement>();
-            TryCreateNextChild();
+            foreach (var uiSetting in setting.childUiElementSettings)
+                ChildUiElements.Add((IUiElement) uiSetting.GetInstance(context, this));
         }
-        
+
         private void DropChild()
         {
             if (ChildUiElements is { })
