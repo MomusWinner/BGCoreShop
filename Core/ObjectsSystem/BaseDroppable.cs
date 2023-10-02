@@ -28,7 +28,6 @@ namespace Core.ObjectsSystem
                 return;
             
             OnAlive();
-            Alived?.Invoke(this);
         }
 
         public void Drop()
@@ -37,19 +36,20 @@ namespace Core.ObjectsSystem
                 return;
             
             OnDrop();
-            Dropped?.Invoke(this);
-            Alived = null;
-            Dropped = null;
         }
 
         protected virtual void OnAlive()
         {
             IsAlive = true;
+            Alived?.Invoke(this);
         }
 
         protected virtual void OnDrop()
         {
             IsAlive = false;
+            Dropped?.Invoke(this);
+            Alived = null;
+            Dropped = null;
         }
     }
 }
