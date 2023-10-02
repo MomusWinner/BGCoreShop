@@ -20,6 +20,7 @@ namespace Core
             {
                 if (o is ITimer timer)
                 {
+                    timer.Stop();
                     action?.Invoke();
                     delayTimers.Remove(timer);
                 }
