@@ -13,10 +13,10 @@ namespace Game.Contexts
             contexts = new Dictionary<Type, IContext>();
         }
 
-        public TType GetContext<TType>(Func<TType, bool> predicate = null) where TType : class, IContext
+        public TType GetContext<TType>(Func<TType, bool> predicate = null) where TType : IContext
         {
             contexts.TryGetValue(typeof(TType), out var context);
-            return (TType) context;
+            return context is TType type ? type : default;
         }
 
         public virtual void AddContext<TType>(TType context) where TType : IContext
