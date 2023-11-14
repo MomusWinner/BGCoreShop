@@ -11,8 +11,9 @@ namespace Core
         private static uint staticUniqueCounter;
         private static ThreadDispatcher threadDispatcher;
 
-        private static readonly Dictionary<string, Dictionary<int, Action<object[]>>> actions = new Dictionary<string, Dictionary<int, Action<object[]>>>();
-        
+        private static readonly Dictionary<string, Dictionary<int, Action<object[]>>> actions =
+            new Dictionary<string, Dictionary<int, Action<object[]>>>();
+
         public static string GetUniqueCategory()
         {
             return "#" + staticUniqueCounter++;
@@ -71,6 +72,14 @@ namespace Core
             }
         }
 
+        public static void DetachAll(string category)
+        {
+            if (actions.TryGetValue(category, out _))
+            {
+                actions.Remove(category);
+            }
+        }
+
         public static bool CallInMainThread(string category, params object[] objects)
         {
             try
@@ -80,6 +89,7 @@ namespace Core
                     threadDispatcher ??= new ThreadDispatcher();
                     threadDispatcher.SetAlive();
                 }
+
                 threadDispatcher.AddEvent(() => Call(category, objects));
                 return true;
             }
