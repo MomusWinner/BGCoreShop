@@ -35,10 +35,5 @@ namespace Core.LoopSystem
 
             loops[type].ExecuteAllEvents();
         }
-
-        public static void ClearLoops()
-        {
-            loops.Clear();
-        }
     }
 }

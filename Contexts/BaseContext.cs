@@ -2,21 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Game.Contexts
+namespace GameData
 {
     public abstract class BaseContext : IContext
     {
-        protected readonly IDictionary<Type, IContext> contexts;
+        private readonly IDictionary<Type, IContext> contexts;
 
         protected BaseContext()
         {
             contexts = new Dictionary<Type, IContext>();
         }
 
-        public TType GetContext<TType>(Func<TType, bool> predicate = null) where TType : IContext
+        public TType GetContext<TType>(Func<TType, bool> predicate = null) where TType : class, IContext
         {
             contexts.TryGetValue(typeof(TType), out var context);
-            return context is TType type ? type : default;
+            return (TType) context;
         }
 
         public virtual void AddContext<TType>(TType context) where TType : IContext

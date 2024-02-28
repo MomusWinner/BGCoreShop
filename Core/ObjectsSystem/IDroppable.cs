@@ -1,14 +1,14 @@
 using System;
+using Core.Locations.Model;
 
 namespace Core.ObjectsSystem
 {
     public interface IDroppable
     {
-        bool IsAlive { get; }
-        event Action<IDroppable> Alived; 
+        string Name { get; }
+        bool Alive { get; }
         event Action<IDroppable> Dropped;
-        TDroppable GetObject<TDroppable>();
-        void SetAlive();
         void Drop();
+        void SetAlive(Location location = null);
     }
 }

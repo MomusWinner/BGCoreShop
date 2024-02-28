@@ -1,55 +1,47 @@
 using System;
+using Core.Locations.Model;
 
 namespace Core.ObjectsSystem
 {
     public abstract class BaseDroppable : IDroppable
     {
-        public string Name { get; }
-        public bool IsAlive { get; protected set; }
-        public event Action<IDroppable> Alived;
+        public string Name { get; protected set; }
+        public bool Alive { get; private set; }
         public event Action<IDroppable> Dropped;
 
-        protected readonly IDroppable parent;
+        protected Location location;
 
-        protected BaseDroppable(IDroppable parent)
+        protected BaseDroppable()
         {
-            this.parent = parent;
             Name = GetType().Name;
         }
-
-        public virtual TDroppable GetObject<TDroppable>()
+        
+        public void SetAlive(Location location = null)
         {
-            return this is TDroppable result ? result : default;
-        }
-
-        public void SetAlive()
-        {
-            if (IsAlive)
-                return;
-            
+            this.location = location;
             OnAlive();
+            Alive = true;
         }
-
+        
         public void Drop()
         {
-            if (!IsAlive)
+            if (!Alive)
+            {
                 return;
-            
+            }
+
             OnDrop();
+            Alive = false;
+            Dropped?.Invoke(this);
+            Dropped = null;
         }
 
         protected virtual void OnAlive()
         {
-            IsAlive = true;
-            Alived?.Invoke(this);
         }
 
         protected virtual void OnDrop()
         {
-            IsAlive = false;
-            Dropped?.Invoke(this);
-            Alived = null;
-            Dropped = null;
         }
     }
 }

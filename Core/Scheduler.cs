@@ -11,8 +11,8 @@ namespace Core
 {
     public static class Scheduler
     {
-        private static MonoBehaviour instance;
-        private static List<ITimer> delayTimers = new List<ITimer>();
+        private static UnityEngine.MonoBehaviour instance;
+        private static Dictionary<Action, ITimer> delayTimers = new Dictionary<Action, ITimer>();
         
         public static void Invoke(Action action, float delay = 0)
         {
@@ -20,16 +20,15 @@ namespace Core
             {
                 if (o is ITimer timer)
                 {
-                    timer.Stop();
                     action?.Invoke();
-                    delayTimers.Remove(timer);
+                    delayTimers.Remove(action);
                 }
             }
 
             
             var delayTimer = TimerFactory.CreateTimer(Loops.Update, delay, InvokeAction, true, true);
             delayTimer.SetAlive();
-            delayTimers.Add(delayTimer);
+            delayTimers.Add(action, delayTimer);
         }
 
         public static async void AsyncInvokeWhen(Func<bool> condition, Action action)
@@ -49,6 +48,16 @@ namespace Core
             if (!instance)
                 instance = new GameObject(nameof(Scheduler)).AddComponent<Mask>();
             instance.StartCoroutine(ConditionUntil(action, condition));
+        }
+
+        public static void StopAll()
+        {
+            foreach (var delayTimer in delayTimers)
+            {
+                delayTimer.Value.Stop();
+                delayTimer.Value.Drop();
+            }
+            delayTimers.Clear();
         }
 
         private static IEnumerator ConditionUntil(Action action, Func<bool> condition)

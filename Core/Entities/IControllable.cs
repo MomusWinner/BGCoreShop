@@ -1,3 +1,4 @@
+using Game.Characters.Control;
 using Submodules.BGLogic.Main.Entities;
 
 namespace Core.Entities
