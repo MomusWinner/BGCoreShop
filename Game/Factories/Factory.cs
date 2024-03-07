@@ -4,6 +4,7 @@ using System.Linq;
 using Core.ObjectsSystem;
 using Game.Settings;
 using GameData;
+using UnityEngine.Rendering;
 
 namespace BGCore.Game.Factories
 {
@@ -49,6 +50,11 @@ namespace BGCore.Game.Factories
                 return result;
             var outcomeCollection = incomeCollection.Except(new[] {factory});
             return InnerCreate(config, context, outcomeCollection);
+        }
+
+        public static void Clear()
+        {
+            Factories.Clear();
         }
     }
 }
